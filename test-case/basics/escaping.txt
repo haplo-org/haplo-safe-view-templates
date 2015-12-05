@@ -1,0 +1,26 @@
+
+Escaping of strings
+
+---
+
+<div> value </div>
+
+---
+{ "value":"xyz" }
+---
+<div>xyz</div>
+
+---
+{ "value":"x&yz" }
+---
+<div>x&amp;yz</div>
+
+---
+{ "value":"<xyz>" }
+---
+<div>&lt;xyz&gt;</div>
+
+---
+{ "value":"\"xyz\"" }
+---
+<div>"xyz"</div>

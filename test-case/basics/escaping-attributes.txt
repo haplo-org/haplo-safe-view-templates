@@ -1,0 +1,26 @@
+
+Escaping of attribute values
+
+---
+
+<div class=value></div>
+
+---
+{ "value":"xyz" }
+---
+<div class="xyz"></div>
+
+---
+{ "value":"x&yz" }
+---
+<div class="x&amp;yz"></div>
+
+---
+{ "value":"<xyz>" }
+---
+<div class="&lt;xyz&gt;"></div>
+
+---
+{ "value":"\"xyz\"" }
+---
+<div class="&quot;xyz&quot;"></div>

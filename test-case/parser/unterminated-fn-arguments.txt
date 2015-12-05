@@ -1,0 +1,10 @@
+
+Unterminated function arguments
+
+---
+
+<div> if(a </div>
+
+---
+
+PARSE EXCEPTION: Error at line 1 character 9: Did not find end of arguments

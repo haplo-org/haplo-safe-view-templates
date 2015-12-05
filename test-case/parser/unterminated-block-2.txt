@@ -1,0 +1,10 @@
+
+Unterminated anonymous block
+
+---
+
+<div> if(a) { abc </div>
+
+---
+
+PARSE EXCEPTION: Error at line 1 character 13: Did not find end of block

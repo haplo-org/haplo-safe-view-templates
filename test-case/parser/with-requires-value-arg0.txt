@@ -1,0 +1,10 @@
+
+with() requires the argument is a value node
+
+---
+
+<div> with("x") { } </div>
+
+---
+
+PARSE EXCEPTION: Error at line 1 character 11: with() must have a value as the argument

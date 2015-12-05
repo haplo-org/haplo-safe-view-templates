@@ -1,0 +1,10 @@
+
+Unterminated generic list
+
+---
+
+<div> ["a" b </div>
+
+---
+
+PARSE EXCEPTION: Error at line 1 character 7: Did not find end of list

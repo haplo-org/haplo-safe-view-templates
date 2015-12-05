@@ -1,0 +1,10 @@
+
+Unterminated literal string (in middle of quoted character)
+
+---
+
+<div> "Hello \
+
+---
+
+PARSE EXCEPTION: Error at line 1 character 7: Unexpected end of template in quoted character

@@ -1,0 +1,36 @@
+
+Element attributes, as constants, values and lists. Automatic removal of empty attributes. Escaping.
+
+---
+
+<div> value1 value2
+    <span class="constant"> "a" </span>
+    <span class=value1> "b" </span>
+    <span class=[value1]> "c" </span>
+    <span class=["constant" value1]> "d" </span>
+    <span class=["constant" value1 "two"]> "e" </span>
+    <span class=[value1 value2]> "f" </span>
+    <span class=[value1 "constant"]> "g" </span>
+    <span class=value1 id="one"> "h" </span>  // has literal attribute, order will change
+</div>
+
+---
+
+{}
+---
+<div><span class=constant>a</span><span>b</span><span>c</span><span class="constant">d</span><span class="constant two">e</span><span>f</span><span class="constant">g</span><span id=one>h</span></div>
+---
+
+{"value1":"v1"}
+---
+<div>v1<span class=constant>a</span><span class="v1">b</span><span class="v1">c</span><span class="constant v1">d</span><span class="constant v1 two">e</span><span class="v1">f</span><span class="v1 constant">g</span><span id=one class="v1">h</span></div>
+---
+
+{"value1":"v1", "value2":"V2"}
+---
+<div>v1V2<span class=constant>a</span><span class="v1">b</span><span class="v1">c</span><span class="constant v1">d</span><span class="constant v1 two">e</span><span class="v1 V2">f</span><span class="v1 constant">g</span><span id=one class="v1">h</span></div>
+---
+
+{"value1":"v1&x\""}
+---
+<div>v1&amp;x"<span class=constant>a</span><span class="v1&amp;x&quot;">b</span><span class="v1&amp;x&quot;">c</span><span class="constant v1&amp;x&quot;">d</span><span class="constant v1&amp;x&quot; two">e</span><span class="v1&amp;x&quot;">f</span><span class="v1&amp;x&quot; constant">g</span><span id=one class="v1&amp;x&quot;">h</span></div>

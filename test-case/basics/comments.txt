@@ -1,0 +1,17 @@
+
+Comments are ignored in templates
+
+---
+
+<div> // comment
+// on own line
+    / "Literal after slash"//comment two
+</div>
+
+---
+
+{ "/": "Single comment char is valid"}
+
+---
+
+<div>Single comment char is validLiteral after slash</div>

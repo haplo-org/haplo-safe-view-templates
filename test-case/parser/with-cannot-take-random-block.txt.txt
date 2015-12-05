@@ -1,0 +1,10 @@
+
+with() doesn't allow other named blocks
+
+---
+
+<div>with(x) {"x"} someotherblockname {"y"}</div>
+
+---
+
+PARSE EXCEPTION: Error at line 1 character 38: with() may not take a someotherblockname block

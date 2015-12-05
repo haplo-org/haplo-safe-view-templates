@@ -1,0 +1,10 @@
+
+Can't nest elements inside another element (attribute value)
+
+---
+
+<div> <span abc=<b>></b></span></div>
+
+---
+
+PARSE EXCEPTION: Error at line 1 character 17: Elements are not valid in this context

@@ -1,0 +1,51 @@
+
+if() and unless()
+
+---
+
+<div>
+    <span> if(check.value)     { "TRUE" }  else { "FALSE" } </span>
+    <span> unless(check.value) { "false" } else { "true" }  </span>
+    <span> if(check.value)     { "tt" }                     </span>
+    <span> unless(check.value) { "ff" }                     </span>
+</div>
+
+---
+{"check":{"value":true}}
+---
+<div><span>TRUE</span><span>true</span><span>tt</span><span></span></div>
+
+---
+{"check":{"value":"hello"}}
+---
+<div><span>TRUE</span><span>true</span><span>tt</span><span></span></div>
+
+---
+{"check":{"value":[1]}}
+---
+<div><span>TRUE</span><span>true</span><span>tt</span><span></span></div>
+
+---
+{"check":{"value":false}}
+---
+<div><span>FALSE</span><span>false</span><span></span><span>ff</span></div>
+
+---
+{"check":{"value":""}}
+---
+<div><span>FALSE</span><span>false</span><span></span><span>ff</span></div>
+
+---
+{"check":{"value":[]}}
+---
+<div><span>FALSE</span><span>false</span><span></span><span>ff</span></div>
+
+---
+{"check":{"value":null}}
+---
+<div><span>FALSE</span><span>false</span><span></span><span>ff</span></div>
+
+---
+{}
+---
+<div><span>FALSE</span><span>false</span><span></span><span>ff</span></div>

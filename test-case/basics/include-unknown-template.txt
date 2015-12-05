@@ -1,0 +1,14 @@
+
+include() doesn't output anything if the template isn't known
+
+---
+
+<div> include("unknown-template") </div>
+
+---
+
+{}
+
+---
+
+<div></div>

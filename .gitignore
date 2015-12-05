@@ -1,0 +1,3 @@
+*.class
+.fslckout
+.fossil-settings/*

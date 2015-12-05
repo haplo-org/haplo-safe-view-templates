@@ -1,0 +1,36 @@
+
+with() moves view to value, but ignores block if there's no corresponding value in view
+
+---
+
+<div>
+    with(abc.def) {
+        value
+    }
+</div>
+
+---
+
+{
+    "value": "bad selection of root value",
+    "abc": {
+        "def": {
+            "value": "correct nested value"
+        }
+    }
+}
+
+---
+
+<div>correct nested value</div>
+
+---
+
+{
+    "abc": {
+    }
+}
+
+---
+
+<div></div>

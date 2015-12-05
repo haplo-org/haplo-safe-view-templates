@@ -1,0 +1,15 @@
+{
+    "options": [
+        {
+            "action": "/action/one",
+            "indicator": "primary",
+            "label": "Action One",
+            "notes": "These are some <notes> about the action."
+        },
+        {
+            "action": "/two",
+            "highlight": true,
+            "label": "Secondary"
+        }
+    ]
+}

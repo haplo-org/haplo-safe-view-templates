@@ -1,0 +1,16 @@
+
+with() creates an empty view when the value does not exist
+
+---
+
+<div> with(x) { value } </div>
+
+---
+{"x":{"value":"exists"}}
+---
+<div>exists</div>
+
+---
+{}
+---
+<div></div>

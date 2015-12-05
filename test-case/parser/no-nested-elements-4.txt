@@ -1,0 +1,10 @@
+
+Can't nest elements inside another element (within attribute name)
+
+---
+
+<div> <span abc<b>></b></span></div>
+
+---
+
+PARSE EXCEPTION: Error at line 1 character 16: Expected = after attribute name

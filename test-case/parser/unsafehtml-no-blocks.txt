@@ -1,0 +1,10 @@
+
+unsafeHTML() doesn't use blocks
+
+---
+
+<div> unsafeHTML(x) { } </div>
+
+---
+
+PARSE EXCEPTION: Error at line 1 character 19: unsafeHTML() may not take an anonymous block

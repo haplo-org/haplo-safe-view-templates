@@ -1,0 +1,17 @@
+
+Literal HTML text nodes need to be in quotes. (When most non-element things are inserts, doing it the other way round is noisy)
+
+---
+
+<div> "Hello" </div>
+<span> "A string with a \"quote\"" </span>
+<div> "And a string with a new\nline" </div>
+
+---
+
+{}
+
+---
+
+<div>Hello</div><span>A string with a "quote"</span><div>And a string with a new
+line</div>

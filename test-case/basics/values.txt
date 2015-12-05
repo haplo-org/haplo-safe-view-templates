@@ -1,0 +1,27 @@
+
+Insert values from nested views, whitespace is ignored
+
+---
+
+<div class="value1"> // literal with same text as key in view
+    <div> value1 </div>
+    <span> top.mid.bottom </span>
+</div>
+
+---
+
+{
+    "value1": "One",
+    "other": 4,
+    "top": {
+        "mid": {
+            "bottom": "nested value",
+            "twelve": 12
+        },
+        "x": 42
+    }
+}
+
+---
+
+<div class=value1><div>One</div><span>nested value</span></div>

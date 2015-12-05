@@ -1,0 +1,10 @@
+
+Can't nest elements inside another element (attribute name)
+
+---
+
+<div> <span <b>></b></span></div>
+
+---
+
+PARSE EXCEPTION: Error at line 1 character 13: Invalid attribute name: <

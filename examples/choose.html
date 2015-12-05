@@ -1,0 +1,16 @@
+<div class="z__ui_choose_container">
+  each(options) {
+    if(indicator) {
+      <span class=[
+            "z__ui_indicator"
+            case(indicator) { } primary {"z__ui_indicator_primary"} secondary {"z__ui_indicator_secondary"}
+          ]></span>
+    }
+    <a href=action class=["z__ui_choose_option_entry" if(highlight) { "z__ui_choose_option_entry_highlight" }]>
+      <span class="z__ui_choose_option_entry_name"> label </span>
+      if(notes) {
+        <span> notes </span>
+      }
+    </a>
+  }
+</div>

@@ -1,0 +1,10 @@
+
+if() doesn't allow other named blocks
+
+---
+
+<div>if(x) {"x"} someotherblockname {"y"}</div>
+
+---
+
+PARSE EXCEPTION: Error at line 1 character 36: if() may not take a someotherblockname block

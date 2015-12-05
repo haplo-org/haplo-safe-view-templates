@@ -1,0 +1,10 @@
+
+if() requires an anonymous block
+
+---
+
+<div> if(x) </div>
+
+---
+
+PARSE EXCEPTION: Error at line 1 character 9: if() requires an anonymous block

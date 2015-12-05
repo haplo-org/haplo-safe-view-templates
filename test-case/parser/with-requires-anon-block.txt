@@ -1,0 +1,10 @@
+
+with() requires an anonymous block
+
+---
+
+<div> with(x) </div>
+
+---
+
+PARSE EXCEPTION: Error at line 1 character 11: with() requires an anonymous block

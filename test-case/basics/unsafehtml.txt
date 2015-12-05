@@ -1,0 +1,16 @@
+
+unsafeHTML() outputs literal HTML within text nodes
+
+---
+
+<div> unsafeHTML(html) </div>
+
+---
+{}
+---
+<div></div>
+
+---
+{"html":"<b>text</b>"}
+---
+<div><b>text</b></div>

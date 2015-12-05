@@ -1,0 +1,10 @@
+
+each() requires an anonymous block
+
+---
+
+<div> each(x) </div>
+
+---
+
+PARSE EXCEPTION: Error at line 1 character 11: each() requires an anonymous block

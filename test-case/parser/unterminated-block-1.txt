@@ -1,0 +1,10 @@
+
+Unterminated block
+
+---
+
+<div> if(a) { } else { </div>
+
+---
+
+PARSE EXCEPTION: Error at line 1 character 22: Did not find end of else block

@@ -1,0 +1,10 @@
+
+each() doesn't allow other named blocks
+
+---
+
+<div>each(x) {"x"} someotherblockname {"y"}</div>
+
+---
+
+PARSE EXCEPTION: Error at line 1 character 38: each() may not take a someotherblockname block

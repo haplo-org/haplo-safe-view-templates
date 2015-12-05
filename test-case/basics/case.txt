@@ -1,0 +1,33 @@
+
+case() chooses a block based on the rendered value of the argument, allows you to have whatever blocks you want, and can take non-value nodes as an argument
+
+---
+
+<div>
+    <span> case(x) </span>
+    <span> case(x) { "always" } </span>
+    <span> case(x) { "default" } one { "ONE" } two { "TWO" } </span>
+    <span> case("x y z") { } "x y z" { "XYZ" } </span>
+    <span> case(x) { } 2 { "num" } </span>
+</div>
+
+---
+{"x":"something"}
+---
+<div><span></span><span>always</span><span>default</span><span>XYZ</span><span></span></div>
+
+---
+{"x":"one"}
+---
+<div><span></span><span>always</span><span>ONE</span><span>XYZ</span><span></span></div>
+
+---
+{"x":"two"}
+---
+<div><span></span><span>always</span><span>TWO</span><span>XYZ</span><span></span></div>
+
+---
+{"x":2}
+---
+<div><span></span><span>always</span><span>default</span><span>XYZ</span><span>num</span></div>
+

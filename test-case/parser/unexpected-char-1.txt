@@ -1,0 +1,10 @@
+
+Unterminated element terminator
+
+---
+
+<div> span> </div>
+
+---
+
+PARSE EXCEPTION: Error at line 1 character 11: Unexpected >

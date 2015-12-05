@@ -1,0 +1,41 @@
+package template;
+
+class NodeValue extends Node {
+    private String[] path;
+
+    final static java.util.regex.Pattern SPLIT_REGEX = java.util.regex.Pattern.compile("\\.");
+
+    public NodeValue(String pathString) {
+        // TODO: Split more efficiently than a regex?
+        this.path = SPLIT_REGEX.split(pathString);
+    }
+
+    public void render(StringBuilder builder, Driver driver, Object view, Context context) {
+        Object value = driver.getValueFromView(view, this.path);
+        if(value != null) {
+            String string = driver.valueToStringRepresentation(value);
+            if(string != null) {
+                Escape.escape(string, builder, context);
+            }
+        }
+    }
+
+    protected Object value(Driver driver, Object view) {
+        return driver.getValueFromView(view, this.path);
+    }
+
+    protected Iterable<Object> valueIterableViewList(Driver driver, Object view) {
+        Object value = driver.getValueFromView(view, this.path);
+        return (value == null) ? null : driver.valueToIterableViewList(value);
+    }
+
+    public void dumpToBuilder(StringBuilder builder, String linePrefix) {
+        builder.append(linePrefix).append("VALUE ");
+        boolean first = true;
+        for(String s : this.path) {
+            if(first) { first = false; } else { builder.append('.'); }
+            builder.append(s);
+        }
+        builder.append("\n");
+    }
+}

@@ -1,0 +1,10 @@
+
+unsafeHTML() should only be used in text context
+
+---
+
+<div class=unsafeHTML(x)></div>
+
+---
+
+PARSE EXCEPTION: Error at line 1 character 22: unsafeHTML() cannot be used in this context

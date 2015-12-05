@@ -1,0 +1,18 @@
+
+If the view does not contain a value, it's treated as the empty string.
+
+---
+
+<div>exists1</div>
+<div>not</div>
+<div>two.levels</div>
+<div> three.lovely.levels </div>
+<div> exists2 </div>
+
+---
+
+{ "exists1":"1", "exists2":"2" }
+
+---
+
+<div>1</div><div></div><div></div><div></div><div>2</div>

@@ -1,0 +1,10 @@
+
+include() can't take values
+
+---
+
+<div> include(a) </div>
+
+---
+
+PARSE EXCEPTION: Error at line 1 character 14: include() must have a literal string as the argument

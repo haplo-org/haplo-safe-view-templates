@@ -1,0 +1,10 @@
+
+Unterminated block terminator
+
+---
+
+<div> x} </div>
+
+---
+
+PARSE EXCEPTION: Error at line 1 character 8: Unexpected }

@@ -1,0 +1,18 @@
+
+License
+-------
+This code is licensed to you under the MPLv2 with an additional clause:
+
+ * You may not use this code in a production application
+
+You may obtain a copy of the MPLv2 at http://mozilla.org/MPL/2.0/
+
+
+Commentary
+----------
+The additional clause is to request that you do not use this code in
+a production application until it is considered "secure" and the
+language grammar is finalised.
+
+The intention is to relicense this code under the MPLv2 as soon as
+practical.
