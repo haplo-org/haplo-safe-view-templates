@@ -1,0 +1,25 @@
+
+each() iterates over list elements
+
+---
+
+<div>
+    each(a.array) {
+        <b> x ":" y </b>
+    }
+</div>
+
+---
+
+{
+    "a": {
+        "array": [
+            {"x":"One", "y":1},
+            {"x":"Two", "y":2}
+        ]
+    }
+}
+
+---
+
+<div><b>One:1</b><b>Two:2</b></div>

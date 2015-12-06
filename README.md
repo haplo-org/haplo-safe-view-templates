@@ -117,7 +117,9 @@ Functions can be used for attribute values.
 
 ## Implementation
 
-The prototype has a simple hand-written recusive descent parser which outputs a thread-safe AST. This AST is then rendered with a Driver which provides language specific implentations to retrieve values from the view. Currently there's just one driver for nested Java structures.
+The prototype has a simple hand-written recusive descent parser which outputs a thread-safe AST. This AST is then rendered with a Driver which provides language specific implentations to retrieve values from the view.
+
+Currently there are two example drivers (neither terribly useful in practise), one for nested Java structures, and one for a JRuby data structure output by JRuby's JSON parser.
 
 All the rendering functions keep track of the context, so escaping and other features is context aware.
 

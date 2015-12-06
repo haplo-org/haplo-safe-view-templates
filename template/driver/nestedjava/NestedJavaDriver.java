@@ -16,6 +16,10 @@ class NestedJavaDriver extends Driver {
         this.inclusions = inclusions;
     }
 
+    public Driver driverWithNewRoot(Object rootView) {
+        return new NestedJavaDriver(rootView, this.inclusions);
+    }
+
     public Object getRootView() {
         return this.rootView;
     }
@@ -43,18 +47,7 @@ class NestedJavaDriver extends Driver {
         return Arrays.asList((Object[])value);
     }
 
-    public boolean valueIsTruthy(Object value) {
-        if(value == null) {
-            return false;
-        } else if(value instanceof CharSequence) {
-            return ((CharSequence)value).length() > 0;
-        } else if(value instanceof Boolean) {
-            return ((Boolean)value).booleanValue();
-        } else if(value instanceof Object[]) {
-            return ((Object[])value).length > 0;
-        }
-        return false;
-    }
+    // Uses default valueIsTruthy() implementation
 
     public void renderInclusion(String inclusionName, StringBuilder builder, Object view, Context context) {
         // TODO: Error if inclusion not found?

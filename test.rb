@@ -82,21 +82,26 @@ files.each do |filename|
     end
   end
   while rest.length >= 2
-    tests += 1
     view_json = rest.shift.strip
     expected_output = rest.shift.strip
     view = JSON.parse(view_json)
-    driver = Java::TemplateDriverNestedjava::NestedJavaDriver.new(view_value_to_java(view), nestedjava_inclusions)
-    output = template.renderString(driver)
-    if output == expected_output
-      passed += 1
-    else
-      failed += 1
-      puts
-      puts "#{filename}: Bad template output"
-      puts comment.strip
-      puts "EXPECTED: #{expected_output}"
-      puts "OUTPUT:   #{output}"
+    drivers = []
+    drivers << Java::TemplateDriverNestedjava::NestedJavaDriver.new(view_value_to_java(view), nestedjava_inclusions)
+    drivers << Java::TemplateDriverJrubyjson::JRubyJSONDriver.new(view, nestedjava_inclusions)
+    drivers.each do |driver|
+      tests += 1
+      output = template.renderString(driver)
+      if output == expected_output
+        passed += 1
+      else
+        failed += 1
+        puts
+        puts "#{filename}: Bad template output"
+        puts comment.strip
+        puts "EXPECTED: #{expected_output}"
+        puts "OUTPUT:   #{output}"
+        puts "DRIVER:   #{driver.class.name.split('::').last}"
+      end
     end
   end
   unless rest.empty? || (was_testing_error && rest.length == 1)
