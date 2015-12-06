@@ -1,0 +1,12 @@
+
+Value names can't begin with a .
+
+---
+
+<div>
+    .value.something
+</div>
+
+---
+
+PARSE EXCEPTION: Error at line 2 character 20: Value names cannot be prefixed with . (single dot is used for 'this')

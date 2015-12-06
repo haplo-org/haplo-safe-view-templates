@@ -1,0 +1,18 @@
+
+Dot 'this' value can be used for iterating over array of values
+
+---
+
+<div>
+    each(array) {
+        <span> . </span>
+    }
+</div>
+
+---
+
+{"array":["one", 2]}
+
+---
+
+<div><span>one</span><span>2</span></div>

@@ -10,6 +10,10 @@ class NodeValue extends Node {
         this.path = SPLIT_REGEX.split(pathString);
     }
 
+    protected NodeValue(String[] path) {
+        this.path = path;
+    }
+
     public void render(StringBuilder builder, Driver driver, Object view, Context context) {
         Object value = driver.getValueFromView(view, this.path);
         if(value != null) {

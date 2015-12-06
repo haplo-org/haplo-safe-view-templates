@@ -56,6 +56,15 @@ public class Parser {
                   (singleChar == ')') || (singleChar == '>')) {
             error("Unexpected "+s);
         }
+        // Special case for '.'
+        if(s.charAt(0) == '.') {
+            if(s.length() == 1) {
+                return new NodeValueThis();
+            } else {
+                error("Value names cannot be prefixed with . (single dot is used for 'this')",
+                    this.pos - 1);  // reasonable position for error
+            }
+        }
         // Is it a value, or a function? Get next symbol to check.
         int savedPos = this.pos;
         CharSequence nextSymbol = symbol();
@@ -181,7 +190,7 @@ public class Parser {
     }
 
     protected boolean isWhitespace(int c) {
-        return (c == ' ') || (c == '\t') || (c == '\n') || (c == '\r');
+        return (c == ' ') || (c == '\n') || (c == '\r');
     }
 
     protected boolean isSingleCharSymbol(int c) {
@@ -247,6 +256,8 @@ public class Parser {
                 return this.source.subSequence(startPos, this.pos);
             } else if(isReservedCharacter(c)) {
                 error("Reserved character: \""+((char)c)+"\"");
+            } else if(c == '\t') {
+                error("Tab character in source, indent with 4 spaces");
             } else if(c == '/') {
                 // Skip a comment? (// until end of line)
                 int symbolEnd = this.pos - 1;

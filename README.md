@@ -91,7 +91,7 @@ Make sure you have `javac` and `jruby` on your `PATH`.
 
 A template is a whitespace separated list of:
 
-* Values from the view, which are simple bare words. Use `.` to access nested values
+* Values from the view, which are simple bare words. Use `.` as a separator to access nested values. `.` on it's own refers to the current view, eg a value when iterating over a list.
 
 * HTML elements with attributes
 
@@ -100,6 +100,8 @@ A template is a whitespace separated list of:
 * Functions, which take an optional anonymous block and zero or more named blocks. (see `if()` and `case()` in the example above). Blocks can be named with quoted strings using the literal syntax, or just bare words.
 
 * Lists, which are just zero or more of the above in `[ ]`
+
+* C++ style comments, which begin with `//` and end at the end of the line
 
 
 ### Attributes on Elements

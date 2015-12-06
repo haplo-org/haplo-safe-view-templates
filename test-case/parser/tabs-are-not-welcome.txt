@@ -1,0 +1,12 @@
+
+Templates should use 4 spaces for indents
+
+---
+
+<div>
+	"Tab indent"
+</div>
+
+---
+
+PARSE EXCEPTION: Error at line 2 character 1: Tab character in source, indent with 4 spaces
