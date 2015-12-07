@@ -1,5 +1,5 @@
 
-# A prototype secure web templating language for dynamic JVM lanagues
+# A prototype secure web templating language for dynamic JVM languages
 
 A experimental web templating language, with the goal of making it almost impossible to write templates with XSS and other common security issues.
 
@@ -112,14 +112,14 @@ If your HTML element is just has attributes with constant values (as literals) t
 
 Otherwise, a single value follows, such as `<a href=action>`, and the `action` value will be output, properly escaped.
 
-That single value may be a list, eg `<div class=["name1" otherClass]>`, in which case, a space separated value will be generated. If `otherClass` is missing, just `<div class="name1">` will be output. If the attribute value is a list which evalutes as empty, the attribute will be omitted from the output entirely.
+That single value may be a list, eg `<div class=["name1" otherClass]>`, in which case, a space separated value will be generated. If `otherClass` is missing, just `<div class="name1">` will be output. If the attribute value is a list which evaluates as empty, the attribute will be omitted from the output entirely.
 
 Functions can be used for attribute values.
 
 
 ## Implementation
 
-The prototype has a simple hand-written recusive descent parser which outputs a thread-safe AST. This AST is then rendered with a Driver which provides language specific implentations to retrieve values from the view.
+The prototype has a simple hand-written recursive descent parser which outputs a thread-safe AST. This AST is then rendered with a Driver which provides language specific implentations to retrieve values from the view.
 
 Currently there are two example drivers (neither terribly useful in practise), one for nested Java structures, and one for a JRuby data structure output by JRuby's JSON parser.
 
@@ -174,15 +174,13 @@ Include another template in the rendered output, controlled by the Driver. If th
 
 * URL generation and parameter escaping (should support building URLs from elements (eg paths and ids), and building parameters from dictionaries, static parameters etc)
 
-* `.` value to refer to "current view" so plain arrays can be iterated
-
 * 'local variables' to remember values as view is traversed
 
 * Destructuring arrays into local variables for compact views & clarity
 
 * Security review, make sure everything escapes properly, and see if there are any more security features which can be implemented
 
-* Drivers for JRuby and Rhino JavaScript
+* Drivers for JRuby (a proper one) and Rhino JavaScript
 
 * Javadocs, build system, etc, so it can be used in other projects
 
@@ -197,12 +195,12 @@ If you're interested in this project, then contributions would be very welcome.
 
 * The most useful thing you can do is try writing some templates in this language and providing feedback. Perhaps you could convert your most complex templates and try running them?
 
-* More test cases for any edge cases you can think of would be wonderful. I'd like to get to 100% test coverage, as this seems appropraite for a security focused project.
+* More test cases for any edge cases you can think of would be wonderful. I'd like to get to 100% test coverage, as this seems appropriate for a security focused project.
 
 * And just as importantly, write bad templates and make sure they throw parse errors and those errors are useful.
 
 * Suggestions on how to write it better, and improvements and fixes.
 
-If you sumbit a pull request, I'll ask you to confirm you're happy to license your code under the MPLv2 before I merge it.
+If you submit a pull request, I'll ask you to confirm you're happy to license your code under the MPLv2 before I merge it.
 
 Thank you!
