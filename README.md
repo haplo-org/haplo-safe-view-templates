@@ -3,6 +3,8 @@
 
 A experimental web templating language, with the goal of making it almost impossible to write templates with XSS and other common security issues.
 
+It achieves this through parsing and understanding the structure of HTML, so it knows the context within which inserted values are output. The language is designed to look like HTML with C-style control flow, so it looks familiar to developers.
+
 Licensed under the MPLv2, but with a temporary additional clause to request you don't use it in production until it's done.
 
 ## Introduction
@@ -93,7 +95,7 @@ A template is a whitespace separated list of:
 
 * Values from the view, which are simple bare words. Use `.` as a separator to access nested values. `.` on it's own refers to the current view, eg a value when iterating over a list.
 
-* HTML elements with attributes
+* HTML elements with attributes. These form part of the language, and so are properly parsed and validated.
 
 * Literal strings in `" "`, with quotes escaped as `\"`
 
