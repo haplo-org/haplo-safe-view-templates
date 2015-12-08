@@ -34,27 +34,7 @@ I'm publishing it now to get feedback on the language and the implementation.
 
 ## Example
 
-Here's a Handlebars template from Haplo:
-
-```
-<div class="z__ui_choose_container">
-  {{#each options}}
-    {{#if indicator}}
-      <span class="z__ui_indicator{{_internal__indicator_styles indicator}}"></span>
-    {{/if}}
-    <a href="{{action}}" class="z__ui_choose_option_entry{{#if highlight}} z__ui_choose_option_entry_highlight{{/if}}">
-      <span class="z__ui_choose_option_entry_name">{{label}}</span>
-      {{#if notes}}
-        <span>{{notes}}</span>
-      {{/if}}
-    </a>
-  {{/each}}
-</div>
-```
-
-Note this doesn't include the implementation of a `_internal__indicator_styles()` Handlebars helper, which has to output a space prefixed class name if required.
-
-Here's the same template in this new language:
+Here's a template in this new language:
 
 ```
 <div class="z__ui_choose_container">
@@ -75,7 +55,27 @@ Here's the same template in this new language:
 </div>
 ```
 
-Note that the `_internal__indicator_styles()` function can be inlined using the `case()` builtin. The template will output one or two class names in the class attribute.
+This is how the equivalent Handlebars template looks:
+
+```
+<div class="z__ui_choose_container">
+  {{#each options}}
+    {{#if indicator}}
+      <span class="z__ui_indicator{{_internal__indicator_styles indicator}}"></span>
+    {{/if}}
+    <a href="{{action}}" class="z__ui_choose_option_entry{{#if highlight}} z__ui_choose_option_entry_highlight{{/if}}">
+      <span class="z__ui_choose_option_entry_name">{{label}}</span>
+      {{#if notes}}
+        <span>{{notes}}</span>
+      {{/if}}
+    </a>
+  {{/each}}
+</div>
+```
+
+Note this doesn't include the implementation of a `_internal__indicator_styles()` Handlebars helper, which has to output a space prefixed class name if required. This is implemented in JavaScript, which is verbose and means you have to look in another place to understand what's going on.
+
+In the new templating language, the `_internal__indicator_styles()` function effectively inlined using the `case()` builtin. The template will output one or two class names in the class attribute.
 
 While similar in structure, the second template has been properly parsed, and you can't write a template which outputs invalid HTML or doesn't escape things properly. And hopefully it's easier to read.
 
