@@ -3,7 +3,7 @@ Unterminated block
 
 ---
 
-<div> if(a) { } else { </div>
+"111" if(a) { } else { "222"
 
 ---
 

@@ -1,6 +1,6 @@
 package template;
 
-class NodeValue extends Node {
+class NodeValue extends Node implements ValueNode {
     private String[] path;
 
     final static java.util.regex.Pattern SPLIT_REGEX = java.util.regex.Pattern.compile("\\.");

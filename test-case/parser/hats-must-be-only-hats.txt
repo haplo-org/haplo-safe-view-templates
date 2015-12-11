@@ -1,0 +1,12 @@
+
+Enclosing block names must only contain hats
+
+---
+
+<div>
+    ^^x { }
+</div>
+
+---
+
+PARSE EXCEPTION: Error at line 2 character 8: Enclosing view block names may not contain other characters

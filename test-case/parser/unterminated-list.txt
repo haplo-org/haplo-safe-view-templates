@@ -3,7 +3,7 @@ Unterminated generic list
 
 ---
 
-<div> ["a" b </div>
+"111" ["a" b "222"
 
 ---
 

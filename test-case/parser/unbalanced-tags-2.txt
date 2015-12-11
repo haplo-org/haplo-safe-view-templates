@@ -1,0 +1,10 @@
+
+Unbalanced tags within block
+
+---
+
+<div> if(x) { <span> <b> </span> } </div>
+
+---
+
+PARSE EXCEPTION: Error at line 1 character 26: Unexpected tag </span>, tags must be balanced

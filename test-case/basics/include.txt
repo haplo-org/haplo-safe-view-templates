@@ -1,5 +1,5 @@
 
-include() includes another template, moving the view if it exists. HTML inside isn't escaped.
+include() includes another template. View doesn't move (unlike languages like Handlebars). HTML inside isn't escaped.
 
 ---
 
@@ -13,9 +13,4 @@ include() includes another template, moving the view if it exists. HTML inside i
 ---
 {"value1":"one","template1":{"value1":"two"}}
 ---
-<div><span class=hello><b>Included Template 1: two</b></span></div>
-
----
-{"value1":"one","template1":{"x":12}}
----
-<div><span class=hello><b>Included Template 1: </b></span></div>
+<div><span class=hello><b>Included Template 1: one</b></span></div>

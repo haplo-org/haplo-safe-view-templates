@@ -1,0 +1,24 @@
+
+Enclosing blocks access values in the enclosing views
+
+---
+
+<div>
+    each(a) {
+        <span> b "-" ^{v} </span>
+    }
+</div>
+
+---
+
+{
+    "v": "root",
+    "a": [
+        {"b":"X", "v":"0"},
+        {"b":"Y", "v":"1"}
+    ]
+}
+
+---
+
+<div><span>X-root</span><span>Y-root</span></div>

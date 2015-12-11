@@ -1,0 +1,11 @@
+
+Close tags don't have attributes
+
+---
+
+<div>
+</div class="bad">
+
+---
+
+PARSE EXCEPTION: Error at line 2 character 11: A closing tag may not have attributes

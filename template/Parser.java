@@ -1,21 +1,29 @@
 package template;
 
+import java.util.Stack;
+
 public class Parser {
     private CharSequence source;
-    private int pos;
-    private Context context;
+    private int pos = 0;
+    private Context context = Context.TEXT;
+    private Stack<Node> nesting;
+    private boolean inEnclosingViewBlock = false;
+    private int nextRememberIndex = 0;
 
     // TODO: Is this overly restrictive regex valid? Is it worth writing a scanner function for it?
     final static java.util.regex.Pattern VALID_ATTRIBUTE_NAME_REGEX = java.util.regex.Pattern.compile("\\A[a-z0-9_A-Z-]+\\Z");
 
     public Parser(CharSequence source) {
         this.source = source;
-        this.pos = 0;
-        this.context = Context.TEXT;
+        this.nesting = new Stack<Node>();
     }
 
     public Template parse() throws ParseException {
-        return new Template(parseList(-1, "template"));
+        Template template = new Template(parseList(-1, "template"), this.nextRememberIndex);
+        if(!this.nesting.empty()) {
+            error("Bad nesting in template.");
+        }
+        return template;
     }
 
     protected Context getCurrentParseContext() {
@@ -25,6 +33,7 @@ public class Parser {
     protected NodeList parseList(int endOfListCharacter, String what) throws ParseException {
         int listStart = this.pos;
         NodeList nodes = new NodeList();
+        this.nesting.push(nodes);
         boolean seenEndOfList = false;
         Node node;
         while((node = parseOneValue(endOfListCharacter)) != null) {
@@ -37,13 +46,15 @@ public class Parser {
         if((endOfListCharacter != -1) && !seenEndOfList) {
             error("Did not find end of "+what, listStart);
         }
+        popNestingAndCheckNodeWas(nodes, listStart);
         return nodes;
     }
 
     protected Node parseOneValue(int endOfListCharacter) throws ParseException {
         CharSequence s = symbol();
         if(s == null) { return null; }
-        int singleChar = (s.length() == 1) ? s.charAt(0) : -999;
+        char firstChar = s.charAt(0);
+        int singleChar = (s.length() == 1) ? firstChar : -999;
         if(singleChar == '"') {
             return new NodeLiteral(quotedString());
         } else if(singleChar == '<') {
@@ -53,16 +64,20 @@ public class Parser {
         } else if(singleChar == endOfListCharacter) {
             return END_OF_LIST;
         } else if((singleChar == ']') || (singleChar == '}') ||
-                  (singleChar == ')') || (singleChar == '>')) {
+                  (singleChar == '(') || (singleChar == ')') || // both () directions
+                  (singleChar == '>')) {
             error("Unexpected "+s);
         }
+        // Special case enclosing view block
+        if(firstChar == '^') {
+            return parseEnclosingViewBlock(s);
+        }
         // Special case for '.'
-        if(s.charAt(0) == '.') {
+        if(firstChar == '.') {
             if(s.length() == 1) {
                 return new NodeValueThis();
             } else {
-                error("Value names cannot be prefixed with . (single dot is used for 'this')",
-                    this.pos - 1);  // reasonable position for error
+                error("Value names cannot be prefixed with . (single dot is used for 'this')");
             }
         }
         // Is it a value, or a function? Get next symbol to check.
@@ -78,6 +93,41 @@ public class Parser {
     }
 
     private static final Node END_OF_LIST = new Node();
+
+    protected Node parseEnclosingViewBlock(CharSequence name) throws ParseException {
+        if(this.inEnclosingViewBlock) {
+            error("Enclosing view blocks may not contain other enclosing view blocks");
+        }
+        this.inEnclosingViewBlock = true;
+        for(int n = 0; n < name.length(); ++n) {
+            if(name.charAt(n) != '^') {
+                error("Enclosing view block names may not contain other characters");
+            }
+        }
+        if(!symbolIsSingleChar(symbol(), '{')) {
+            error("Enclosing view block names must be followed by a block");
+        }
+        NodeFunction.ChangesView nodeWhichChangesView = null;
+        int depth = name.length();
+        for(int n = this.nesting.size() - 1; n >= 0 && depth > 0; --n) {
+            Node s = this.nesting.get(n);
+            if(s instanceof NodeFunction.ChangesView) {
+                depth--;
+                if(depth == 0) {
+                    nodeWhichChangesView = (NodeFunction.ChangesView)s;
+                    break;
+                }
+            }
+        }
+        if(nodeWhichChangesView == null) {
+            error("There are not "+name.length()+" enclosing views");
+        }
+        // Ask the function node to remember the value when the view is remembered
+        nodeWhichChangesView.shouldRemember(this);
+        Node block = parseList('}', "enclosing view block").orSingleNode();
+        this.inEnclosingViewBlock = false;
+        return new NodeEnclosingView(nodeWhichChangesView.getRememberedViewIndex(), block);
+    }
 
     // Called after the first ( has been returned from symbol()
     protected Node parseFunction(String functionName) throws ParseException {
@@ -95,6 +145,7 @@ public class Parser {
             default:            fn = new NodeFunctionGeneric(functionName); break;
         }
         fn.setArguments(this, arguments);
+        this.nesting.push(fn);
         // Are there any blocks?
         CharSequence possibleBlockName = Node.BLOCK_ANONYMOUS;
         while(true) {
@@ -123,6 +174,7 @@ public class Parser {
             possibleBlockName = null;
         }
         fn.postParse(this, functionStartPos);
+        popNestingAndCheckNodeWas(fn, functionStartPos);
         return fn;
     }
 
@@ -131,9 +183,11 @@ public class Parser {
             error("Elements are not valid in this context");
         }
         try {
+            int tagStartPos = this.pos;
             this.context = Context.ELEMENT;
             CharSequence name = symbol();
             if(name == null) { error("Unexpected end of template after <"); }
+            boolean isClosingTag = (name.charAt(0) == '/');
             NodeElement element = new NodeElement(name.toString());
             // TODO: Validate element name looks like a dom element name?
             // TODO: Check close elements don't have attributes?
@@ -143,6 +197,8 @@ public class Parser {
                 if(s == null) { error("Unexpected end of template in element"); }
                 if(symbolIsSingleChar(s, '>')) {
                     break;
+                } else if(isClosingTag) {
+                    error("A closing tag may not have attributes");
                 } else if(symbolIsSingleChar(s, '=')) {
                     if(attributeName == null) {
                         error("Unexpected = in element");
@@ -167,10 +223,31 @@ public class Parser {
             if(attributeName != null) {
                 error("No attribute value in element");
             }
+            if(isClosingTag) {
+                Node openingTag = this.nesting.pop();
+                String tagName = name.subSequence(1, name.length()).toString();
+                if(!((openingTag instanceof NodeElement) && ((NodeElement)openingTag).getName().equals(tagName))) {
+                    error("Unexpected tag <"+name+">, tags must be balanced", tagStartPos);
+                }
+            } else {
+                // TODO: don't push self-closing tags
+                this.nesting.push(element);
+            }
             return element;
         } finally {
             this.context = Context.TEXT;
         }
+    }
+
+    // ----------------------------------------------------------------------
+
+    // Views need to be rememebered during rendering so mechanisms like the
+    // enclosing view can recall them. To make it as close to zero cost as
+    // possible when the feature isn't used, only store views that are known
+    // to be needed later when rendering. The parser keeps track of indicies
+    // and tells the Driver, via the Template, how many are needed.
+    protected int allocateRememberIndex() {
+        return this.nextRememberIndex++;
     }
 
     // ----------------------------------------------------------------------
@@ -207,6 +284,12 @@ public class Parser {
         return (c == ',') || (c == '\'') || (c == ';');
     }
 
+    protected void popNestingAndCheckNodeWas(Node node, int errorPosition) throws ParseException {
+        if(this.nesting.empty() || (this.nesting.pop() != node)) {
+            error("Improperly nested block, check tags are balanced", errorPosition);
+        }
+    }
+
     protected void error(String error) throws ParseException {
         // Default error position is the last character consumed
         error(error, this.pos);
@@ -215,6 +298,11 @@ public class Parser {
     protected void error(String error, int errorPosition) throws ParseException {
         // TODO: Report errors nicely
         int p = errorPosition - 1;  // back one so the relevant character is found
+        while((p > 0) && (this.source.charAt(p) == '\n')) {
+            // If the position is on a newline, then move back another character,
+            // errors at char 0 were actually at the end of the previous line
+            --p;
+        }
         int charPos = 0;
         for(; p >= 0; p--) {
             if(this.source.charAt(p) == '\n') {

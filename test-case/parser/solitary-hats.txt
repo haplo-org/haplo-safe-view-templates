@@ -1,0 +1,13 @@
+
+You can't have a ^ without a block following it
+
+---
+
+<div>
+    // there's a space between the ^ and the name
+    ^ name
+</div>
+
+---
+
+PARSE EXCEPTION: Error at line 3 character 10: Enclosing view block names must be followed by a block

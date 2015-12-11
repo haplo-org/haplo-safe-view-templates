@@ -85,12 +85,12 @@ class JRubyJSONDriver extends Driver {
         }
     }
 
-    public void renderInclusion(String inclusionName, StringBuilder builder, Object view, Context context) {
+    public void renderInclusion(String inclusionName, StringBuilder builder, Context context) {
         // TODO: Error if inclusion not found?
         if(this.inclusions == null) { return; }
         Template template = this.inclusions.get(inclusionName);
         if(template != null) {
-            template.renderAsInclusion(builder, this, view, context);
+            template.renderAsInclusion(builder, this, this.getRootView(), context);
         }
     }
 }

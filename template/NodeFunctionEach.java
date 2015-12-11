@@ -1,6 +1,6 @@
 package template;
 
-class NodeFunctionEach extends NodeFunction.ExactlyOneValueArgument {
+class NodeFunctionEach extends NodeFunction.ChangesView {
 
     static private final String[] PERMITTED_BLOCK_NAMES = {NodeFunction.BLOCK_ANONYMOUS};
 
@@ -20,6 +20,7 @@ class NodeFunctionEach extends NodeFunction.ExactlyOneValueArgument {
     }
 
     public void render(StringBuilder builder, Driver driver, Object view, Context context) {
+        rememberUnchangedViewIfNecessary(driver, view);
         Node block = getBlock(Node.BLOCK_ANONYMOUS);
         Node arg0 = getSingleArgument();
         Iterable<Object> viewList = arg0.valueIterableViewList(driver, view);

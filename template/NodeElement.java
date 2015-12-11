@@ -3,11 +3,18 @@ package template;
 import java.util.ArrayList;
 
 class NodeElement extends Node {
+    private String name;
     private String start;
     private ArrayList<Attribute> attributes;
 
     public NodeElement(String name) {
+        // TODO: store both name and 'start'?
+        this.name = name;
         this.start = "<"+name;
+    }
+
+    public String getName() {
+        return this.name;
     }
 
     public void addAttribute(String name, Node value) {

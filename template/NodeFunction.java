@@ -92,8 +92,38 @@ abstract class NodeFunction extends Node {
     public abstract static class ExactlyOneValueArgument extends ExactlyOneArgument {
         public void postParse(Parser parser, int functionStartPos) throws ParseException {
             super.postParse(parser, functionStartPos);
-            if(!(getSingleArgument() instanceof NodeValue)) {
+            if(!(getSingleArgument() instanceof ValueNode)) {
                 parser.error(this.getFunctionName()+"() must have a value as the argument", functionStartPos);
+            }
+        }
+    }
+
+    // Classes dervived from NodeFunction.ChangesView must call rememberUnchangedViewIfNecessary()
+    // before they change the view. But each() and with() should be the only subclasses.
+    public abstract static class ChangesView extends ExactlyOneValueArgument {
+        private boolean shouldRememberViewBeforeChange = false;
+        private int rememberIndex;
+        void shouldRemember(Parser parser) {
+            if(!this.shouldRememberViewBeforeChange) {
+                this.shouldRememberViewBeforeChange = true;
+                this.rememberIndex = parser.allocateRememberIndex();
+            }
+        }
+        int getRememberedViewIndex() {
+            return this.shouldRememberViewBeforeChange ? this.rememberIndex : -1;
+        }
+        protected void rememberUnchangedViewIfNecessary(Driver driver, Object view) {
+            if(this.shouldRememberViewBeforeChange) {
+                driver.rememberView(this.rememberIndex, view);
+            }
+        }
+        public void dumpToBuilder(StringBuilder builder, String linePrefix) {
+            if(this.shouldRememberViewBeforeChange) {
+                builder.append(linePrefix).append("REMEMBER VIEW index=").
+                        append(this.rememberIndex).append('\n');
+                super.dumpToBuilder(builder, linePrefix+"  ");
+            } else {
+                super.dumpToBuilder(builder, linePrefix);
             }
         }
     }

@@ -3,7 +3,7 @@ Unterminated anonymous block
 
 ---
 
-<div> if(a) { abc </div>
+"111" if(a) { abc "222"
 
 ---
 

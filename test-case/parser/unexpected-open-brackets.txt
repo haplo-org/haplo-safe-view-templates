@@ -1,0 +1,12 @@
+
+Open bracket can only appear after a function name
+
+---
+
+<pre>
+    ( )
+</pre>
+
+---
+
+PARSE EXCEPTION: Error at line 2 character 5: Unexpected (

@@ -1,0 +1,12 @@
+
+Enclosing view blocks must be terminated with a }
+
+---
+
+"a" with(y) {
+    ^ { value.x
+"b"
+
+---
+
+PARSE EXCEPTION: Error at line 2 character 7: Did not find end of enclosing view block

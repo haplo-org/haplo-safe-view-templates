@@ -2,12 +2,15 @@ package template;
 
 public class Template {
     private NodeList nodes;
+    private int numberOfRememberedViews;
 
-    protected Template(NodeList nodes) {
+    protected Template(NodeList nodes, int numberOfRememberedViews) {
         this.nodes = nodes;
+        this.numberOfRememberedViews = numberOfRememberedViews;
     }
 
     public void render(StringBuilder builder, Driver driver) {
+        driver.setupForRender(this.numberOfRememberedViews);
         this.nodes.render(builder, driver, driver.getRootView(), Context.TEXT);
     }
 

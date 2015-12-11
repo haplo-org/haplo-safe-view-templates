@@ -89,13 +89,14 @@ and to see the AST, run
 
 Make sure you have `javac` and `jruby` on your `PATH`.
 
+
 ## Language overview
 
 A template is a whitespace separated list of:
 
 * Values from the view, which are simple bare words. Use `.` as a separator to access nested values. `.` on it's own refers to the current view, eg a value when iterating over a list.
 
-* HTML elements with attributes. These form part of the language, and so are properly parsed and validated.
+* HTML tags with attributes. These form part of the language, and so are properly parsed and validated. Tags must be balanced.
 
 * Literal strings in `" "`, with quotes escaped as `\"`
 
@@ -103,7 +104,20 @@ A template is a whitespace separated list of:
 
 * Lists, which are just zero or more of the above in `[ ]`
 
+* Enclosing view blocks, `^ { }`, the number of `^` characters indicating how many enclosing blocks to traverse, and then the block is rendered with that view.
+
 * C++ style comments, which begin with `//` and end at the end of the line
+
+
+## Views
+
+The template is rendered from a view. This is a nested data structure, somewhat like JSON but the actual implementation dependent on the Driver. Values in the template refer to named properties in the view.
+
+There is a concept of the "current view". This starts at the root of the data structure. Values are looked up starting from the current view.
+
+`each()` and `with()` change the current view. `each()` changes the view to each element of a list in order, rendering the block for each. `with()` just changes it and renders the block.
+
+Sometimes you need to refer to values which are outside the current view. Use an enclosing view block, for example, to access the 'x' value in the enclosing view, use `^{x}`.
 
 
 ### Attributes on Elements
@@ -167,7 +181,7 @@ Evaluate `value` as a string, then output directly in the template without escap
 
 ### include("template")
 
-Include another template in the rendered output, controlled by the Driver. If the view contains a property named after the template name, then the view is moved to its value.
+Include another template in the rendered output, controlled by the Driver.
 
 
 ## TODO

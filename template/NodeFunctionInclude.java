@@ -27,15 +27,11 @@ class NodeFunctionInclude extends NodeFunction.ExactlyOneArgument {
     }
 
     public void render(StringBuilder builder, Driver driver, Object view, Context context) {
-        String inclusionName = getInclusionName();
-        // Move the view to the property named after the inclusion, if it exists in the view
-        Object inclusionView = driver.getValueFromView(view, new String[] {inclusionName});
-        if(inclusionView == null) { inclusionView = view; }
         // Clone the driver with a new root, so all state is reset for included template
-        Driver nestedDriver = driver.driverWithNewRoot(inclusionView);
+        Driver nestedDriver = driver.driverWithNewRoot(view);
         // Delegate the rendering of the included template to the driver, so it can
         // implement driver specific templates, templates written in other languages, etc.
-        nestedDriver.renderInclusion(inclusionName, builder, inclusionView, context);
+        nestedDriver.renderInclusion(getInclusionName(), builder, context);
     }
 
     public String getDumpName() {

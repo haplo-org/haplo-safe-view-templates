@@ -3,7 +3,7 @@ Unterminated function arguments
 
 ---
 
-<div> if(a </div>
+"111" if(a "222"
 
 ---
 

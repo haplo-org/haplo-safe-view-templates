@@ -1,0 +1,27 @@
+
+Enclosing blocks can be used as values for other functions
+
+---
+
+<div>
+    with(b) {
+        each(^{a}) {
+            <span> b "-" v </span>
+        }
+    }
+</div>
+
+---
+
+{
+    "a": [
+        {"b":"X", "v":"0"},
+        {"b":"Y", "v":"1"}
+    ],
+    "b": {
+    }
+}
+
+---
+
+<div><span>X-0</span><span>Y-1</span></div>

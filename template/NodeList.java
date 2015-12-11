@@ -25,6 +25,22 @@ class NodeList extends Node {
         return (this.nodes.size() == 1) ? this.nodes.get(0) : this;
     }
 
+    protected Object value(Driver driver, Object view) {
+        if(this.nodes.size() == 1) {
+            return this.nodes.get(0).value(driver, view);
+        } else {
+            return null;
+        }
+    }
+
+    protected Iterable<Object> valueIterableViewList(Driver driver, Object view) {
+        if(this.nodes.size() == 1) {
+            return this.nodes.get(0).valueIterableViewList(driver, view);
+        } else {
+            return null;
+        }
+    }
+
     public void render(StringBuilder builder, Driver driver, Object view, Context context) {
         if(context == Context.ATTRIBUTE_VALUE) {
             // Lists need to be space separated inside attributes

@@ -1,0 +1,10 @@
+
+Block contains unbalanced elements, and so appears as impropertly nested
+
+---
+
+<div> if(x) { <span> } </div>
+
+---
+
+PARSE EXCEPTION: Error at line 1 character 13: Improperly nested block, check tags are balanced
