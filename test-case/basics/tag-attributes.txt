@@ -1,5 +1,5 @@
 
-Element attributes, as constants, values and lists. Automatic removal of empty attributes. Escaping.
+Tag attributes, as constants, values and lists. Automatic removal of empty attributes. Escaping.
 
 ---
 

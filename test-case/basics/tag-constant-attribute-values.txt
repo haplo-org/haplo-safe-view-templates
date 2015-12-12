@@ -1,5 +1,5 @@
 
-Literal element values are not escaped, and may omit quotes.
+Literal tag values are not escaped, and may omit quotes.
 
 ---
 

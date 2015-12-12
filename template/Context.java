@@ -3,6 +3,6 @@ package template;
 public enum Context {
     UNSAFE,     // no escaping
     TEXT,
-    ELEMENT,
+    TAG,
     ATTRIBUTE_VALUE
 }

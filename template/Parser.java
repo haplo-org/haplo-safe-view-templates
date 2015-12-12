@@ -10,6 +10,7 @@ public class Parser {
     private boolean inEnclosingViewBlock = false;
     private int nextRememberIndex = 0;
 
+    final static java.util.regex.Pattern VALID_TAG_NAME_REGEX = java.util.regex.Pattern.compile("\\A[a-z0-9]+\\Z");
     // TODO: Is this overly restrictive regex valid? Is it worth writing a scanner function for it?
     final static java.util.regex.Pattern VALID_ATTRIBUTE_NAME_REGEX = java.util.regex.Pattern.compile("\\A[a-z0-9_A-Z-]+\\Z");
 
@@ -58,9 +59,9 @@ public class Parser {
         if(singleChar == '"') {
             return new NodeLiteral(quotedString());
         } else if(singleChar == '<') {
-            return parseElement().orLiteral();
+            return parseTag().orSimplifiedNode();
         } else if(singleChar == '[') {
-            return parseList(']', "list").orSingleNode();
+            return parseList(']', "list").orSimplifiedNode();
         } else if(singleChar == endOfListCharacter) {
             return END_OF_LIST;
         } else if((singleChar == ']') || (singleChar == '}') ||
@@ -124,7 +125,7 @@ public class Parser {
         }
         // Ask the function node to remember the value when the view is remembered
         nodeWhichChangesView.shouldRemember(this);
-        Node block = parseList('}', "enclosing view block").orSingleNode();
+        Node block = parseList('}', "enclosing view block").orSimplifiedNode();
         this.inEnclosingViewBlock = false;
         return new NodeEnclosingView(nodeWhichChangesView.getRememberedViewIndex(), block);
     }
@@ -165,7 +166,7 @@ public class Parser {
                 // Work out a readable block name for the error message
                 String listBlockName = (possibleBlockName == Node.BLOCK_ANONYMOUS) ?
                     "block" : blockName+" block";
-                Node block = parseList('}', listBlockName).orSingleNode();
+                Node block = parseList('}', listBlockName).orSimplifiedNode();
                 fn.addBlock(this, blockName, block, blockNameEndPos);
             } else {
                 this.pos = savedPos;
@@ -178,64 +179,81 @@ public class Parser {
         return fn;
     }
 
-    protected NodeElement parseElement() throws ParseException {
+    protected Node parseTag() throws ParseException {
         if(this.context != Context.TEXT) {
-            error("Elements are not valid in this context");
+            error("Tags are not valid in this context");
         }
-        try {
-            int tagStartPos = this.pos;
-            this.context = Context.ELEMENT;
-            CharSequence name = symbol();
-            if(name == null) { error("Unexpected end of template after <"); }
-            boolean isClosingTag = (name.charAt(0) == '/');
-            NodeElement element = new NodeElement(name.toString());
-            // TODO: Validate element name looks like a dom element name?
-            // TODO: Check close elements don't have attributes?
-            CharSequence attributeName = null;
-            while(true) {
-                CharSequence s = symbol();
-                if(s == null) { error("Unexpected end of template in element"); }
-                if(symbolIsSingleChar(s, '>')) {
-                    break;
-                } else if(isClosingTag) {
-                    error("A closing tag may not have attributes");
-                } else if(symbolIsSingleChar(s, '=')) {
-                    if(attributeName == null) {
-                        error("Unexpected = in element");
-                    }
-                    try {
-                        this.context = Context.ATTRIBUTE_VALUE;
-                        element.addAttribute(attributeName.toString(), parseOneValue(-1));
-                    } finally {
-                        this.context = Context.ELEMENT;
-                    }
-                    attributeName = null;
-                } else {
-                    if(attributeName != null) {
-                        error("Expected = after attribute name");
-                    }
-                    if(!(VALID_ATTRIBUTE_NAME_REGEX.matcher(s).matches())) {
-                        error("Invalid attribute name: "+s);
-                    }
-                    attributeName = s;
+        int tagStartPos = this.pos;
+        CharSequence name = symbol();
+        if(symbolIsSingleChar(name, '/')) {
+            return parseCloseTag(tagStartPos);
+        }
+        this.context = Context.TAG;
+        checkTagName(name, false, tagStartPos);
+        String tagName = name.toString();
+        NodeTag tag = new NodeTag(tagName);
+        CharSequence attributeName = null;
+        while(true) {
+            CharSequence s = symbol();
+            if(s == null) { error("Unexpected end of template in tag"); }
+            if(symbolIsSingleChar(s, '>')) {
+                break;
+            } else if(symbolIsSingleChar(s, '=')) {
+                if(attributeName == null) {
+                    error("Unexpected = in tag");
                 }
-            }
-            if(attributeName != null) {
-                error("No attribute value in element");
-            }
-            if(isClosingTag) {
-                Node openingTag = this.nesting.pop();
-                String tagName = name.subSequence(1, name.length()).toString();
-                if(!((openingTag instanceof NodeElement) && ((NodeElement)openingTag).getName().equals(tagName))) {
-                    error("Unexpected tag <"+name+">, tags must be balanced", tagStartPos);
-                }
+                this.context = Context.ATTRIBUTE_VALUE;
+                tag.addAttribute(attributeName.toString(), parseOneValue(-1));
+                this.context = Context.TAG;
+                attributeName = null;
+            } else if(symbolIsSingleChar(s, '/')) {
+                error("Self closing tags are not allowed", tagStartPos);
             } else {
-                // TODO: don't push self-closing tags
-                this.nesting.push(element);
+                if(attributeName != null) {
+                    error("Expected = after attribute name");
+                }
+                if(!(VALID_ATTRIBUTE_NAME_REGEX.matcher(s).matches())) {
+                    error("Invalid attribute name: "+s);
+                }
+                attributeName = s;
             }
-            return element;
-        } finally {
-            this.context = Context.TEXT;
+        }
+        if(attributeName != null) {
+            error("No attribute value in tag");
+        }
+        if(!HTML.isVoidTag(tagName)) {
+            // Void tags are not closed, so aren't part of the nested structure
+            this.nesting.push(tag);
+        }
+        this.context = Context.TEXT;
+        return tag;
+    }
+
+    protected Node parseCloseTag(int tagStartPos) throws ParseException {
+        CharSequence name = symbol();
+        checkTagName(name, true, tagStartPos);
+        CharSequence terminator = symbol();
+        if(symbolIsSingleChar(terminator, '/')) {
+            error("Self closing tags are not allowed", tagStartPos);
+        } else if(!symbolIsSingleChar(terminator, '>')) {
+            error("A closing tag may not have attributes");
+        }
+        String tagName = name.toString();
+        if(HTML.isVoidTag(tagName)) {
+            error("Void tags may not have close tags", tagStartPos);
+        }
+        Node openingTag = this.nesting.pop();
+        if(!((openingTag instanceof NodeTag) && ((NodeTag)openingTag).getName().equals(tagName))) {
+            error("Unexpected tag </"+name+">, tags must be balanced", tagStartPos);
+        }
+        return new NodeLiteral("</"+name+">");
+    }
+
+    protected void checkTagName(CharSequence name, boolean isCloseTag, int tagStartPos) throws ParseException {
+        if(name == null) { error("Unexpected end of template after <"); }
+        // TODO: Validate tag name a bit better?
+        if(!(VALID_TAG_NAME_REGEX.matcher(name).matches())) {
+            error("Invalid tag name <"+(isCloseTag?"/":"")+name+"> (must be lower case, a-z0-9 only)", tagStartPos);
         }
     }
 
@@ -275,6 +293,7 @@ public class Parser {
                 (c == '{') || (c == '}') ||
                 (c == '<') || (c == '>') ||
                 (c == '[') || (c == ']') ||
+                (c == '/') ||
                 (c == '"') ||
                 (c == '=');
     }
@@ -326,8 +345,21 @@ public class Parser {
             if((c = read()) == -1) { return null; }
         } while(isWhitespace(c));
         move(-1);
+        c = read();
+        // Skip comments: // until end of line
+        // Since isSingleCharSymbol() returns true for this character, it must be checked
+        // separately, and / chars can only be found at this point in this function.
+        if(c == '/') {
+            int symbolEnd = this.pos - 1;
+            if(read() != '/') {
+                this.pos = symbolEnd + 1;   // not actually a comment
+            } else {
+                while(((c = read()) != -1) && (c != '\n')) { /* empty */ }
+                return symbol();
+            }
+        }
         // Single character symbol? (never EOF at this point)
-        if(isSingleCharSymbol(c = read())) {
+        if(isSingleCharSymbol(c)) {
             return this.source.subSequence(this.pos - 1, this.pos);
         }
         move(-1);
@@ -346,19 +378,6 @@ public class Parser {
                 error("Reserved character: \""+((char)c)+"\"");
             } else if(c == '\t') {
                 error("Tab character in source, indent with 4 spaces");
-            } else if(c == '/') {
-                // Skip a comment? (// until end of line)
-                int symbolEnd = this.pos - 1;
-                if(read() != '/') {
-                    this.pos = symbolEnd + 1;   // not actually a comment
-                } else {
-                    while(((c = read()) != -1) && (c != '\n')) { /* empty */ }
-                    if(symbolEnd > startPos) {
-                        return this.source.subSequence(startPos, symbolEnd);
-                    } else {
-                        return symbol();
-                    }
-                }
             }
         }
     }

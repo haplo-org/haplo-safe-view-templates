@@ -1,0 +1,10 @@
+
+Tag names only contain a-z0-9
+
+---
+
+<a-b> </a-b>
+
+---
+
+PARSE EXCEPTION: Error at line 1 character 1: Invalid tag name <a-b> (must be lower case, a-z0-9 only)

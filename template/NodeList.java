@@ -21,7 +21,7 @@ class NodeList extends Node {
         return this.nodes.get(index);
     }
 
-    protected Node orSingleNode() {
+    protected Node orSimplifiedNode() {
         return (this.nodes.size() == 1) ? this.nodes.get(0) : this;
     }
 

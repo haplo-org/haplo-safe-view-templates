@@ -2,12 +2,12 @@ package template;
 
 import java.util.ArrayList;
 
-class NodeElement extends Node {
+class NodeTag extends Node {
     private String name;
     private String start;
     private ArrayList<Attribute> attributes;
 
-    public NodeElement(String name) {
+    public NodeTag(String name) {
         // TODO: store both name and 'start'?
         this.name = name;
         this.start = "<"+name;
@@ -59,7 +59,7 @@ class NodeElement extends Node {
         public Node value;
     }
 
-    protected Node orLiteral() {
+    protected Node orSimplifiedNode() {
         if(this.attributes == null) {
             return new NodeLiteral(this.start+">");
         }
@@ -86,7 +86,7 @@ class NodeElement extends Node {
     }
 
     public void dumpToBuilder(StringBuilder builder, String linePrefix) {
-        builder.append(linePrefix).append("ELEMENT ").append(this.start);
+        builder.append(linePrefix).append("TAG ").append(this.start);
         if(this.attributes == null) {
             builder.append(">\n");
         } else {

@@ -1,0 +1,14 @@
+
+Void tags don't need close tags
+
+---
+
+<div> <br> </div>
+
+---
+
+{}
+
+---
+
+<div><br></div>

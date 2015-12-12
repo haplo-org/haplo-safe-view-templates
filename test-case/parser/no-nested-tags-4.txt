@@ -1,5 +1,5 @@
 
-Can't nest elements inside another element (within attribute name)
+Can't nest tags inside another tag (within attribute name)
 
 ---
 

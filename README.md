@@ -13,11 +13,11 @@ There's lots of advice on the internet that you shouldn't write your own templat
 
 I'm currently using [Handlebars](http://handlebarsjs.com/) in my project, [Haplo](http://haplo.org). While it's pretty good, I would like to use something better.
 
-* It's very noisy. I've noticed that in my applications, most of the time I'm just writing HTML elements and inserting escaped values. The `{{handlebars}}` clutter up your code, and make it hard to read. I'd like to invert that, so that literal text has the special syntax.
+* It's very noisy. I've noticed that in my applications, most of the time I'm just writing HTML tags and inserting escaped values. The `{{handlebars}}` clutter up your code, and make it hard to read. I'd like to invert that, so that literal text has the special syntax.
 
 * It doesn't help writing secure applications, because it's just interpolating escaped strings. A templating language should properly parse HTML and understand the different contexts within it.
 
-* I'd like to output really tidy HTML, with the language handling all the edge cases. String interpolation makes this harder than it should be, for example, adding multiple classes to an element is tricky.
+* I'd like to output really tidy HTML, with the language handling all the edge cases. String interpolation makes this harder than it should be, for example, adding multiple classes to an tag is tricky.
 
 * I want it to ignore whitespace, as I'd like to lay out my templates as clearly as possible. I shouldn't need to have to chose between legibility and consistent formatting.
 
@@ -96,7 +96,7 @@ A template is a whitespace separated list of:
 
 * Values from the view, which are simple bare words. Use `.` as a separator to access nested values. `.` on it's own refers to the current view, eg a value when iterating over a list.
 
-* HTML tags with attributes. These form part of the language, and so are properly parsed and validated. Tags must be balanced.
+* HTML tags with attributes. These form part of the language, and so are properly parsed and validated. Tag names are lower case only. Tags must be balanced, except for the [void tags defined in the HTML spec](http://www.w3.org/TR/html-markup/syntax.html#syntax-elements) which must not have close tags.
 
 * Literal strings in `" "`, with quotes escaped as `\"`
 
@@ -120,9 +120,9 @@ There is a concept of the "current view". This starts at the root of the data st
 Sometimes you need to refer to values which are outside the current view. Use an enclosing view block, for example, to access the 'x' value in the enclosing view, use `^{x}`.
 
 
-### Attributes on Elements
+### Attributes on Tags
 
-If your HTML element is just has attributes with constant values (as literals) then your element is written exactly as it would be in normal HTML files, and will be output exactly as is.
+If your HTML tag is just formed of attributes with constant values (as literals) then your tag is written exactly as it would be in normal HTML files, and will be output exactly as is.
 
 Otherwise, a single value follows, such as `<a href=action>`, and the `action` value will be output, properly escaped.
 
@@ -186,7 +186,7 @@ Include another template in the rendered output, controlled by the Driver.
 
 ## TODO
 
-* URL generation and parameter escaping (should support building URLs from elements (eg paths and ids), and building parameters from dictionaries, static parameters etc)
+* URL generation and parameter escaping (should support building URLs from tags (eg paths and ids), and building parameters from dictionaries, static parameters etc)
 
 * 'local variables' to remember values as view is traversed
 

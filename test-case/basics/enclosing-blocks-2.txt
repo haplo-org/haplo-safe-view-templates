@@ -1,0 +1,59 @@
+
+Multiple enclosing view blocks in interesting orders
+
+---
+
+<div>
+    with(one) {
+        with(two) {
+            ^ { v }
+            ^^ { v }
+            v
+        }
+    }
+    with(three) {
+        with(four) {
+            ^ { v }
+            v
+        }
+    }
+</div>
+
+---
+{
+    "v": "B",
+    "one": {
+        "v": "A",
+        "two": {
+            "v": "C"
+        }
+    },
+    "three": {
+        "v": "D",
+        "four": {
+            "v": "E"
+        }
+    }
+}
+---
+<div>ABCDE</div>
+
+---
+{}
+---
+<div></div>
+
+---
+{
+    "v": "B",
+    "one": {
+        "v": "A"
+    },
+    "three": {
+        "four": {
+            "v": "E"
+        }
+    }
+}
+---
+<div>E</div>

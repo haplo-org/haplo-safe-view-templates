@@ -15,6 +15,10 @@ public class Node {
         return null;
     }
 
+    protected Node orSimplifiedNode() {
+        return this;
+    }
+
     public void dumpToBuilder(StringBuilder builder, String linePrefix) {
         builder.append(linePrefix);
         builder.append("UNKNOWN\n");

@@ -4,7 +4,7 @@ Comments are ignored in templates
 ---
 
 <div> // comment
-// on own line
+// on own line "with some literal text which gets output if comments not parsed properly"
     / "Literal after slash"//comment two
 </div>
 

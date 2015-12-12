@@ -1,5 +1,5 @@
 
-Literal HTML text nodes need to be in quotes. (When most non-element things are inserts, doing it the other way round is noisy)
+Literal HTML text nodes need to be in quotes. (When most non-tag things are inserts, doing it the other way round is noisy)
 
 ---
 
