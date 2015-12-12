@@ -1,0 +1,17 @@
+
+PARSE ERROR: Unbalanced tags at top level of template & within blocks
+
+---
+<div> <b> </div>
+---
+Error at line 1 character 11: Unexpected tag </div>, tags must be balanced
+
+---
+<div> if(x) { <span> <b> </span> } </div>
+---
+Error at line 1 character 26: Unexpected tag </span>, tags must be balanced
+
+---
+<div> if(x) { <span> } </div>
+---
+Error at line 1 character 13: Improperly nested block, check tags are balanced

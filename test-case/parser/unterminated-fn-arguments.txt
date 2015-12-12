@@ -1,5 +1,5 @@
 
-Unterminated function arguments
+PARSE ERROR: Unterminated function arguments
 
 ---
 
@@ -7,4 +7,4 @@ Unterminated function arguments
 
 ---
 
-PARSE EXCEPTION: Error at line 1 character 9: Did not find end of arguments
+Error at line 1 character 9: Did not find end of arguments

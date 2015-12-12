@@ -1,5 +1,5 @@
 
-You can't have a ^ without a block following it
+PARSE ERROR: You can't have a ^ without a block following it
 
 ---
 
@@ -10,4 +10,4 @@ You can't have a ^ without a block following it
 
 ---
 
-PARSE EXCEPTION: Error at line 3 character 10: Enclosing view block names must be followed by a block
+Error at line 3 character 10: Enclosing view block names must be followed by a block

@@ -1,0 +1,19 @@
+
+PARSE ERROR: Self closing tags are not allowed
+
+---
+<div> <br/> </div>
+---
+Error at line 1 character 7: Self closing tags are not allowed
+
+
+---
+<div> </br/> </div>
+---
+Error at line 1 character 7: Self closing tags are not allowed
+
+
+---
+<div> <div class="hello" /> </div>
+---
+Error at line 1 character 7: Self closing tags are not allowed

@@ -1,5 +1,5 @@
 
-Templates should use 4 spaces for indents
+PARSE ERROR: Templates should use 4 spaces for indents
 
 ---
 
@@ -9,4 +9,4 @@ Templates should use 4 spaces for indents
 
 ---
 
-PARSE EXCEPTION: Error at line 2 character 1: Tab character in source, indent with 4 spaces
+Error at line 2 character 1: Tab character in source, indent with 4 spaces

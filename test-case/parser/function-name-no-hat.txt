@@ -1,5 +1,5 @@
 
-Function names may not start with ^ symbol because that's used to access enclosing views
+PARSE ERROR: Function names may not start with ^ symbol because that's used to access enclosing views
 
 ---
 
@@ -9,4 +9,4 @@ Function names may not start with ^ symbol because that's used to access enclosi
 
 ---
 
-PARSE EXCEPTION: Error at line 2 character 9: Enclosing view block names may not contain other characters
+Error at line 2 character 9: Enclosing view block names may not contain other characters

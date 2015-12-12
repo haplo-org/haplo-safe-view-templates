@@ -1,5 +1,5 @@
 
-case() requires an argument
+PARSE ERROR: case() requires an argument
 
 ---
 
@@ -7,4 +7,4 @@ case() requires an argument
 
 ---
 
-PARSE EXCEPTION: Error at line 1 character 12: case() must take exactly one argument
+Error at line 1 character 12: case() must take exactly one argument

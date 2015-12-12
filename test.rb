@@ -62,50 +62,74 @@ passed = 0
 failed = 0
 files = Dir.glob("test-case/**/*.*").sort
 files.each do |filename|
-  comment, template_source, *rest = File.read(filename).split("\n---\n")
-  raise "Bad test #{filename} - no tests" if rest.empty?
-  was_testing_error = false
-  begin
-    template = Java::Template::Parser.new(template_source.strip).parse()
-  rescue => e
-    was_testing_error = true
-    tests += 1
-    if rest.length == 1 && rest.first =~ /\A\s*PARSE EXCEPTION:\s*(.+?)\s*\z/m && $1 == e.message
-      passed += 1
-    else
-      failed += 1
-      puts
-      puts "#{filename}: Unexpected exception:"
-      puts "EXPECTED: #{$1}"
-      puts "OUTPUT:   #{e.message}"
-      puts comment.strip
-    end
+  comment, *commands = File.read(filename).split("\n---\n")
+  raise "Bad test #{filename} - no tests" if commands.empty?
+  required_cmd = Proc.new do
+    raise "Expected element in test #{filename}" if commands.empty?
+    commands.shift
   end
-  while rest.length >= 2
-    view_json = rest.shift.strip
-    expected_output = rest.shift.strip
-    view = JSON.parse(view_json)
-    drivers = []
-    drivers << Java::TemplateDriverNestedjava::NestedJavaDriver.new(view_value_to_java(view), nestedjava_inclusions)
-    drivers << Java::TemplateDriverJrubyjson::JRubyJSONDriver.new(view, nestedjava_inclusions)
-    drivers.each do |driver|
+  if comment =~ /\A\s*PARSE ERROR:/
+    # Test one or more parse errors
+    while ! commands.empty?
+      template_source = required_cmd.call
+      expected_error = required_cmd.call.strip
       tests += 1
-      output = template.renderString(driver)
-      if output == expected_output
+      exception = nil
+      begin
+        template = Java::Template::Parser.new(template_source.strip).parse()
+      rescue => e
+        exception = e
+      end
+      message = exception ? exception.message : '(exception not thrown)'
+      if message == expected_error
         passed += 1
       else
         failed += 1
         puts
-        puts "#{filename}: Bad template output"
+        puts "#{filename}: Unexpected exception:"
+        puts "EXPECTED: #{expected_error}"
+        puts "OUTPUT:   #{message}"
         puts comment.strip
-        puts "EXPECTED: #{expected_output}"
-        puts "OUTPUT:   #{output}"
-        puts "DRIVER:   #{driver.class.name.split('::').last}"
       end
     end
-  end
-  unless rest.empty? || (was_testing_error && rest.length == 1)
-    raise "Incomplete tests in #{filename}"
+  else
+    # Test templates
+    template = nil
+    while ! commands.empty?
+      if template == nil
+        begin
+          template = Java::Template::Parser.new(required_cmd.call.strip).parse()
+        rescue => e
+          failed += 1
+          puts "#{filename}: Unexpected parse error: #{e.message}"
+        end
+      end
+      view_json = required_cmd.call.strip
+      if view_json == 'NEW TEMPLATE'
+        template = nil
+        next
+      end
+      expected_output = required_cmd.call.strip
+      view = JSON.parse(view_json)
+      drivers = []
+      drivers << Java::TemplateDriverNestedjava::NestedJavaDriver.new(view_value_to_java(view), nestedjava_inclusions)
+      drivers << Java::TemplateDriverJrubyjson::JRubyJSONDriver.new(view, nestedjava_inclusions)
+      drivers.each do |driver|
+        tests += 1
+        output = template.renderString(driver)
+        if output == expected_output
+          passed += 1
+        else
+          failed += 1
+          puts
+          puts "#{filename}: Bad template output"
+          puts comment.strip
+          puts "EXPECTED: #{expected_output}"
+          puts "OUTPUT:   #{output}"
+          puts "DRIVER:   #{driver.class.name.split('::').last}"
+        end
+      end
+    end
   end
 end
 

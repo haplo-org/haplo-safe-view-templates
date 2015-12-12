@@ -1,5 +1,5 @@
 
-include() can't take values
+PARSE ERROR: include() can't take values
 
 ---
 
@@ -7,4 +7,4 @@ include() can't take values
 
 ---
 
-PARSE EXCEPTION: Error at line 1 character 14: include() must have a literal string as the argument
+Error at line 1 character 14: include() must have a literal string as the argument

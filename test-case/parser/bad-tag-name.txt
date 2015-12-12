@@ -1,10 +1,12 @@
 
-Tag names are lower case
+PARSE ERROR: Tag names are lower case, only contain a-z0-9
 
 ---
-
 <DIV> </DIV>
+---
+Error at line 1 character 1: Invalid tag name <DIV> (must be lower case, a-z0-9 only)
 
 ---
-
-PARSE EXCEPTION: Error at line 1 character 1: Invalid tag name <DIV> (must be lower case, a-z0-9 only)
+<a-b> </a-b>
+---
+Error at line 1 character 1: Invalid tag name <a-b> (must be lower case, a-z0-9 only)

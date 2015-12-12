@@ -1,0 +1,10 @@
+
+PARSE ERROR: Void tags can't be closed
+
+---
+
+<div> <br></br> </div>
+
+---
+
+Error at line 1 character 11: Void tags may not have close tags

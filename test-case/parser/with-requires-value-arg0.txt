@@ -1,5 +1,5 @@
 
-with() requires the argument is a value node
+PARSE ERROR: with() requires the argument is a value node
 
 ---
 
@@ -7,4 +7,4 @@ with() requires the argument is a value node
 
 ---
 
-PARSE EXCEPTION: Error at line 1 character 11: with() must have a value as the argument
+Error at line 1 character 11: with() must have a value as the argument

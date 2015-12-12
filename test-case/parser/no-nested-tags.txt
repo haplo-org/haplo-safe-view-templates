@@ -1,0 +1,22 @@
+
+PARSE ERROR: Can't nest tags inside another tag (attribute value, value list, attribute names)
+
+---
+<div> <span abc=<b>></b></span></div>
+---
+Error at line 1 character 17: Tags are not valid in this context
+
+---
+<div> <span abc=[xyz <b>]></b></span></div>
+---
+Error at line 1 character 22: Tags are not valid in this context
+
+---
+<div> <span <b>></b></span></div>
+---
+Error at line 1 character 13: Invalid attribute name: <
+
+---
+<div> <span abc<b>></b></span></div>
+---
+Error at line 1 character 16: Expected = after attribute name

@@ -1,5 +1,5 @@
 
-if() doesn't allow other named blocks
+PARSE ERROR: if() doesn't allow other named blocks
 
 ---
 
@@ -7,4 +7,4 @@ if() doesn't allow other named blocks
 
 ---
 
-PARSE EXCEPTION: Error at line 1 character 36: if() may not take a someotherblockname block
+Error at line 1 character 36: if() may not take a someotherblockname block

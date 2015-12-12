@@ -1,5 +1,5 @@
 
-if() requires an anonymous block
+PARSE ERROR: if() requires an anonymous block
 
 ---
 
@@ -7,4 +7,4 @@ if() requires an anonymous block
 
 ---
 
-PARSE EXCEPTION: Error at line 1 character 9: if() requires an anonymous block
+Error at line 1 character 9: if() requires an anonymous block

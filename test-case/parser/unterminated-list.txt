@@ -1,5 +1,5 @@
 
-Unterminated generic list
+PARSE ERROR: Unterminated generic list
 
 ---
 
@@ -7,4 +7,4 @@ Unterminated generic list
 
 ---
 
-PARSE EXCEPTION: Error at line 1 character 7: Did not find end of list
+Error at line 1 character 7: Did not find end of list

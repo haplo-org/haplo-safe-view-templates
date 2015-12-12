@@ -1,5 +1,5 @@
 
-Enclosing view blocks can't be nested
+PARSE ERROR: Enclosing view blocks can't be nested
 
 ---
 
@@ -11,4 +11,4 @@ Enclosing view blocks can't be nested
 
 ---
 
-PARSE EXCEPTION: Error at line 3 character 12: Enclosing view blocks may not contain other enclosing view blocks
+Error at line 3 character 12: Enclosing view blocks may not contain other enclosing view blocks

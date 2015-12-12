@@ -1,5 +1,5 @@
 
-each() requires an anonymous block
+PARSE ERROR: each() requires an anonymous block
 
 ---
 
@@ -7,4 +7,4 @@ each() requires an anonymous block
 
 ---
 
-PARSE EXCEPTION: Error at line 1 character 11: each() requires an anonymous block
+Error at line 1 character 11: each() requires an anonymous block

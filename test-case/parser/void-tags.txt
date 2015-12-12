@@ -2,13 +2,143 @@
 Void tags don't need close tags
 
 ---
-
 <div> <br> </div>
-
 ---
-
 {}
+---
+<div><br></div>
 
 ---
+NEW TEMPLATE
+---
+<div> <area> </div>
+---
+{}
+---
+<div><area></div>
 
-<div><br></div>
+---
+NEW TEMPLATE
+---
+<div> <base> </div>
+---
+{}
+---
+<div><base></div>
+
+---
+NEW TEMPLATE
+---
+<div> <col> </div>
+---
+{}
+---
+<div><col></div>
+
+---
+NEW TEMPLATE
+---
+<div> <command> </div>
+---
+{}
+---
+<div><command></div>
+
+---
+NEW TEMPLATE
+---
+<div> <embed> </div>
+---
+{}
+---
+<div><embed></div>
+
+---
+NEW TEMPLATE
+---
+<div> <hr> </div>
+---
+{}
+---
+<div><hr></div>
+
+---
+NEW TEMPLATE
+---
+<div> <img> </div>
+---
+{}
+---
+<div><img></div>
+
+---
+NEW TEMPLATE
+---
+<div> <input> </div>
+---
+{}
+---
+<div><input></div>
+
+---
+NEW TEMPLATE
+---
+<div> <keygen> </div>
+---
+{}
+---
+<div><keygen></div>
+
+---
+NEW TEMPLATE
+---
+<div> <link> </div>
+---
+{}
+---
+<div><link></div>
+
+---
+NEW TEMPLATE
+---
+<div> <meta> </div>
+---
+{}
+---
+<div><meta></div>
+
+---
+NEW TEMPLATE
+---
+<div> <param> </div>
+---
+{}
+---
+<div><param></div>
+
+---
+NEW TEMPLATE
+---
+<div> <source> </div>
+---
+{}
+---
+<div><source></div>
+
+---
+NEW TEMPLATE
+---
+<div> <track> </div>
+---
+{}
+---
+<div><track></div>
+
+---
+NEW TEMPLATE
+---
+<div> <wbr> </div>
+---
+{}
+---
+<div><wbr></div>

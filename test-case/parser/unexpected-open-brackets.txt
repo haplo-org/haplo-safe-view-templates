@@ -1,5 +1,5 @@
 
-Open bracket can only appear after a function name
+PARSE ERROR: Open bracket can only appear after a function name
 
 ---
 
@@ -9,4 +9,4 @@ Open bracket can only appear after a function name
 
 ---
 
-PARSE EXCEPTION: Error at line 2 character 5: Unexpected (
+Error at line 2 character 5: Unexpected (

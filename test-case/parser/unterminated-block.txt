@@ -1,0 +1,12 @@
+
+PARSE ERROR: Unterminated named & anon blocks
+
+---
+"111" if(a) { } else { "222"
+---
+Error at line 1 character 22: Did not find end of else block
+
+---
+"111" if(a) { abc "222"
+---
+Error at line 1 character 13: Did not find end of block

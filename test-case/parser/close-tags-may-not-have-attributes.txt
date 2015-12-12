@@ -1,5 +1,5 @@
 
-Close tags don't have attributes
+PARSE ERROR: Close tags don't have attributes
 
 ---
 
@@ -8,4 +8,4 @@ Close tags don't have attributes
 
 ---
 
-PARSE EXCEPTION: Error at line 2 character 11: A closing tag may not have attributes
+Error at line 2 character 11: A closing tag may not have attributes

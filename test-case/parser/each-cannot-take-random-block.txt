@@ -1,5 +1,5 @@
 
-each() doesn't allow other named blocks
+PARSE ERROR: each() doesn't allow other named blocks
 
 ---
 
@@ -7,4 +7,4 @@ each() doesn't allow other named blocks
 
 ---
 
-PARSE EXCEPTION: Error at line 1 character 38: each() may not take a someotherblockname block
+Error at line 1 character 38: each() may not take a someotherblockname block

@@ -25,3 +25,34 @@ Enclosing blocks can be used as values for other functions
 ---
 
 <div><span>X-0</span><span>Y-1</span></div>
+
+
+---
+NEW TEMPLATE
+---
+<div>
+    with(b) {
+        if(^{a}) {
+            "TRUE"
+        } else {
+            "FALSE"
+        }
+    }
+</div>
+
+
+---
+{
+    "a": true,
+    "b": { }
+}
+---
+<div>TRUE</div>
+
+---
+{
+    "a": false,
+    "b": { }
+}
+---
+<div>FALSE</div>

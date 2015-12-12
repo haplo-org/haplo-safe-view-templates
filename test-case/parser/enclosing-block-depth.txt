@@ -1,0 +1,16 @@
+
+PARSE ERROR: Enclosing blocks referred to by hat blocks must exist
+
+---
+^{x}
+---
+Error at line 1 character 2: There are not 1 enclosing views
+
+---
+<div>
+    with(x) {
+        ^^ { y }
+    }
+</div>
+---
+Error at line 3 character 12: There are not 2 enclosing views

@@ -1,5 +1,5 @@
 
-Enclosing view blocks must be terminated with a }
+PARSE ERROR: Enclosing view blocks must be terminated with a }
 
 ---
 
@@ -9,4 +9,4 @@ Enclosing view blocks must be terminated with a }
 
 ---
 
-PARSE EXCEPTION: Error at line 2 character 7: Did not find end of enclosing view block
+Error at line 2 character 7: Did not find end of enclosing view block

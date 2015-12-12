@@ -1,5 +1,5 @@
 
-Value names can't begin with a .
+PARSE ERROR: Value names can't begin with a .
 
 ---
 
@@ -9,4 +9,4 @@ Value names can't begin with a .
 
 ---
 
-PARSE EXCEPTION: Error at line 2 character 20: Value names cannot be prefixed with . (single dot is used for 'this')
+Error at line 2 character 20: Value names cannot be prefixed with . (single dot is used for 'this')

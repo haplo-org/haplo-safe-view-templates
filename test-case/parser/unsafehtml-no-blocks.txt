@@ -1,5 +1,5 @@
 
-unsafeHTML() doesn't use blocks
+PARSE ERROR: unsafeHTML() doesn't use blocks
 
 ---
 
@@ -7,4 +7,4 @@ unsafeHTML() doesn't use blocks
 
 ---
 
-PARSE EXCEPTION: Error at line 1 character 19: unsafeHTML() may not take an anonymous block
+Error at line 1 character 19: unsafeHTML() may not take an anonymous block

@@ -1,0 +1,22 @@
+
+PARSE ERROR: Unterminated tags & lists
+
+---
+<div> span> </div>
+---
+Error at line 1 character 11: Unexpected >
+
+---
+<div> ] </div>
+---
+Error at line 1 character 7: Unexpected ]
+
+---
+<div> x} </div>
+---
+Error at line 1 character 8: Unexpected }
+
+---
+<div> args) </div>
+---
+Error at line 1 character 11: Unexpected )
