@@ -1,0 +1,10 @@
+
+PARSE ERROR: within() requires an anonymous block
+
+---
+
+<div> within(x) </div>
+
+---
+
+Error at line 1 character 13: within() requires an anonymous block

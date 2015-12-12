@@ -8,7 +8,7 @@ Error at line 1 character 2: There are not 1 enclosing views
 
 ---
 <div>
-    with(x) {
+    within(x) {
         ^^ { y }
     }
 </div>

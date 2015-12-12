@@ -137,7 +137,7 @@ public class Parser {
         NodeFunction fn = null;
         switch(functionName) {
             case "include":     fn = new NodeFunctionInclude(); break;
-            case "with":        fn = new NodeFunctionWith(); break;
+            case "within":      fn = new NodeFunctionWithin(); break;
             case "if":          fn = new NodeFunctionConditional(false); break;
             case "unless":      fn = new NodeFunctionConditional(true); break;
             case "each":        fn = new NodeFunctionEach(); break;

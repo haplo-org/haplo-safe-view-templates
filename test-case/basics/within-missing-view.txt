@@ -1,0 +1,16 @@
+
+within() creates an empty view when the value does not exist
+
+---
+
+<div> within(x) { value } </div>
+
+---
+{"x":{"value":"exists"}}
+---
+<div>exists</div>
+
+---
+{}
+---
+<div></div>

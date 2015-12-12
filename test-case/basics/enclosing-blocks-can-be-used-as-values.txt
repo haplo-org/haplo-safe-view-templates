@@ -4,7 +4,7 @@ Enclosing blocks can be used as values for other functions
 ---
 
 <div>
-    with(b) {
+    within(b) {
         each(^{a}) {
             <span> b "-" v </span>
         }
@@ -31,7 +31,7 @@ Enclosing blocks can be used as values for other functions
 NEW TEMPLATE
 ---
 <div>
-    with(b) {
+    within(b) {
         if(^{a}) {
             "TRUE"
         } else {

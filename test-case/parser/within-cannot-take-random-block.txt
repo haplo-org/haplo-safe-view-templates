@@ -1,0 +1,10 @@
+
+PARSE ERROR: within() doesn't allow other named blocks
+
+---
+
+<div>within(x) {"x"} someotherblockname {"y"}</div>
+
+---
+
+Error at line 1 character 40: within() may not take a someotherblockname block

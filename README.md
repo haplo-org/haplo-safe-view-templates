@@ -115,7 +115,7 @@ The template is rendered from a view. This is a nested data structure, somewhat 
 
 There is a concept of the "current view". This starts at the root of the data structure. Values are looked up starting from the current view.
 
-`each()` and `with()` change the current view. `each()` changes the view to each element of a list in order, rendering the block for each. `with()` just changes it and renders the block.
+`each()` and `within()` change the current view. `each()` changes the view to each element of a list in order, rendering the block for each. `within()` just changes it and renders the block.
 
 Sometimes you need to refer to values which are outside the current view. Use an enclosing view block, for example, to access the 'x' value in the enclosing view, use `^{x}`.
 
@@ -167,7 +167,7 @@ A simple conditional control flow function. The Driver determines whether `value
 
 The Driver returns an Iterable of nested views for `value`, then the anonymous block is rendered once per view in that list.
 
-### with(value)
+### within(value)
 
 The view is moved to the `value`, then the anonymous block is rendered.
 

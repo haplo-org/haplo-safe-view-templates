@@ -1,0 +1,10 @@
+
+PARSE ERROR: within() requires the argument is a value node
+
+---
+
+<div> within("x") { } </div>
+
+---
+
+Error at line 1 character 13: within() must have a value as the argument

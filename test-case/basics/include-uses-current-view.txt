@@ -4,7 +4,7 @@ include() includes uses the current view as the root of the template.
 ---
 
 <div>
-    with(nested) {
+    within(nested) {
         include("template1")
     }
 </div>

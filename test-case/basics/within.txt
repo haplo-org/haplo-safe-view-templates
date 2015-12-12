@@ -1,10 +1,10 @@
 
-with() moves view to value, but ignores block if there's no corresponding value in view
+within() moves view to value, but ignores block if there's no corresponding value in view
 
 ---
 
 <div>
-    with(abc.def) {
+    within(abc.def) {
         value
     }
 </div>

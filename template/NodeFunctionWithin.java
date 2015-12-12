@@ -1,14 +1,14 @@
 package template;
 
-class NodeFunctionWith extends NodeFunction.ChangesView {
+class NodeFunctionWithin extends NodeFunction.ChangesView {
 
     static private final String[] PERMITTED_BLOCK_NAMES = {NodeFunction.BLOCK_ANONYMOUS};
 
-    NodeFunctionWith() {
+    NodeFunctionWithin() {
     }
 
     public String getFunctionName() {
-        return "with";
+        return "within";
     }
 
     protected String[] getPermittedBlockNames() {
@@ -28,6 +28,6 @@ class NodeFunctionWith extends NodeFunction.ChangesView {
     }
 
     public String getDumpName() {
-        return "WITH";
+        return "WITHIN";
     }
 }

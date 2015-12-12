@@ -3,7 +3,7 @@ PARSE ERROR: Enclosing view blocks must be terminated with a }
 
 ---
 
-"a" with(y) {
+"a" within(y) {
     ^ { value.x
 "b"
 

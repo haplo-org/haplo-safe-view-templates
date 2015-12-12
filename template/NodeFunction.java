@@ -63,7 +63,7 @@ abstract class NodeFunction extends Node {
 
     public void dumpToBuilder(StringBuilder builder, String linePrefix) {
         builder.append(linePrefix).append(getDumpName()).
-                append(" with "+this.arguments.size()+" arguments:\n");
+                append(" within "+this.arguments.size()+" arguments:\n");
         arguments.dumpToBuilder(builder, linePrefix+"  ");
         if(this.blocks != null) {
             for(String blockName : this.blocks.keySet()) {
@@ -99,7 +99,7 @@ abstract class NodeFunction extends Node {
     }
 
     // Classes dervived from NodeFunction.ChangesView must call rememberUnchangedViewIfNecessary()
-    // before they change the view. But each() and with() should be the only subclasses.
+    // before they change the view. But each() and within() should be the only subclasses.
     public abstract static class ChangesView extends ExactlyOneValueArgument {
         private boolean shouldRememberViewBeforeChange = false;
         private int rememberIndex;

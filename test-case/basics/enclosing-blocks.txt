@@ -28,15 +28,15 @@ Enclosing blocks access values in the enclosing views
 NEW TEMPLATE
 ---
 <div>
-    with(one) {
-        with(two) {
+    within(one) {
+        within(two) {
             ^ { v }
             ^^ { v }
             v
         }
     }
-    with(three) {
-        with(four) {
+    within(three) {
+        within(four) {
             ^ { v }
             v
         }

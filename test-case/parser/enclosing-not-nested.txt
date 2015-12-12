@@ -4,7 +4,7 @@ PARSE ERROR: Enclosing view blocks can't be nested
 ---
 
 <div>
-    with(x) {
+    within(x) {
         ^{ ^{} }
     }
 </div>
