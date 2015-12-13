@@ -14,7 +14,7 @@ Error at line 1 character 22: Tags are not valid in this context
 ---
 <div> <span <b>></b></span></div>
 ---
-Error at line 1 character 13: Invalid attribute name: <
+Error at line 1 character 13: Invalid attribute name: '<' (attribute names must be lower case)
 
 ---
 <div> <span abc<b>></b></span></div>

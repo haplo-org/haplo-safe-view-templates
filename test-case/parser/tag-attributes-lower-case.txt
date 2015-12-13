@@ -1,0 +1,10 @@
+
+PARSE ERROR: Tag attributes must be lower case
+
+---
+
+<div> <span Class="hello"> </span> </div>
+
+---
+
+Error at line 1 character 17: Invalid attribute name: 'Class' (attribute names must be lower case)

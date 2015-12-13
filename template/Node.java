@@ -3,6 +3,11 @@ package template;
 public class Node {
     protected final static String BLOCK_ANONYMOUS = ""; // used as key & object identity comparison
 
+    // Used during parsing, not rendering
+    public boolean allowedInURLContext() {
+        return true;
+    }
+
     public void render(StringBuilder builder, Driver driver, Object view, Context context) {
         // TODO: Make Node's render() function abstract
     }

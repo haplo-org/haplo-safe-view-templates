@@ -1,0 +1,16 @@
+
+An explicit url() in an auto-URL attribute is valid
+
+---
+
+<div>
+    <a href=url("/path/to/" id)> "link" </a>
+</div>
+
+---
+
+{"id":"23☃x"}
+
+---
+
+<div><a href="/path/to/23%E2%98%83x">link</a></div>

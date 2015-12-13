@@ -12,7 +12,7 @@ public class Parser {
 
     final static java.util.regex.Pattern VALID_TAG_NAME_REGEX = java.util.regex.Pattern.compile("\\A[a-z0-9]+\\Z");
     // TODO: Is this overly restrictive regex valid? Is it worth writing a scanner function for it?
-    final static java.util.regex.Pattern VALID_ATTRIBUTE_NAME_REGEX = java.util.regex.Pattern.compile("\\A[a-z0-9_A-Z-]+\\Z");
+    final static java.util.regex.Pattern VALID_ATTRIBUTE_NAME_REGEX = java.util.regex.Pattern.compile("\\A[a-z0-9_-]+\\Z");
 
     public Parser(CharSequence source) {
         this.source = source;
@@ -57,16 +57,27 @@ public class Parser {
         char firstChar = s.charAt(0);
         int singleChar = (s.length() == 1) ? firstChar : -999;
         if(singleChar == '"') {
-            return new NodeLiteral(quotedString());
+            String qstr = quotedString();
+            if(this.context == Context.URL) {
+                // Needs special escaping for URL context
+                qstr = Escape.escapeString(qstr, Context.URL_PATH);
+            }
+            return new NodeLiteral(qstr);
         } else if(singleChar == '<') {
             return parseTag().orSimplifiedNode();
         } else if(singleChar == '[') {
-            return parseList(']', "list").orSimplifiedNode();
+            if(this.context == Context.URL) {
+                return parseURL(']');
+            } else {
+                return parseList(']', "list").orSimplifiedNode();
+            }
         } else if(singleChar == endOfListCharacter) {
             return END_OF_LIST;
         } else if((singleChar == ']') || (singleChar == '}') ||
                   (singleChar == '(') || (singleChar == ')') || // both () directions
-                  (singleChar == '>')) {
+                  (singleChar == '>') ||
+                  (singleChar == '?') || (singleChar == '!') || (singleChar == '*') // URL syntax
+                ) {
             error("Unexpected "+s);
         }
         // Special case enclosing view block
@@ -94,6 +105,14 @@ public class Parser {
     }
 
     private static final Node END_OF_LIST = new Node();
+
+    protected <T extends Node> T parseOneValueOfType(Class<T> type, String expected, int endOfListCharacter, int startPos) throws ParseException {
+        Node node = parseOneValue(endOfListCharacter);
+        if((node == null) || (node == END_OF_LIST) || !(type.isInstance(node))) {
+            error("Expected "+expected, startPos);
+        }
+        return type.cast(node);
+    }
 
     protected Node parseEnclosingViewBlock(CharSequence name) throws ParseException {
         if(this.inEnclosingViewBlock) {
@@ -132,6 +151,9 @@ public class Parser {
 
     // Called after the first ( has been returned from symbol()
     protected Node parseFunction(String functionName) throws ParseException {
+        if(functionName.equals("url")) {
+            return parseURL(')'); // pseudo function
+        }
         int functionStartPos = this.pos;
         NodeList arguments = parseList(')', "arguments");
         NodeFunction fn = null;
@@ -192,7 +214,7 @@ public class Parser {
         checkTagName(name, false, tagStartPos);
         String tagName = name.toString();
         NodeTag tag = new NodeTag(tagName);
-        CharSequence attributeName = null;
+        String attributeName = null;
         while(true) {
             CharSequence s = symbol();
             if(s == null) { error("Unexpected end of template in tag"); }
@@ -202,8 +224,11 @@ public class Parser {
                 if(attributeName == null) {
                     error("Unexpected = in tag");
                 }
-                this.context = Context.ATTRIBUTE_VALUE;
-                tag.addAttribute(attributeName.toString(), parseOneValue(-1));
+                // Automatically move to URL escaping & parsing mode if attribute is known to contains URLs
+                this.context = HTML.attributeIsURL(tagName, attributeName) ?
+                        Context.URL :
+                        Context.ATTRIBUTE_VALUE;
+                tag.addAttribute(attributeName.toString(), parseOneValue(-1), this.context);
                 this.context = Context.TAG;
                 attributeName = null;
             } else if(symbolIsSingleChar(s, '/')) {
@@ -213,9 +238,9 @@ public class Parser {
                     error("Expected = after attribute name");
                 }
                 if(!(VALID_ATTRIBUTE_NAME_REGEX.matcher(s).matches())) {
-                    error("Invalid attribute name: "+s);
+                    error("Invalid attribute name: '"+s+"' (attribute names must be lower case)");
                 }
-                attributeName = s;
+                attributeName = s.toString();
             }
         }
         if(attributeName != null) {
@@ -257,6 +282,62 @@ public class Parser {
         }
     }
 
+    protected Node parseURL(char endOfListCharacter) throws ParseException {
+        int urlStart = this.pos;
+        Context oldContext = this.context;
+        this.context = Context.URL;
+        NodeURL url = new NodeURL();
+        this.nesting.push(url);
+        boolean inParameters = false;
+        while(true) {
+            int symbolStart = this.pos;
+            CharSequence s = symbol();
+            if(s == null) {
+                error("Did not find end of URL", urlStart);
+            }
+            int singleChar = (s.length() == 1) ? s.charAt(0) : -999;
+            if(singleChar == endOfListCharacter) {
+                break;
+            } else if(inParameters) {
+                if(singleChar == '*') {
+                    NodeValue value = parseOneValueOfType(NodeValue.class, "dictionary value after *", endOfListCharacter, this.pos);
+                    url.addParameterInstructionAllFromDictionary(value);
+                } else if(singleChar == '!') {
+                    CharSequence name = symbol();
+                    if(name == null) { error("Expected key name"); }
+                    url.addParameterInstructionRemoveKey(name.toString());
+                } else {
+                    if(!symbolIsSingleChar(symbol(), '=')) {
+                        error("After ?, URLs must be formed of key=value, !key or *dictionary");
+                    }
+                    this.context = Context.UNSAFE;  // escaping happens in NodeURL's render()
+                    Node value = parseOneValueOfType(Node.class, "URL parameter value after =", endOfListCharacter, this.pos);
+                    this.context = Context.URL;
+                    url.addParameterInstructionAddKeyValue(s.toString(), value);
+                }
+            } else {
+                if(singleChar == '?') {
+                    inParameters = true;
+                } else if((singleChar == '=') || (singleChar == '!') || (singleChar == '*')) {
+                    error("In URLs, "+s+" can only be used to declare parameters after the ? symbol");
+                } else {
+                    this.pos = symbolStart; // go back before looked ahead symbol
+                    url.add(checkAllowedInURL(this.pos, parseOneValue(-1)));
+                }
+            }
+        }
+        this.context = oldContext;
+        popNestingAndCheckNodeWas(url, urlStart);
+        return url;
+    }
+
+    protected Node checkAllowedInURL(int startPos, Node node) throws ParseException {
+        if(!(node.allowedInURLContext())) {
+            error("Not allowed in URL", startPos + 2);
+        }
+        return node;
+    }
+
     // ----------------------------------------------------------------------
 
     // Views need to be rememebered during rendering so mechanisms like the
@@ -293,6 +374,7 @@ public class Parser {
                 (c == '{') || (c == '}') ||
                 (c == '<') || (c == '>') ||
                 (c == '[') || (c == ']') ||
+                (c == '?') || (c == '!') || (c == '*') || // for special URL syntax
                 (c == '/') ||
                 (c == '"') ||
                 (c == '=');

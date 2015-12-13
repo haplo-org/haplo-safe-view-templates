@@ -1,0 +1,32 @@
+
+PARSE ERROR: Can't use special URL syntax symbols outside URLs
+
+---
+<div> [ a ? b ] </div>
+---
+Error at line 1 character 11: Unexpected ?
+
+---
+<div> [ a ! b ] </div>
+---
+Error at line 1 character 11: Unexpected !
+
+---
+<b> generic(a * b) </div>
+---
+Error at line 1 character 15: Unexpected *
+
+---
+?
+---
+Error at line 1 character 1: Unexpected ?
+
+---
+!
+---
+Error at line 1 character 1: Unexpected !
+
+---
+*
+---
+Error at line 1 character 1: Unexpected *

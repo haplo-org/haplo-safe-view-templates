@@ -6,6 +6,7 @@ abstract public class Driver {
     abstract public Object getValueFromView(Object view, String[] path);
     abstract public String valueToStringRepresentation(Object value);
     abstract public Iterable<Object> valueToIterableViewList(Object value);
+    abstract public void iterateOverValueAsDictionary(Object value, DictionaryIterator iterator);
     abstract public void renderInclusion(String inclusionName, StringBuilder builder, Context context);
 
     public boolean valueIsTruthy(Object value) {
@@ -19,6 +20,12 @@ abstract public class Driver {
             return ((Object[])value).length > 0;
         }
         return false;
+    }
+
+    // ----------------------------------------------------------------------
+
+    public static interface DictionaryIterator {
+        void entry(String key, Object value);
     }
 
     // ----------------------------------------------------------------------

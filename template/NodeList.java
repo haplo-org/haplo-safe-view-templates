@@ -1,5 +1,6 @@
 package template;
 
+import java.util.List;
 import java.util.ArrayList;
 
 class NodeList extends Node {
@@ -19,6 +20,10 @@ class NodeList extends Node {
 
     public Node nodeAt(int index) {
         return this.nodes.get(index);
+    }
+
+    protected List<Node> getNodeList() {
+        return this.nodes;
     }
 
     protected Node orSimplifiedNode() {
@@ -70,9 +75,13 @@ class NodeList extends Node {
     }
 
     public void dumpToBuilder(StringBuilder builder, String linePrefix) {
-        builder.append(linePrefix).append("LIST ("+this.nodes.size()+" nodes)\n");
+        builder.append(linePrefix).append(this.dumpName()).append(" ("+this.nodes.size()).append(" nodes)\n");
         for(Node node : this.nodes) {
             node.dumpToBuilder(builder, linePrefix+"  ");
         }
+    }
+
+    protected String dumpName() {
+        return "LIST";
     }
 }

@@ -1,3 +1,4 @@
+# coding: UTF-8
 
 require 'json'
 
@@ -43,7 +44,11 @@ end
 
 # ---------------------------------------------------------------------------
 if ARGV[0] == 'run' || ARGV[0] == 'tree'
-  template = Java::Template::Parser.new(File.read(ARGV[1])).parse()
+  template_source = File.open(ARGV[1], "r:UTF-8") { |f| f.read }
+  # See if it looks like a test file, and if so, pick out the template
+  template_source_split = template_source.split("\n---\n")
+  template_source = template_source_split[1] if template_source_split.length >= 3
+  template = Java::Template::Parser.new(template_source).parse()
   if ARGV[0] == 'tree'
     STDOUT.write template.dump()
   else
@@ -62,7 +67,7 @@ passed = 0
 failed = 0
 files = Dir.glob("test-case/**/*.*").sort
 files.each do |filename|
-  comment, *commands = File.read(filename).split("\n---\n")
+  comment, *commands = File.open(filename, "r:UTF-8") { |f| f.read }.split("\n---\n")
   raise "Bad test #{filename} - no tests" if commands.empty?
   required_cmd = Proc.new do
     raise "Expected element in test #{filename}" if commands.empty?
@@ -105,7 +110,8 @@ files.each do |filename|
         end
       end
       view_json = required_cmd.call.strip
-      if view_json == 'NEW TEMPLATE'
+      if view_json =~ /NEW TEMPLATE(:\s*(.+))?/
+        comment = $2 if $2
         template = nil
         next
       end

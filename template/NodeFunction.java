@@ -101,6 +101,9 @@ abstract class NodeFunction extends Node {
     // Classes dervived from NodeFunction.ChangesView must call rememberUnchangedViewIfNecessary()
     // before they change the view. But each() and within() should be the only subclasses.
     public abstract static class ChangesView extends ExactlyOneValueArgument {
+        public boolean allowedInURLContext() {
+            return false;   // things which change the view can't go in a URL
+        }
         private boolean shouldRememberViewBeforeChange = false;
         private int rememberIndex;
         void shouldRemember(Parser parser) {

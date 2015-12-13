@@ -1,0 +1,44 @@
+
+PARSE ERROR: Not allowed in urls
+
+---
+<div>
+    url("a" url("b"))
+</div>
+---
+Error at line 2 character 13: Not allowed in URL
+
+---
+<div>
+    <a href=url(url("b"))> "c" </a>
+</div>
+---
+Error at line 2 character 18: Not allowed in URL
+
+---
+<div>
+    <a href=["a" url("b")]> "c" </a>
+</div>
+---
+Error at line 2 character 18: Not allowed in URL
+
+---
+<div>
+    url("a" each(b) { "b" })
+</div>
+---
+Error at line 2 character 13: Not allowed in URL
+
+---
+<div>
+    url("a" within(b) { "b" })
+</div>
+---
+Error at line 2 character 13: Not allowed in URL
+
+---
+<div>
+    url("a" <a></a>)
+</div>
+---
+Error at line 2 character 13: Tags are not valid in this context

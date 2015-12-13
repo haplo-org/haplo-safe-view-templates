@@ -67,6 +67,18 @@ class JRubyJSONDriver extends Driver {
         return null;
     }
 
+    @SuppressWarnings("unchecked")
+    public void iterateOverValueAsDictionary(Object value, DictionaryIterator iterator) {
+        if(value instanceof Map) {
+            for(Map.Entry<Object,Object> entry : ((Map<Object,Object>)value).entrySet()) {
+                String key = valueToStringRepresentation(entry.getKey());
+                if(key != null) {
+                    iterator.entry(key, entry.getValue());
+                }
+            }
+        }
+    }
+
     public boolean valueIsTruthy(Object value) {
         if(value instanceof IRubyObject) {
             IRubyObject o = (IRubyObject)value;

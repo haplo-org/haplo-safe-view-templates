@@ -1,0 +1,42 @@
+
+url() function
+
+---
+
+<div>
+    url("/path/to/x?y=☃&z=`n&z=" z)
+</div>
+
+---
+{"z":"% ☃-/-"}
+---
+<div>/path/to/x?y=%E2%98%83&z=%60n&z=%25%20%E2%98%83-%2F-</div>
+
+
+---
+NEW TEMPLATE: bad things in URLs are escaped
+---
+<div>
+    url("/path/<>\"x")
+    " - "
+    url(value)
+    " - "
+    <a href=value>"a"</a>
+    " - "
+    <a href=[value "q"]>"b"</a>
+</div>
+---
+{"value":"/path/<>\"y"}
+---
+<div>/path/%3C%3E%22x - /path/%3C%3E%22y - <a href="/path/%3C%3E%22y">a</a> - <a href="/path/%3C%3E%22yq">b</a></div>
+
+---
+NEW TEMPLATE: first element in URL list is escaped differently so views can include URLs and paths
+---
+<div>
+    url(value value)
+</div>
+---
+{"value":"/path"}
+---
+<div>/path%2Fpath</div>

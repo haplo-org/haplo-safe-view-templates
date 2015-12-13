@@ -26,4 +26,34 @@ class HTML {
                 return false;
         }
     }
+
+    // Rests to see if an attribute contains a URL value.
+    // List from http://www.w3.org/html/wg/drafts/html/master/index.html#attributes-1
+    public static boolean attributeIsURL(String tag, String attribute) {
+        switch(tag) {
+            case "form":
+                return attribute.equals("action");
+            case "blockquote": case "del": case "ins": case "q":
+                return attribute.equals("cite");
+            case "object":
+                return attribute.equals("data");
+            case "input":
+                return attribute.equals("src") || attribute.equals("formaction");
+            case "button":
+                return attribute.equals("formaction");
+            case "a": case "area": case "link": case "base":
+                return attribute.equals("href");
+            case "menuitem":
+                return attribute.equals("icon");
+            case "html":
+                return attribute.equals("manifest");
+            case "video":
+                return attribute.equals("src") || attribute.equals("poster");
+            case "img": case "audio": case "embed": case "iframe":
+            case "script": case "source": case "track":
+                return attribute.equals("src");
+            default:
+                return false;
+        }
+    }
 }

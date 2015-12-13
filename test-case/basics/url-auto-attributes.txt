@@ -1,0 +1,19 @@
+
+Attributes which always contain URLs are encoded as such
+
+---
+<div> <a href="/snowman/☃"> "Snowman" </a> </div>
+---
+{}
+---
+<div><a href="/snowman/%E2%98%83">Snowman</a></div>
+
+---
+NEW TEMPLATE: src attribute with list of literal and values
+---
+<div> <img src=["/img/☃?x=" x]> </div>
+---
+{"x": " /"}
+---
+<div><img src="/img/%E2%98%83?x=%20%2F"></div>
+

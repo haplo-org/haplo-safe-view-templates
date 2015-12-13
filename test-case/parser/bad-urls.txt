@@ -1,0 +1,48 @@
+
+PARSE ERROR: Bad URLs
+
+---
+<div> url(abc
+---
+Error at line 1 character 10: Did not find end of URL
+
+---
+<div><a href=[abc
+---
+Error at line 1 character 14: Did not find end of URL
+
+---
+<div><a href=[a?*"hello"]
+---
+Error at line 1 character 17: Expected dictionary value after *
+
+---
+<div> url(?!
+---
+Error at line 1 character 12: Expected key name
+
+---
+<div> url(? xbc abc) </div>
+---
+Error at line 1 character 19: After ?, URLs must be formed of key=value, !key or *dictionary
+
+---
+<div> url(? abc=) </div>
+---
+Error at line 1 character 16: Expected URL parameter value after =
+
+---
+<div> url("/path" abc=xyz) </div>
+---
+Error at line 1 character 22: In URLs, = can only be used to declare parameters after the ? symbol
+
+---
+<div> url("/path" !abc) </div>
+---
+Error at line 1 character 19: In URLs, ! can only be used to declare parameters after the ? symbol
+
+---
+<div> url("/path" *abc) </div>
+---
+Error at line 1 character 19: In URLs, * can only be used to declare parameters after the ? symbol
+

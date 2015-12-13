@@ -1,0 +1,71 @@
+
+Construct URLs with parameters
+
+---
+
+<div>
+    url("/path/to/something" ? *params abc=value1 !xyz ping="hello%/")
+</div>
+
+---
+{}
+---
+<div>/path/to/something?ping=hello%25%2F</div>
+
+---
+{
+    "params": {
+        "xyz": "X",
+        "p1": "ONE",
+        "p2": "two☃"
+    },
+    "value1": "V1"
+}
+---
+<div>/path/to/something?p1=ONE&p2=two%E2%98%83&abc=V1&ping=hello%25%2F</div>
+
+
+
+---
+NEW TEMPLATE: ? is omitted if there are no parameters
+---
+<div>
+    url("/path" ? *params x=x)
+</div>
+
+---
+{}
+---
+<div>/path</div>
+
+---
+{"params":{"1":2},"x":"y"}
+---
+<div>/path?1=2&x=y</div>
+
+
+
+---
+NEW TEMPLATE: Simple parameters in href
+---
+<div> <a href=["/path/to/" id ? a=one b=two]> "link" </a> </div>
+
+---
+{}
+---
+<div><a href="/path/to/">link</a></div>
+
+---
+{"id":"abc"}
+---
+<div><a href="/path/to/abc">link</a></div>
+
+---
+{"id":"abc","one":123}
+---
+<div><a href="/path/to/abc?a=123">link</a></div>
+
+---
+{"id":"abc","one":123,"two":"Ducks"}
+---
+<div><a href="/path/to/abc?a=123&b=Ducks">link</a></div>

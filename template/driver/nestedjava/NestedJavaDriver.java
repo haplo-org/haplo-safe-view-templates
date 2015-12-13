@@ -47,6 +47,14 @@ class NestedJavaDriver extends Driver {
         return Arrays.asList((Object[])value);
     }
 
+    @SuppressWarnings("unchecked")
+    public void iterateOverValueAsDictionary(Object value, DictionaryIterator iterator) {
+        if(!(value instanceof Map)) { return; }
+        for(Map.Entry<String,Object> entry : ((Map<String,Object>)value).entrySet()) {
+            iterator.entry(entry.getKey(), entry.getValue());
+        }
+    }
+
     // Uses default valueIsTruthy() implementation
 
     public void renderInclusion(String inclusionName, StringBuilder builder, Context context) {

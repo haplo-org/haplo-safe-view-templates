@@ -13,11 +13,15 @@ class NodeTag extends Node {
         this.start = "<"+name;
     }
 
+    public boolean allowedInURLContext() {
+        return false;   // caught by Context.TEXT check as well
+    }
+
     public String getName() {
         return this.name;
     }
 
-    public void addAttribute(String name, Node value) {
+    public void addAttribute(String name, Node value, Context valueContext) {
         if(value instanceof NodeLiteral) {
             // Value is just a literal string, so can be optimised
             // Literal values should not be escaped, because the author is trusted
@@ -37,6 +41,11 @@ class NodeTag extends Node {
         attribute.name = name;
         attribute.preparedNameEquals = " "+name+"=\"";
         attribute.value = value;
+        // If a URL, and the value is a single NodeValue element, it has to output as a URL path
+        if((valueContext == Context.URL) && (value instanceof NodeValue)) {
+            valueContext = Context.URL_PATH;
+        }
+        attribute.valueContext = valueContext;
         this.attributes.add(attribute);
     }
 
@@ -57,6 +66,7 @@ class NodeTag extends Node {
         public String name;
         public String preparedNameEquals; // " name=\"" for rendering
         public Node value;
+        public Context valueContext;
     }
 
     protected Node orSimplifiedNode() {
@@ -73,7 +83,7 @@ class NodeTag extends Node {
                 int attributeStart = builder.length();
                 builder.append(attribute.preparedNameEquals);
                 int valueStart = builder.length();
-                attribute.value.render(builder, driver, view, Context.ATTRIBUTE_VALUE);
+                attribute.value.render(builder, driver, view, attribute.valueContext);
                 // If nothing was rendered, remove the attribute
                 if(valueStart == builder.length()) {
                     builder.setLength(attributeStart);

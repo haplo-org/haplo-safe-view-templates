@@ -5,6 +5,16 @@ A experimental web templating language, with the goal of making it almost imposs
 
 It achieves this through parsing and understanding the structure of HTML, so it knows the context within which inserted values are output. The language is designed to look like HTML with C-style control flow, so it looks familiar to developers.
 
+The language is designed so that if a trusted template
+
+ * parses without errors,
+ * only uses the built in functions, and
+ * does not use `unsafeHTML()`,
+
+then all possible input views will write the HTML structure described by the template.
+
+That is, when using a template written by the application author, is it impossible for an attacker controlled view to inject arbitary HTML, such as unwelcome JavaScript.
+
 Licensed under the MPLv2, but with a temporary additional clause to request you don't use it in production until it's done.
 
 ## Introduction
@@ -104,12 +114,14 @@ A template is a whitespace separated list of:
 
 * Lists, which are just zero or more of the above in `[ ]`
 
+* URLs, which are explicitly created with a `url(...)` pseudo function, or implicitly inside attributes defined by the HTML specification to contain a URL value. (see below for URL syntax)
+
 * Enclosing view blocks, `^ { }`, the number of `^` characters indicating how many enclosing blocks to traverse, and then the block is rendered with that view.
 
 * C++ style comments, which begin with `//` and end at the end of the line
 
 
-## Views
+### Views
 
 The template is rendered from a view. This is a nested data structure, somewhat like JSON but the actual implementation dependent on the Driver. Values in the template refer to named properties in the view.
 
@@ -131,7 +143,57 @@ That single value may be a list, eg `<div class=["name1" otherClass]>`, in which
 Functions can be used for attribute values.
 
 
-## Implementation
+### URLs
+
+URLs are handled specially, because they require different escaping to other values, and URL parameters are generated properly.
+
+URL parsing and escaping is triggered by one of these forms:
+
+* An explicit url pseudo function containing a list `url(...)`
+
+* As an attribute defined in the HTML spec to take a URL value attribute, with a single value, `<a href=url>`
+  
+* As an attribute defined in the HTML spec to take a URL value attribute, with a list `<a href=[...]>`
+
+* As any tag attribute with an explict url value, `<a href=url(...)>`
+
+Where a URL is a single value, it is % escaped without escaping reserved characters. This allows values in the view like `/path/to/action` to work as expected, as otherwise characters like '/' would be replaced with % encoded values.
+
+Where a URL is a list, the first value, and all literal values afterwards, are % escaped without escaping reserved characters. Values after the first value are fully % escaped.
+
+The URL list may contain the `?` symbol, which triggers parameter mode. This is designed to do common parameter manipulation in the template language, without lots of troublesome code:
+
+* `key=value` sets the given parameter to the value. This can be a value from the view or a literal. If a parameter with that name is already set, then the value is replaced.
+
+* `*dictionary` retrives value from the view, inteprets it as a dictionary of key value pairs for setting parameters.
+
+* `!key` removes the parameter
+
+Parameters are omitted if the values are not found in the view.
+
+For example, given the definition:
+
+```
+<div> <a href=["/action" ? *params !sort kind="person" from=fromDate]> link </a> </div>
+```
+
+and the view
+
+```
+{
+  "params": {"q":"query string", "sort":"date"},
+  "fromDate": "2015-12-01"
+}
+```
+
+the template would be rendered as
+
+```
+<div><a href="/action?q=query%20string&kind=person&from=2015-12-01">link</a></div>
+```
+
+
+### Implementation
 
 The prototype has a simple hand-written recursive descent parser which outputs a thread-safe AST. This AST is then rendered with a Driver which provides language specific implentations to retrieve values from the view.
 
@@ -183,12 +245,12 @@ Evaluate `value` as a string, then output directly in the template without escap
 
 Include another template in the rendered output, controlled by the Driver.
 
+### url(...)
+
+Pseudo function with special parsing. See URLs section above.
+
 
 ## TODO
-
-* URL generation and parameter escaping (should support building URLs from tags (eg paths and ids), and building parameters from dictionaries, static parameters etc)
-
-* 'local variables' to remember values as view is traversed
 
 * Destructuring arrays into local variables for compact views & clarity
 
