@@ -2,7 +2,7 @@ package template;
 
 import java.util.ArrayList;
 import java.util.Map;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 
 class NodeURL extends NodeList {
     private ArrayList<ParamInst> parameters;
@@ -71,7 +71,8 @@ class NodeURL extends NodeList {
             urlContext = Context.URL;
         }
         if(this.parameters != null) {
-            HashMap<String,String> params = new HashMap<String,String>(16);
+            // Use LinkedHashMap to preserve order of parameters
+            LinkedHashMap<String,String> params = new LinkedHashMap<String,String>(16);
             for(ParamInst inst : this.parameters) {
                 if(inst.remove) {
                     params.remove(inst.key);

@@ -46,3 +46,22 @@ Error at line 1 character 19: In URLs, ! can only be used to declare parameters 
 ---
 Error at line 1 character 19: In URLs, * can only be used to declare parameters after the ? symbol
 
+---
+<div> <a href=[? <="bad"]> </div>
+---
+Error at line 1 character 18: Invalid literal URL parameter name: '<'
+
+---
+<div> <a href=[? >="bad"]> </div>
+---
+Error at line 1 character 18: Invalid literal URL parameter name: '>'
+
+---
+<div> <a href=[? "=bad]> </div>
+---
+Error at line 1 character 18: Invalid literal URL parameter name: '"'
+
+---
+<div> <a href=[? ABC@Y=bad]> </div>
+---
+Error at line 1 character 22: Invalid literal URL parameter name: 'ABC@Y'

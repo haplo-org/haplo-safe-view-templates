@@ -14,3 +14,40 @@ include() includes another template. View doesn't move (unlike languages like Ha
 {"value1":"one","template1":{"value1":"two"}}
 ---
 <div><span class=hello><b>Included Template 1: one</b></span></div>
+
+
+---
+NEW TEMPLATE: enclosing view works in included templates
+---
+<div> include("template2") </div>
+
+---
+{"rootValue":"ABC","nested":{"rootValue":"XYZ"}}
+---
+<div><i>Included Template 2: ABC</i></div>
+
+
+---
+NEW TEMPLATE: include() includes uses the current view as the root of the template.
+---
+<div>
+    within(nested) {
+        include("template1")
+    }
+</div>
+
+---
+{"nested":{"value1":"two"},"value1":"root"}
+---
+<div><b>Included Template 1: two</b></div>
+
+
+---
+NEW TEMPLATE: include() doesn't output anything if the template isn't known
+---
+<div> include("unknown-template") </div>
+
+---
+{}
+---
+<div></div>

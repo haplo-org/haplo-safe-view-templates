@@ -1,0 +1,35 @@
+
+Script tags have a special syntax because they're dangerous. (<script> tags are banned)
+
+---
+
+<head>
+    scriptTag("/path/to/x" ? time=time)
+</head>
+
+---
+{}
+---
+<head><script src="/path/to/x"></script></head>
+
+---
+{"time":1234}
+---
+<head><script src="/path/to/x?time=1234"></script></head>
+
+---
+NEW TEMPLATE: empty urls in <script> tags would be dangerous, so those tags are omitted entirely
+---
+<head>
+    scriptTag(? time=time)
+</head>
+
+---
+{}
+---
+<head></head>
+
+---
+{"time":5678}
+---
+<head><script src="?time=5678"></script></head>

@@ -132,6 +132,15 @@ There is a concept of the "current view". This starts at the root of the data st
 Sometimes you need to refer to values which are outside the current view. Use an enclosing view block, for example, to access the 'x' value in the enclosing view, use `^{x}`.
 
 
+### Missing and wrongly typed values
+
+If a value is missing from the view, or is the wrong type (eg a String when an Array is expected), then nothing will be output.
+
+This is chosen because it is probably better to display the page with missing values than to show an error to the user. A developer mode will alert the developer to these problems, and logging for in production.
+
+Where missing values would have a security implication, the rendering will output something which is safe. For example, empty attributes are omitted from tags, and `<script>` tags with an empty `src` are omitted entirely.
+
+
 ### Attributes on Tags
 
 If your HTML tag is just formed of attributes with constant values (as literals) then your tag is written exactly as it would be in normal HTML files, and will be output exactly as is.
@@ -193,7 +202,7 @@ the template would be rendered as
 ```
 
 
-### Implementation
+## Implementation
 
 The prototype has a simple hand-written recursive descent parser which outputs a thread-safe AST. This AST is then rendered with a Driver which provides language specific implentations to retrieve values from the view.
 
@@ -204,7 +213,7 @@ All the rendering functions keep track of the context, so escaping and other fea
 Running the tests requires JRuby, and the build system isn't worthy of the name.
 
 
-## Running the tests
+### Running the tests
 
 Make sure you have `javac` and `jruby` on your `PATH`, then run
 
@@ -241,6 +250,8 @@ Evaluate `value` as a string, then render the named block with that name. If tha
 
 Evaluate `value` as a string, then output directly in the template without escaping. A parse error is thrown if it is used outside the text context (eg can't be used in an attribute value).
 
+The value name must begin with `unsafe` so that it's obvious in the code generating the view that the value will be used unsafely.
+
 ### include("template")
 
 Include another template in the rendered output, controlled by the Driver.
@@ -248,6 +259,12 @@ Include another template in the rendered output, controlled by the Driver.
 ### url(...)
 
 Pseudo function with special parsing. See URLs section above.
+
+### scriptTag(...)
+
+Pseudo function for generating `<script>` tags. The arguments are a URL, as `url()`, and the resulting URL is output as the `src` attribute in `<script src="..."></script>` tag pair.
+
+Script tags are otherwise not allowed in templates, because including JavaScript is too dangerous and should be prohibited by your Content Security Policy.
 
 
 ## TODO
@@ -261,6 +278,8 @@ Pseudo function with special parsing. See URLs section above.
 * Javadocs, build system, etc, so it can be used in other projects
 
 * Linter to find more problems in templates (eg inline JavaScript, improperly escaped URLs)
+
+* Logging of empty and wrongly typed values.
 
 * Internationalisation support
 
@@ -279,4 +298,8 @@ If you're interested in this project, then contributions would be very welcome.
 
 If you submit a pull request, I'll ask you to confirm you're happy to license your code under the MPLv2 before I merge it.
 
-Thank you!
+
+## Thank you!
+
+Many thanks to [Alaric Snell-Pym](http://www.snell-pym.org.uk/alaric/) and [Samir Talwar](http://samirtalwar.com) for reviewing my language design, giving actionable feedback, and trying out the code.
+

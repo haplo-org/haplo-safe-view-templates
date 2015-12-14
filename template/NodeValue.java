@@ -14,6 +14,11 @@ class NodeValue extends Node implements ValueNode {
         this.path = path;
     }
 
+    // Used for validation
+    protected String _getFirstPathComponent() {
+        return this.path[0];
+    }
+
     public void render(StringBuilder builder, Driver driver, Object view, Context context) {
         Object value = driver.getValueFromView(view, this.path);
         if(value != null) {

@@ -1,0 +1,22 @@
+
+PARSE ERROR: Can't include <script> tags in the document because we want to control them properly.
+
+---
+<div><script></script></div>
+---
+Error at line 1 character 12: <script> tags are not allowed. Use scriptTag(...) to generate tags which include external scripts.
+
+---
+<div></script></div>
+---
+Error at line 1 character 6: Unexpected tag </script>, tags must be balanced
+
+---
+<div><ScRiPt></ScRiPt></div>
+---
+Error at line 1 character 6: Invalid tag name <ScRiPt> (must be lower case, a-z0-9 only)
+
+---
+<div><script src="/abc"></script></div>
+---
+Error at line 1 character 13: <script> tags are not allowed. Use scriptTag(...) to generate tags which include external scripts.

@@ -49,9 +49,11 @@ class HTML {
                 return attribute.equals("manifest");
             case "video":
                 return attribute.equals("src") || attribute.equals("poster");
-            case "img": case "audio": case "embed": case "iframe":
-            case "script": case "source": case "track":
+            case "img": case "audio": case "embed":
+            case "iframe": case "source": case "track":
                 return attribute.equals("src");
+            case "script":
+                throw new RuntimeException("logic error, script tags not allowed");
             default:
                 return false;
         }

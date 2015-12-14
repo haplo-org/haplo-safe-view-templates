@@ -21,6 +21,16 @@ class NodeFunctionUnsafeHTML extends NodeFunction.ExactlyOneValueArgument {
         if(parser.getCurrentParseContext() != Context.TEXT) {
             parser.error("unsafeHTML() cannot be used in this context", functionStartPos);
         }
+        Node arg0 = getSingleArgument();
+        // Must not use instanceof for type checking as NodeValueThis is a subclass of NodeValue
+        if((arg0 == null) || (arg0.getClass() != NodeValue.class)) {
+            parser.error("The argument to unsafeHTML() must be a plain value.", functionStartPos);
+        }
+        String fp = ((NodeValue)arg0)._getFirstPathComponent();
+        if((fp == null) || !fp.startsWith("unsafe")) {
+            parser.error("The value used in unsafeHTML() must begin with 'unsafe' to ensure it's obvious "+
+                "in the code generating the view that the value will be used unsafely.", functionStartPos);
+        }
     }
 
     public void render(StringBuilder builder, Driver driver, Object view, Context context) {

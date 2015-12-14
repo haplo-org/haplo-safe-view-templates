@@ -4,13 +4,13 @@ Construct URLs with parameters
 ---
 
 <div>
-    url("/path/to/something" ? *params abc=value1 !xyz ping="hello%/")
+    url("/path/to/something" ? *params abc=value1 !xyz ping="hello%/<>\"")
 </div>
 
 ---
 {}
 ---
-<div>/path/to/something?ping=hello%25%2F</div>
+<div>/path/to/something?ping=hello%25%2F%3C%3E%22</div>
 
 ---
 {
@@ -22,7 +22,7 @@ Construct URLs with parameters
     "value1": "V1"
 }
 ---
-<div>/path/to/something?p1=ONE&p2=two%E2%98%83&abc=V1&ping=hello%25%2F</div>
+<div>/path/to/something?p1=ONE&p2=two%E2%98%83&abc=V1&ping=hello%25%2F%3C%3E%22</div>
 
 
 
@@ -69,3 +69,25 @@ NEW TEMPLATE: Simple parameters in href
 {"id":"abc","one":123,"two":"Ducks"}
 ---
 <div><a href="/path/to/abc?a=123&b=Ducks">link</a></div>
+
+
+
+---
+NEW TEMPLATE: Parameters from dictionaries
+---
+<div> <a href=[?*dictionary]> "link" </a> </div>
+
+---
+{}
+---
+<div><a>link</a></div>
+
+---
+{"dictionary":{"a":"1", "b":2}}
+---
+<div><a href="?a=1&b=2">link</a></div>
+
+---
+{"dictionary":{"a<>\"&?z":"1", "b":"\"<&?>"}}
+---
+<div><a href="?a%3C%3E%22%26%3Fz=1&b=%22%3C%26%3F%3E">link</a></div>

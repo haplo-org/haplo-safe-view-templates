@@ -15,6 +15,7 @@ public class Template {
     }
 
     public void renderAsInclusion(StringBuilder builder, Driver driver, Object view, Context context) {
+        driver.setupForRender(this.numberOfRememberedViews);
         this.nodes.render(builder, driver, view, context);
     }
 

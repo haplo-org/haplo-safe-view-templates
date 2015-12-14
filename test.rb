@@ -2,9 +2,14 @@
 
 require 'json'
 
-nestedjava_inclusions = java.util.HashMap.new
-nestedjava_inclusions.put("template1", Java::Template::Parser.new(<<__E).parse())
+template_inclusions = java.util.HashMap.new
+template_inclusions.put("template1", Java::Template::Parser.new(<<__E).parse())
   <b> "Included Template 1: " value1 </b>
+__E
+template_inclusions.put("template2", Java::Template::Parser.new(<<__E).parse())
+  within(nested) {
+    <i> "Included Template 2: " ^{rootValue} </i>
+  }
 __E
 
 java_import Java::Template::Context
@@ -32,7 +37,7 @@ def view_value_to_java(value)
   when Array
     value.map {|v| view_value_to_java(v)} .to_java
   when Hash
-    m = java.util.HashMap.new
+    m = java.util.LinkedHashMap.new
     value.each do |k,v|
       m.put(k.to_s.to_java, view_value_to_java(v))
     end
@@ -118,8 +123,8 @@ files.each do |filename|
       expected_output = required_cmd.call.strip
       view = JSON.parse(view_json)
       drivers = []
-      drivers << Java::TemplateDriverNestedjava::NestedJavaDriver.new(view_value_to_java(view), nestedjava_inclusions)
-      drivers << Java::TemplateDriverJrubyjson::JRubyJSONDriver.new(view, nestedjava_inclusions)
+      drivers << Java::TemplateDriverNestedjava::NestedJavaDriver.new(view_value_to_java(view), template_inclusions)
+      drivers << Java::TemplateDriverJrubyjson::JRubyJSONDriver.new(view, template_inclusions)
       drivers.each do |driver|
         tests += 1
         output = template.renderString(driver)

@@ -7,4 +7,4 @@ PARSE ERROR: Tag attributes must be lower case
 
 ---
 
-Error at line 1 character 17: Invalid attribute name: 'Class' (attribute names must be lower case)
+Error at line 1 character 17: Invalid attribute name: 'Class' (attribute names must be lower case, and not begin with 'on' as these attributes are security risks)

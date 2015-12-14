@@ -1,0 +1,32 @@
+
+PARSE ERROR: onX="" attributes not allowed because they contains JavaScript
+
+---
+<a onclick="alert()">link</a>
+---
+Error at line 1 character 10: Invalid attribute name: 'onclick' (attribute names must be lower case, and not begin with 'on' as these attributes are security risks)
+
+---
+<a on="alert()">link</a>
+---
+Error at line 1 character 5: Invalid attribute name: 'on' (attribute names must be lower case, and not begin with 'on' as these attributes are security risks)
+
+---
+<a On="alert()">link</a>
+---
+Error at line 1 character 5: Invalid attribute name: 'On' (attribute names must be lower case, and not begin with 'on' as these attributes are security risks)
+
+---
+<a ON="alert()">link</a>
+---
+Error at line 1 character 5: Invalid attribute name: 'ON' (attribute names must be lower case, and not begin with 'on' as these attributes are security risks)
+
+---
+<a oN="alert()">link</a>
+---
+Error at line 1 character 5: Invalid attribute name: 'oN' (attribute names must be lower case, and not begin with 'on' as these attributes are security risks)
+
+---
+<a ONX="alert()">link</a>
+---
+Error at line 1 character 6: Invalid attribute name: 'ONX' (attribute names must be lower case, and not begin with 'on' as these attributes are security risks)

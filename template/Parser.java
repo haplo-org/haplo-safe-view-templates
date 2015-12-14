@@ -1,6 +1,7 @@
 package template;
 
 import java.util.Stack;
+import java.util.regex.Pattern;
 
 public class Parser {
     private CharSequence source;
@@ -10,9 +11,10 @@ public class Parser {
     private boolean inEnclosingViewBlock = false;
     private int nextRememberIndex = 0;
 
-    final static java.util.regex.Pattern VALID_TAG_NAME_REGEX = java.util.regex.Pattern.compile("\\A[a-z0-9]+\\Z");
+    final static Pattern VALID_TAG_NAME_REGEX = Pattern.compile("\\A[a-z0-9]+\\Z");
     // TODO: Is this overly restrictive regex valid? Is it worth writing a scanner function for it?
-    final static java.util.regex.Pattern VALID_ATTRIBUTE_NAME_REGEX = java.util.regex.Pattern.compile("\\A[a-z0-9_-]+\\Z");
+    final static Pattern VALID_ATTRIBUTE_NAME_REGEX = Pattern.compile("\\A(?!on)[a-z0-9_-]+\\Z");   // probits names starting onX for security
+    final static Pattern VALID_URL_PARAMETER_NAME_REGEX = Pattern.compile("\\A[a-z0-9_-]+\\Z");
 
     public Parser(CharSequence source) {
         this.source = source;
@@ -151,8 +153,11 @@ public class Parser {
 
     // Called after the first ( has been returned from symbol()
     protected Node parseFunction(String functionName) throws ParseException {
+        // Special cases for pseudo functions
         if(functionName.equals("url")) {
-            return parseURL(')'); // pseudo function
+            return parseURL(')');
+        } else if(functionName.equals("scriptTag")) {
+            return new NodeScriptTag(parseURL(')'));
         }
         int functionStartPos = this.pos;
         NodeList arguments = parseList(')', "arguments");
@@ -213,6 +218,9 @@ public class Parser {
         this.context = Context.TAG;
         checkTagName(name, false, tagStartPos);
         String tagName = name.toString();
+        if(tagName.equals("script")) {
+            error("<script> tags are not allowed. Use scriptTag(...) to generate tags which include external scripts.");
+        }
         NodeTag tag = new NodeTag(tagName);
         String attributeName = null;
         while(true) {
@@ -238,7 +246,8 @@ public class Parser {
                     error("Expected = after attribute name");
                 }
                 if(!(VALID_ATTRIBUTE_NAME_REGEX.matcher(s).matches())) {
-                    error("Invalid attribute name: '"+s+"' (attribute names must be lower case)");
+                    error("Invalid attribute name: '"+s+"' (attribute names must be lower case, "+
+                        "and not begin with 'on' as these attributes are security risks)");
                 }
                 attributeName = s.toString();
             }
@@ -282,7 +291,7 @@ public class Parser {
         }
     }
 
-    protected Node parseURL(char endOfListCharacter) throws ParseException {
+    protected NodeURL parseURL(char endOfListCharacter) throws ParseException {
         int urlStart = this.pos;
         Context oldContext = this.context;
         this.context = Context.URL;
@@ -307,6 +316,9 @@ public class Parser {
                     if(name == null) { error("Expected key name"); }
                     url.addParameterInstructionRemoveKey(name.toString());
                 } else {
+                    if(!(VALID_URL_PARAMETER_NAME_REGEX.matcher(s).matches())) {
+                        error("Invalid literal URL parameter name: '"+s+"'");
+                    }
                     if(!symbolIsSingleChar(symbol(), '=')) {
                         error("After ?, URLs must be formed of key=value, !key or *dictionary");
                     }

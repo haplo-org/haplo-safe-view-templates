@@ -3,7 +3,7 @@ unsafeHTML() outputs literal HTML within text nodes
 
 ---
 
-<div> unsafeHTML(html) </div>
+<div> unsafeHTML(unsafeValue) </div>
 
 ---
 {}
@@ -11,6 +11,16 @@ unsafeHTML() outputs literal HTML within text nodes
 <div></div>
 
 ---
-{"html":"<b>text</b>"}
+{"unsafeValue":"<b>text</b>"}
 ---
 <div><b>text</b></div>
+
+---
+NEW TEMPLATE: Check nested unsafe value names
+---
+<div> unsafeHTML(unsafe.nested) </div>
+
+---
+{"unsafe":{"nested":"<b>"}}
+---
+<div><b></div>
