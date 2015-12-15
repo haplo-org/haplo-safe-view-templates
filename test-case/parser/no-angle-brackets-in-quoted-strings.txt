@@ -1,0 +1,32 @@
+
+PARSE ERROR: Angle brackets aren't allowed in quoted strings, because it allows you to break all the rules about tags.
+
+---
+<div> "<" </div>
+---
+Error at line 1 character 8: Angle brackets are not allowed in quoted strings. Use proper tags for security.
+
+---
+<div> ">" </div>
+---
+Error at line 1 character 8: Angle brackets are not allowed in quoted strings. Use proper tags for security.
+
+---
+<div class=">"> </div>
+---
+Error at line 1 character 13: Angle brackets are not allowed in quoted strings. Use proper tags for security.
+
+---
+<div> url("/path/to<") </div>
+---
+Error at line 1 character 20: Angle brackets are not allowed in quoted strings. Use proper tags for security.
+
+---
+<div> url("/path/to" ? param="<") </div>
+---
+Error at line 1 character 31: Angle brackets are not allowed in quoted strings. Use proper tags for security.
+
+---
+<div> switch(x) { abc } "abc->xyz" { xyz } </div>
+---
+Error at line 1 character 30: Angle brackets are not allowed in quoted strings. Use proper tags for security.

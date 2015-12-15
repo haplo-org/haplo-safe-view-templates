@@ -4,13 +4,13 @@ Construct URLs with parameters
 ---
 
 <div>
-    url("/path/to/something" ? *params abc=value1 !xyz ping="hello%/<>\"")
+    url("/path/to/something" ? *params abc=value1 !xyz ping="hello%/&\"")
 </div>
 
 ---
 {}
 ---
-<div>/path/to/something?ping=hello%25%2F%3C%3E%22</div>
+<div>/path/to/something?ping=hello%25%2F%26%22</div>
 
 ---
 {
@@ -22,7 +22,7 @@ Construct URLs with parameters
     "value1": "V1"
 }
 ---
-<div>/path/to/something?p1=ONE&p2=two%E2%98%83&abc=V1&ping=hello%25%2F%3C%3E%22</div>
+<div>/path/to/something?p1=ONE&p2=two%E2%98%83&abc=V1&ping=hello%25%2F%26%22</div>
 
 
 

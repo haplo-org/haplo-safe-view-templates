@@ -1,13 +1,13 @@
-<div class="z__ui_choose_container">
+<div class="container">
   each(options) {
     if(indicator) {
       <span class=[
-            "z__ui_indicator"
-            switch(indicator) { } primary {"z__ui_indicator_primary"} secondary {"z__ui_indicator_secondary"}
+            "indicator"
+            switch(indicator) { } primary {"primary"} secondary {"secondary"}
           ]></span>
     }
-    <a href=action class=["z__ui_choose_option_entry" if(highlight) { "z__ui_choose_option_entry_highlight" }]>
-      <span class="z__ui_choose_option_entry_name"> label </span>
+    <a href=action class=["entry" if(highlight) { "highlight" }]>
+      <span class="name"> label </span>
       if(notes) {
         <span> notes </span>
       }

@@ -516,10 +516,14 @@ public class Parser {
                 break;
             } else if(c == '\\') {
                 int n = read();
-                if(n == -1) {
-                    break;
+                if(n == -1) { break; }
+                switch(n) {
+                    case 'n': builder.append('\n'); break;
+                    case '"': case '\\': builder.append((char)n); break;
+                    default: error("Unsupported escape code in quoted string: \\"+(char)n);
                 }
-                builder.append((n == 'n') ? '\n' : (char)n);
+            } else if((c == '<') || (c == '>')) {
+                error("Angle brackets are not allowed in quoted strings. Use proper tags for security.");
             } else if(c == '"') {
                 return builder.toString();
             } else {

@@ -17,7 +17,7 @@ url() function
 NEW TEMPLATE: bad things in URLs are escaped
 ---
 <div>
-    url("/path/<>\"x")
+    url("/path/&\"x")
     " - "
     url(value)
     " - "
@@ -28,7 +28,7 @@ NEW TEMPLATE: bad things in URLs are escaped
 ---
 {"value":"/path/<>\"y"}
 ---
-<div>/path/%3C%3E%22x - /path/%3C%3E%22y - <a href="/path/%3C%3E%22y">a</a> - <a href="/path/%3C%3E%22yq">b</a></div>
+<div>/path/&%22x - /path/%3C%3E%22y - <a href="/path/%3C%3E%22y">a</a> - <a href="/path/%3C%3E%22yq">b</a></div>
 
 ---
 NEW TEMPLATE: first element in URL list is escaped differently so views can include URLs and paths

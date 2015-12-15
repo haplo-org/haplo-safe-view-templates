@@ -1,0 +1,18 @@
+
+PARSE ERROR: Quoted strings aren't allowed to include any escaped characters that are not explicitly supported.
+
+---
+<div> "hello \n ping \t pong" </div>
+---
+Error at line 1 character 23: Unsupported escape code in quoted string: \t
+
+---
+<div> "hello ping \! pong" </div>
+---
+Error at line 1 character 20: Unsupported escape code in quoted string: \!
+
+---
+<div> "hello ping \r pong" </div>
+---
+Error at line 1 character 20: Unsupported escape code in quoted string: \r
+

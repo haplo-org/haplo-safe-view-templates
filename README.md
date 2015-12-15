@@ -47,16 +47,16 @@ I'm publishing it now to get feedback on the language and the implementation.
 Here's a template in this new language:
 
 ```
-<div class="z__ui_choose_container">
+<div class="container">
   each(options) {
     if(indicator) {
       <span class=[
-            "z__ui_indicator"
-            switch(indicator) { } primary {"z__ui_indicator_primary"} secondary {"z__ui_indicator_secondary"}
+            "indicator"
+            switch(indicator) { } primary {"primary"} secondary {"secondary"}
           ]></span>
     }
-    <a href=action class=["z__ui_choose_option_entry" if(highlight) { "z__ui_choose_option_entry_highlight" }]>
-      <span class="z__ui_choose_option_entry_name"> label </span>
+    <a href=action class=["entry" if(highlight) { "highlight" }]>
+      <span class="name"> label </span>
       if(notes) {
         <span> notes </span>
       }
@@ -68,13 +68,13 @@ Here's a template in this new language:
 This is how the equivalent Handlebars template looks:
 
 ```
-<div class="z__ui_choose_container">
+<div class="container">
   {{#each options}}
     {{#if indicator}}
-      <span class="z__ui_indicator{{_internal__indicator_styles indicator}}"></span>
+      <span class="indicator{{_internal__indicator_styles indicator}}"></span>
     {{/if}}
-    <a href="{{action}}" class="z__ui_choose_option_entry{{#if highlight}} z__ui_choose_option_entry_highlight{{/if}}">
-      <span class="z__ui_choose_option_entry_name">{{label}}</span>
+    <a href="{{action}}" class="entry{{#if highlight}} highlight{{/if}}">
+      <span class="name">{{label}}</span>
       {{#if notes}}
         <span>{{notes}}</span>
       {{/if}}
@@ -183,7 +183,7 @@ Parameters are omitted if the values are not found in the view.
 For example, given the definition:
 
 ```
-<div> <a href=["/action" ? *params !sort kind="person" from=fromDate]> link </a> </div>
+<div> <a href=["/action" ? *params !sort kind="person" from=fromDate]> label </a> </div>
 ```
 
 and the view
@@ -191,14 +191,15 @@ and the view
 ```
 {
   "params": {"q":"query string", "sort":"date"},
-  "fromDate": "2015-12-01"
+  "fromDate": "2015-12-01",
+  "label": "People"
 }
 ```
 
 the template would be rendered as
 
 ```
-<div><a href="/action?q=query%20string&kind=person&from=2015-12-01">link</a></div>
+<div><a href="/action?q=query%20string&kind=person&from=2015-12-01">People</a></div>
 ```
 
 
@@ -314,5 +315,5 @@ If you submit a pull request, I'll ask you to confirm you're happy to license yo
 
 ## Thank you!
 
-Many thanks to [Alaric Snell-Pym](http://www.snell-pym.org.uk/alaric/) and [Samir Talwar](http://samirtalwar.com) for reviewing my language design, giving actionable feedback, and trying out the code.
+Many thanks [Alaric Snell-Pym](http://www.snell-pym.org.uk/alaric/), [Samir Talwar](http://samirtalwar.com), and my colleages at [Haplo Services](http://www.haplo-services.com) for reviewing my language design, giving actionable feedback, and trying out the code.
 

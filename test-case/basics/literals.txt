@@ -5,6 +5,7 @@ Literal HTML text nodes need to be in quotes. (When most non-tag things are inse
 
 <div> "Hello" </div>
 <span> "A string with a \"quote\"" </span>
+<span> "A slash \\" </span>
 <div> "And a string with a new\nline" </div>
 
 ---
@@ -13,5 +14,5 @@ Literal HTML text nodes need to be in quotes. (When most non-tag things are inse
 
 ---
 
-<div>Hello</div><span>A string with a "quote"</span><div>And a string with a new
+<div>Hello</div><span>A string with a "quote"</span><span>A slash \</span><div>And a string with a new
 line</div>

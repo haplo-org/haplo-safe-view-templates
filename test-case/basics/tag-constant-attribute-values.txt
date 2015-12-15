@@ -4,7 +4,7 @@ Literal tag values are not escaped, and may omit quotes.
 ---
 
 <div>
-    <span class="\"<>&"></span>
+    <span class="\"&"></span>
     <span class="a"></span>
     <span class="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"></span>
     <span class="_k"></span>
@@ -17,4 +17,4 @@ Literal tag values are not escaped, and may omit quotes.
 
 ---
 
-<div><span class=""<>&"></span><span class=a></span><span class=abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789></span><span class="_k"></span><span class="k-"></span></div>
+<div><span class=""&"></span><span class=a></span><span class=abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789></span><span class="_k"></span><span class="k-"></span></div>
