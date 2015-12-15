@@ -1,0 +1,16 @@
+
+PARSE ERROR: Childless nodes aren't allowed to have children
+
+---
+<div>
+    <title><span>Hello</span></title>
+</div>
+---
+Error at line 2 character 16: Cannot include other tags inside <title>
+
+---
+<div>
+    <textarea><span>Hello</span></textarea>
+</div>
+---
+Error at line 2 character 19: Cannot include other tags inside <textarea>

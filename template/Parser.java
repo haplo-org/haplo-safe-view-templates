@@ -8,6 +8,7 @@ public class Parser {
     private int pos = 0;
     private Context context = Context.TEXT;
     private Stack<Node> nesting;
+    private String childlessTagName = null;
     private boolean inEnclosingViewBlock = false;
     private int nextRememberIndex = 0;
 
@@ -213,13 +214,20 @@ public class Parser {
         int tagStartPos = this.pos;
         CharSequence name = symbol();
         if(symbolIsSingleChar(name, '/')) {
-            return parseCloseTag(tagStartPos);
+            Node closeTag = parseCloseTag(tagStartPos);
+            this.childlessTagName = null;
+            return closeTag;
         }
         this.context = Context.TAG;
         checkTagName(name, false, tagStartPos);
         String tagName = name.toString();
         if(tagName.equals("script")) {
             error("<script> tags are not allowed. Use scriptTag(...) to generate tags which include external scripts.");
+        }
+        if(this.childlessTagName != null) {
+            error("Cannot include other tags inside <"+this.childlessTagName+">");
+        } else if(HTML.cannotContainChildNodes(tagName)) {
+            this.childlessTagName = tagName;
         }
         NodeTag tag = new NodeTag(tagName);
         String attributeName = null;

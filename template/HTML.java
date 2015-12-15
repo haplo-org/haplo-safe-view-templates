@@ -27,6 +27,18 @@ class HTML {
         }
     }
 
+    // Some tags may not include any child nodes because their text child
+    // isn't used as part of the document.
+    public static boolean cannotContainChildNodes(String name) {
+        switch(name) {
+            case "title":
+            case "textarea":
+                return true;
+            default:
+                return false;
+        }
+    }
+
     // Rests to see if an attribute contains a URL value.
     // List from http://www.w3.org/html/wg/drafts/html/master/index.html#attributes-1
     public static boolean attributeIsURL(String tag, String attribute) {

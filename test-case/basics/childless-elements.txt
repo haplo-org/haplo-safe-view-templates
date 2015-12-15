@@ -1,0 +1,17 @@
+
+Nodes which cannot contain child nodes still have their contents escaped properly.
+
+---
+<div>
+    <title> text </title>
+    <textarea name="text"> text </textarea>
+</div>
+
+---
+{
+    "text": "abc <tag> & something"
+}
+
+---
+
+<div><title>abc &lt;tag&gt; &amp; something</title><textarea name=text>abc &lt;tag&gt; &amp; something</textarea></div>
