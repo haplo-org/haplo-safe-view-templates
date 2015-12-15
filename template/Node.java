@@ -24,6 +24,10 @@ public class Node {
         return this;
     }
 
+    protected boolean whitelistForLiteralStringOnly() {
+        return false;
+    }
+
     public void dumpToBuilder(StringBuilder builder, String linePrefix) {
         builder.append(linePrefix);
         builder.append("UNKNOWN\n");

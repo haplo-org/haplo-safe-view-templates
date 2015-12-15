@@ -52,7 +52,7 @@ Here's a template in this new language:
     if(indicator) {
       <span class=[
             "z__ui_indicator"
-            case(indicator) { } primary {"z__ui_indicator_primary"} secondary {"z__ui_indicator_secondary"}
+            switch(indicator) { } primary {"z__ui_indicator_primary"} secondary {"z__ui_indicator_secondary"}
           ]></span>
     }
     <a href=action class=["z__ui_choose_option_entry" if(highlight) { "z__ui_choose_option_entry_highlight" }]>
@@ -85,7 +85,7 @@ This is how the equivalent Handlebars template looks:
 
 Note this doesn't include the implementation of a `_internal__indicator_styles()` Handlebars helper, which has to output a space prefixed class name if required. This is implemented in JavaScript, which is verbose and means you have to look in another place to understand what's going on.
 
-In the new templating language, the `_internal__indicator_styles()` function effectively inlined using the `case()` builtin. The template will output one or two class names in the class attribute.
+In the new templating language, the `_internal__indicator_styles()` function effectively inlined using the `switch()` builtin. The template will output one or two class names in the class attribute.
 
 While similar in structure, the second template has been properly parsed, and you can't write a template which outputs invalid HTML or doesn't escape things properly. And hopefully it's easier to read.
 
@@ -110,7 +110,7 @@ A template is a whitespace separated list of:
 
 * Literal strings in `" "`, with quotes escaped as `\"`
 
-* Functions, which take an optional anonymous block and zero or more named blocks. (see `if()` and `case()` in the example above). Blocks can be named with quoted strings using the literal syntax, or just bare words.
+* Functions, which take an optional anonymous block and zero or more named blocks. (see `if()` and `switch()` in the example above). Blocks can be named with quoted strings using the literal syntax, or just bare words.
 
 * Lists, which are just zero or more of the above in `[ ]`
 
@@ -202,6 +202,19 @@ the template would be rendered as
 ```
 
 
+## Security checking
+
+There are some additional restrictions on templates to encourage secure coding.
+
+* `<script>` tags are not allowed. Use `scriptTag()` instead.
+
+* onX attributes are not allowed, as they contain inline JavaScript. Use id and class attributes to select nodes and add handlers in your client side scripting.
+
+* id, class and style attributes may only contain literal strings, or conditionals which choose between one or more literal strings. This helps stop attackers from being able to manipulate the behaviour of client side scripts.
+
+* if the use of `unsafeHTML()` is unavoidable, the value key must have a name beginning with 'unsafe' so the view generation code also contains a hint that it's unsafe.
+
+
 ## Implementation
 
 The prototype has a simple hand-written recursive descent parser which outputs a thread-safe AST. This AST is then rendered with a Driver which provides language specific implentations to retrieve values from the view.
@@ -242,7 +255,7 @@ The Driver returns an Iterable of nested views for `value`, then the anonymous b
 
 The view is moved to the `value`, then the anonymous block is rendered.
 
-### case(value)
+### switch(value)
 
 Evaluate `value` as a string, then render the named block with that name. If that block doesn't exist, render the anonymous block.
 

@@ -1,0 +1,78 @@
+
+style attributes are allowed to be literals only, or control flow containing literals only
+
+---
+<div style=if(hidden){"display:none"}> "hello" </div>
+---
+{"hidden":true}
+---
+<div style="display:none">hello</div>
+
+---
+{}
+---
+<div>hello</div>
+
+---
+NEW TEMPLATE: pure literal style attribute
+---
+<div style="hello"></div>
+---
+{}
+---
+<div style=hello></div>
+
+---
+NEW TEMPLATE: lists containing only literals are good too
+---
+<div style=["hello" "there"]></div>
+---
+{}
+---
+<div style="hello there"></div>
+
+---
+NEW TEMPLATE: conditionals to check literals are allowed
+---
+<div style=if(x) { "hello" } else { "there" }></div>
+---
+{}
+---
+<div style="there"></div>
+
+---
+NEW TEMPLATE: conditionals to check literals are allowed
+---
+<div style=[if(x) { [ "hello" if(y) { "ping" }] } else { "there" }]></div>
+---
+{"x":true,"y":true}
+---
+<div style="hello ping"></div>
+
+---
+NEW TEMPLATE: switches to check literals are allowed
+---
+<div style=switch(x) { "Q" } y { "Y" }></div>
+---
+{"x":"y"}
+---
+<div style="Y"></div>
+
+---
+NEW TEMPLATE: quick check for id
+---
+<div id="one"><span id=[unless(a) {"two"}]> "text" </span></div>
+---
+{}
+---
+<div id=one><span id="two">text</span></div>
+
+---
+NEW TEMPLATE: quick check for class
+---
+<div class="one"><span class=[unless(a) {"two"}]> "text" </span></div>
+---
+{}
+---
+<div class=one><span class="two">text</span></div>
+

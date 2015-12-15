@@ -1,0 +1,14 @@
+
+switch() values are not escaped before being compared to block names
+
+---
+
+<div> switch(x) { "fail" } "hello <ping>&\"" { "pass" } </div>
+
+---
+
+{"x":"hello <ping>&\""}
+
+---
+
+<div>pass</div>

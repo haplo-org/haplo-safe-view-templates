@@ -1,0 +1,47 @@
+
+PARSE ERROR: id attributes must be string literals, because they're too hard to secure
+
+---
+<div id=value></div>
+---
+Error at line 1 character 13: id and class attributes must always be a literal string or conditionals choosing between literal strings. Use if()/switch() to determine or whitelist values (using untrusted id/class attributes is likely to introduce client side security bugs)
+
+---
+<div id=[value]></div>
+---
+Error at line 1 character 15: id and class attributes must always be a literal string or conditionals choosing between literal strings. Use if()/switch() to determine or whitelist values (using untrusted id/class attributes is likely to introduce client side security bugs)
+
+---
+<div id=if(a){x}></div>
+---
+Error at line 1 character 16: id and class attributes must always be a literal string or conditionals choosing between literal strings. Use if()/switch() to determine or whitelist values (using untrusted id/class attributes is likely to introduce client side security bugs)
+
+---
+<div id=["a" b]></div>
+---
+Error at line 1 character 15: id and class attributes must always be a literal string or conditionals choosing between literal strings. Use if()/switch() to determine or whitelist values (using untrusted id/class attributes is likely to introduce client side security bugs)
+
+---
+<div id=if(x) { y } else { "there" }></div>
+---
+Error at line 1 character 36: id and class attributes must always be a literal string or conditionals choosing between literal strings. Use if()/switch() to determine or whitelist values (using untrusted id/class attributes is likely to introduce client side security bugs)
+
+---
+<div id=unless(x) { y } else { "there" }></div>
+---
+Error at line 1 character 40: id and class attributes must always be a literal string or conditionals choosing between literal strings. Use if()/switch() to determine or whitelist values (using untrusted id/class attributes is likely to introduce client side security bugs)
+
+---
+<div id=switch(x) { "Q" } y { y }></div>
+---
+Error at line 1 character 33: id and class attributes must always be a literal string or conditionals choosing between literal strings. Use if()/switch() to determine or whitelist values (using untrusted id/class attributes is likely to introduce client side security bugs)
+
+---
+<div id=["abc" switch(x) { "Q" } y { y }]></div>
+---
+Error at line 1 character 41: id and class attributes must always be a literal string or conditionals choosing between literal strings. Use if()/switch() to determine or whitelist values (using untrusted id/class attributes is likely to introduce client side security bugs)
+
+---
+<div id=["abc" url("/abc")]></div>
+---
+Error at line 1 character 27: id and class attributes must always be a literal string or conditionals choosing between literal strings. Use if()/switch() to determine or whitelist values (using untrusted id/class attributes is likely to introduce client side security bugs)

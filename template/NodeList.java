@@ -3,29 +3,9 @@ package template;
 import java.util.List;
 import java.util.ArrayList;
 
-class NodeList extends Node {
-    ArrayList<Node> nodes;
-
-    protected NodeList() {
-        this.nodes = new ArrayList<Node>(16);
-    }
-
-    public void add(Node node) {
-        this.nodes.add(node);
-    }
-
-    public int size() {
-        return this.nodes.size();
-    }
-
-    public Node nodeAt(int index) {
-        return this.nodes.get(index);
-    }
-
-    protected List<Node> getNodeList() {
-        return this.nodes;
-    }
-
+// NodeList is final because other implementations might not override
+// whitelistForLiteralStringOnly() and create a security bug.
+final class NodeList extends NodeListBase {
     protected Node orSimplifiedNode() {
         return (this.nodes.size() == 1) ? this.nodes.get(0) : this;
     }
@@ -74,11 +54,13 @@ class NodeList extends Node {
         }
     }
 
-    public void dumpToBuilder(StringBuilder builder, String linePrefix) {
-        builder.append(linePrefix).append(this.dumpName()).append(" ("+this.nodes.size()).append(" nodes)\n");
+    protected boolean whitelistForLiteralStringOnly() {
         for(Node node : this.nodes) {
-            node.dumpToBuilder(builder, linePrefix+"  ");
+            if(!node.whitelistForLiteralStringOnly()) {
+                return false;
+            }
         }
+        return true;
     }
 
     protected String dumpName() {

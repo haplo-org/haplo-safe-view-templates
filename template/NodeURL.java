@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Map;
 import java.util.LinkedHashMap;
 
-class NodeURL extends NodeList {
+final class NodeURL extends NodeListBase {
     private ArrayList<ParamInst> parameters;
 
     public NodeURL() {
@@ -52,21 +52,9 @@ class NodeURL extends NodeList {
         return false;   // can't nest URLs
     }
 
-    protected Node orSimplifiedNode() {
-        return this;
-    }
-
-    protected Object value(Driver driver, Object view) {
-        return null;
-    }
-
-    protected Iterable<Object> valueIterableViewList(Driver driver, Object view) {
-        return null;
-    }
-
     public void render(StringBuilder builder, Driver driver, Object view, Context context) {
         Context urlContext = Context.URL_PATH;
-        for(Node node : this.getNodeList()) {
+        for(Node node : this.nodes) {
             node.render(builder, driver, view, urlContext);
             urlContext = Context.URL;
         }

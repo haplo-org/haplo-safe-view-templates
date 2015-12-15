@@ -1,0 +1,10 @@
+
+PARSE ERROR: switch() requires an argument
+
+---
+
+<div> switch() { } </div>
+
+---
+
+Error at line 1 character 14: switch() must take exactly one argument

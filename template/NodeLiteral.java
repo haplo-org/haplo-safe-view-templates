@@ -15,6 +15,10 @@ class NodeLiteral extends Node {
         builder.append(this.html);
     }
 
+    protected boolean whitelistForLiteralStringOnly() {
+        return true;
+    }
+
     public void dumpToBuilder(StringBuilder builder, String linePrefix) {
         builder.append(linePrefix).append("LITERAL ").append(this.html).append("\n");
     }

@@ -3,24 +3,24 @@ Escaping of attribute values
 
 ---
 
-<div class=value></div>
+<div data-value=value></div>
 
 ---
 { "value":"xyz" }
 ---
-<div class="xyz"></div>
+<div data-value="xyz"></div>
 
 ---
 { "value":"x&yz" }
 ---
-<div class="x&amp;yz"></div>
+<div data-value="x&amp;yz"></div>
 
 ---
 { "value":"<xyz>" }
 ---
-<div class="&lt;xyz&gt;"></div>
+<div data-value="&lt;xyz&gt;"></div>
 
 ---
 { "value":"\"xyz\"" }
 ---
-<div class="&quot;xyz&quot;"></div>
+<div data-value="&quot;xyz&quot;"></div>

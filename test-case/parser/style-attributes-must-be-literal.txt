@@ -1,0 +1,47 @@
+
+PARSE ERROR: style attributes must be string literals, because they're too hard to secure
+
+---
+<div style=value></div>
+---
+Error at line 1 character 16: style attributes must always be a literal string or conditionals choosing between literal strings (CSS escaping not supported)
+
+---
+<div style=[value]></div>
+---
+Error at line 1 character 18: style attributes must always be a literal string or conditionals choosing between literal strings (CSS escaping not supported)
+
+---
+<div style=if(a){x}></div>
+---
+Error at line 1 character 19: style attributes must always be a literal string or conditionals choosing between literal strings (CSS escaping not supported)
+
+---
+<div style=["a" b]></div>
+---
+Error at line 1 character 18: style attributes must always be a literal string or conditionals choosing between literal strings (CSS escaping not supported)
+
+---
+<div style=if(x) { y } else { "there" }></div>
+---
+Error at line 1 character 39: style attributes must always be a literal string or conditionals choosing between literal strings (CSS escaping not supported)
+
+---
+<div style=unless(x) { y } else { "there" }></div>
+---
+Error at line 1 character 43: style attributes must always be a literal string or conditionals choosing between literal strings (CSS escaping not supported)
+
+---
+<div style=switch(x) { "Q" } y { y }></div>
+---
+Error at line 1 character 36: style attributes must always be a literal string or conditionals choosing between literal strings (CSS escaping not supported)
+
+---
+<div style=["abc" switch(x) { "Q" } y { y }]></div>
+---
+Error at line 1 character 44: style attributes must always be a literal string or conditionals choosing between literal strings (CSS escaping not supported)
+
+---
+<div style=["abc" url("/abc")]></div>
+---
+Error at line 1 character 30: style attributes must always be a literal string or conditionals choosing between literal strings (CSS escaping not supported)

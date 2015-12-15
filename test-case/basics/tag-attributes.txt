@@ -4,33 +4,33 @@ Tag attributes, as constants, values and lists. Automatic removal of empty attri
 ---
 
 <div> value1 value2
-    <span class="constant"> "a" </span>
-    <span class=value1> "b" </span>
-    <span class=[value1]> "c" </span>
-    <span class=["constant" value1]> "d" </span>
-    <span class=["constant" value1 "two"]> "e" </span>
-    <span class=[value1 value2]> "f" </span>
-    <span class=[value1 "constant"]> "g" </span>
-    <span class=value1 id="one"> "h" </span>  // has literal attribute, order will change
+    <span data-value="constant"> "a" </span>
+    <span data-value=value1> "b" </span>
+    <span data-value=[value1]> "c" </span>
+    <span data-value=["constant" value1]> "d" </span>
+    <span data-value=["constant" value1 "two"]> "e" </span>
+    <span data-value=[value1 value2]> "f" </span>
+    <span data-value=[value1 "constant"]> "g" </span>
+    <span data-value=value1 id="one"> "h" </span>  // has literal attribute, order will change
 </div>
 
 ---
 
 {}
 ---
-<div><span class=constant>a</span><span>b</span><span>c</span><span class="constant">d</span><span class="constant two">e</span><span>f</span><span class="constant">g</span><span id=one>h</span></div>
+<div><span data-value=constant>a</span><span>b</span><span>c</span><span data-value="constant">d</span><span data-value="constant two">e</span><span>f</span><span data-value="constant">g</span><span id=one>h</span></div>
 ---
 
 {"value1":"v1"}
 ---
-<div>v1<span class=constant>a</span><span class="v1">b</span><span class="v1">c</span><span class="constant v1">d</span><span class="constant v1 two">e</span><span class="v1">f</span><span class="v1 constant">g</span><span id=one class="v1">h</span></div>
+<div>v1<span data-value=constant>a</span><span data-value="v1">b</span><span data-value="v1">c</span><span data-value="constant v1">d</span><span data-value="constant v1 two">e</span><span data-value="v1">f</span><span data-value="v1 constant">g</span><span id=one data-value="v1">h</span></div>
 ---
 
 {"value1":"v1", "value2":"V2"}
 ---
-<div>v1V2<span class=constant>a</span><span class="v1">b</span><span class="v1">c</span><span class="constant v1">d</span><span class="constant v1 two">e</span><span class="v1 V2">f</span><span class="v1 constant">g</span><span id=one class="v1">h</span></div>
+<div>v1V2<span data-value=constant>a</span><span data-value="v1">b</span><span data-value="v1">c</span><span data-value="constant v1">d</span><span data-value="constant v1 two">e</span><span data-value="v1 V2">f</span><span data-value="v1 constant">g</span><span id=one data-value="v1">h</span></div>
 ---
 
 {"value1":"v1&x\""}
 ---
-<div>v1&amp;x"<span class=constant>a</span><span class="v1&amp;x&quot;">b</span><span class="v1&amp;x&quot;">c</span><span class="constant v1&amp;x&quot;">d</span><span class="constant v1&amp;x&quot; two">e</span><span class="v1&amp;x&quot;">f</span><span class="v1&amp;x&quot; constant">g</span><span id=one class="v1&amp;x&quot;">h</span></div>
+<div>v1&amp;x"<span data-value=constant>a</span><span data-value="v1&amp;x&quot;">b</span><span data-value="v1&amp;x&quot;">c</span><span data-value="constant v1&amp;x&quot;">d</span><span data-value="constant v1&amp;x&quot; two">e</span><span data-value="v1&amp;x&quot;">f</span><span data-value="v1&amp;x&quot; constant">g</span><span id=one data-value="v1&amp;x&quot;">h</span></div>

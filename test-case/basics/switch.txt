@@ -1,14 +1,14 @@
 
-case() chooses a block based on the rendered value of the argument, allows you to have whatever blocks you want, and can take non-value nodes as an argument
+switch() chooses a block based on the rendered value of the argument, allows you to have whatever blocks you want, and can take non-value nodes as an argument
 
 ---
 
 <div>
-    <span> case(x) </span>
-    <span> case(x) { "always" } </span>
-    <span> case(x) { "default" } one { "ONE" } two { "TWO" } </span>
-    <span> case("x y z") { } "x y z" { "XYZ" } </span>
-    <span> case(x) { } 2 { "num" } </span>
+    <span> switch(x) </span>
+    <span> switch(x) { "always" } </span>
+    <span> switch(x) { "default" } one { "ONE" } two { "TWO" } </span>
+    <span> switch("x y z") { } "x y z" { "XYZ" } </span>
+    <span> switch(x) { } 2 { "num" } </span>
 </div>
 
 ---

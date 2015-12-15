@@ -1,11 +1,11 @@
 package template;
 
-class NodeFunctionCase extends NodeFunction.ExactlyOneArgument {
-    NodeFunctionCase() {
+class NodeFunctionSwitch extends NodeFunction.ExactlyOneArgument {
+    NodeFunctionSwitch() {
     }
 
     public String getFunctionName() {
-        return "case";
+        return "switch";
     }
 
     public void render(StringBuilder builder, Driver driver, Object view, Context context) {
@@ -20,7 +20,11 @@ class NodeFunctionCase extends NodeFunction.ExactlyOneArgument {
         }
     }
 
+    protected boolean whitelistForLiteralStringOnly() {
+        return checkBlocksWhitelistForLiteralStringOnly();
+    }
+
     public String getDumpName() {
-        return "FUNCTION case()";
+        return "FUNCTION switch()";
     }
 }

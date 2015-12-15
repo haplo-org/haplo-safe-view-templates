@@ -168,7 +168,7 @@ public class Parser {
             case "if":          fn = new NodeFunctionConditional(false); break;
             case "unless":      fn = new NodeFunctionConditional(true); break;
             case "each":        fn = new NodeFunctionEach(); break;
-            case "case":        fn = new NodeFunctionCase(); break;
+            case "switch":      fn = new NodeFunctionSwitch(); break;
             case "unsafeHTML":  fn = new NodeFunctionUnsafeHTML(); break;
             default:            fn = new NodeFunctionGeneric(functionName); break;
         }
@@ -236,7 +236,10 @@ public class Parser {
                 this.context = HTML.attributeIsURL(tagName, attributeName) ?
                         Context.URL :
                         Context.ATTRIBUTE_VALUE;
-                tag.addAttribute(attributeName.toString(), parseOneValue(-1), this.context);
+                tag.addAttribute(
+                        attributeName,
+                        checkedTagAttribute(attributeName, parseOneValue(-1)),
+                        this.context);
                 this.context = Context.TAG;
                 attributeName = null;
             } else if(symbolIsSingleChar(s, '/')) {
@@ -261,6 +264,26 @@ public class Parser {
         }
         this.context = Context.TEXT;
         return tag;
+    }
+
+    protected Node checkedTagAttribute(String attributeName, Node value) throws ParseException {
+        switch(attributeName) {
+            case "style":
+            case "id":
+            case "class":
+                if(!value.whitelistForLiteralStringOnly()) {
+                    error("style".equals(attributeName) ?
+                        "style attributes must always be a literal string or conditionals choosing between literal strings "+
+                            "(CSS escaping not supported)" :
+                        "id and class attributes must always be a literal string or conditionals choosing between literal strings. "+
+                            "Use if()/switch() to determine or whitelist values (using untrusted id/class attributes is likely "+
+                            "to introduce client side security bugs)");
+                }
+                break;
+            default:
+                break;
+        }
+        return value;
     }
 
     protected Node parseCloseTag(int tagStartPos) throws ParseException {

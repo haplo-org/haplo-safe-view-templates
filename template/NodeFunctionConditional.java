@@ -31,6 +31,10 @@ class NodeFunctionConditional extends NodeFunction.ExactlyOneValueArgument {
         }
     }
 
+    protected boolean whitelistForLiteralStringOnly() {
+        return checkBlocksWhitelistForLiteralStringOnly();
+    }
+
     public String getDumpName() {
         return this.inverse ? "UNLESS" : "IF";
     }

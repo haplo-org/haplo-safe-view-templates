@@ -61,6 +61,17 @@ abstract class NodeFunction extends Node {
         return this.blocks.get(name);
     }
 
+    protected boolean checkBlocksWhitelistForLiteralStringOnly() {
+        if(this.blocks != null) {
+            for(Node node : this.blocks.values()) {
+                if(!node.whitelistForLiteralStringOnly()) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
     public void dumpToBuilder(StringBuilder builder, String linePrefix) {
         builder.append(linePrefix).append(getDumpName()).
                 append(" within "+this.arguments.size()+" arguments:\n");
