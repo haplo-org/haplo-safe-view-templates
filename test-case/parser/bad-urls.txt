@@ -65,3 +65,23 @@ Error at line 1 character 18: Invalid literal URL parameter name: '"'
 <div> <a href=[? ABC@Y=bad]> </div>
 ---
 Error at line 1 character 22: Invalid literal URL parameter name: 'ABC@Y'
+
+---
+<div> <a href=[pants #
+---
+Error at line 1 character 22: Unexpected end of template after # URL fragment
+
+---
+<div> <a href=[? pants=2 #
+---
+Error at line 1 character 26: Unexpected end of template after # URL fragment
+
+---
+<div> <a href=[a ? pants=2 #
+---
+Error at line 1 character 28: Unexpected end of template after # URL fragment
+
+---
+<div> <a href=[pants # x ? p=q]> </a> </div>
+---
+Error at line 1 character 26: Unexpected ?

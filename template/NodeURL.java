@@ -1,11 +1,11 @@
 package template;
 
-import java.util.ArrayList;
 import java.util.Map;
 import java.util.LinkedHashMap;
 
 final class NodeURL extends NodeListBase {
-    private ArrayList<ParamInst> parameters;
+    private ParamInst parametersHead;
+    private Node fragmentsHead;
 
     public NodeURL() {
     }
@@ -32,18 +32,31 @@ final class NodeURL extends NodeListBase {
     // ----------------------------------------------------------------------
 
     private ParamInst addParameterInstruction() {
-        if(this.parameters == null) {
-            this.parameters = new ArrayList<ParamInst>(16);
-        }
         ParamInst inst = new ParamInst();
-        this.parameters.add(inst);
+        ParamInst tail = this.parametersHead;
+        while(tail != null) {
+            if(tail.nextInst == null) { break; }
+            tail = tail.nextInst;
+        }
+        if(tail == null) {
+            this.parametersHead = inst;
+        } else {
+            tail.nextInst = inst;
+        }
         return inst;
     }
 
     private static class ParamInst {
+        public ParamInst nextInst;
         public String key;
         public boolean remove;
         public Node value;
+    }
+
+    // ----------------------------------------------------------------------
+
+    public void addFragmentNode(Node node) {
+        this.fragmentsHead = Node.appendToNodeList(this.fragmentsHead, node, true);
     }
 
     // ----------------------------------------------------------------------
@@ -54,14 +67,17 @@ final class NodeURL extends NodeListBase {
 
     public void render(StringBuilder builder, Driver driver, Object view, Context context) {
         Context urlContext = Context.URL_PATH;
-        for(Node node : this.nodes) {
+        Node node = getListHeadMaybe();
+        while(node != null) {
             node.render(builder, driver, view, urlContext);
             urlContext = Context.URL;
+            node = node.getNextNode();
         }
-        if(this.parameters != null) {
+        if(this.parametersHead != null) {
             // Use LinkedHashMap to preserve order of parameters
             LinkedHashMap<String,String> params = new LinkedHashMap<String,String>(16);
-            for(ParamInst inst : this.parameters) {
+            ParamInst inst = this.parametersHead;
+            while(inst != null) {
                 if(inst.remove) {
                     params.remove(inst.key);
                 } else if(inst.key != null) {
@@ -78,6 +94,7 @@ final class NodeURL extends NodeListBase {
                         }
                     });
                 }
+                inst = inst.nextInst;
             }
             char separator = '?';
             for(Map.Entry<String,String> p : params.entrySet()) {
@@ -88,13 +105,25 @@ final class NodeURL extends NodeListBase {
                 separator = '&';
             }
         }
+        if(this.fragmentsHead != null) {
+            StringBuilder fragmentBuilder = new StringBuilder(64);
+            Node fragmentNode = this.fragmentsHead;
+            while(fragmentNode != null) {
+                fragmentNode.render(fragmentBuilder, driver, view, Context.URL_PATH);
+                fragmentNode = fragmentNode.getNextNode();
+            }
+            if(fragmentBuilder.length() > 0) {
+                builder.append('#').append(fragmentBuilder);
+            }
+        }
     }
 
     public void dumpToBuilder(StringBuilder builder, String linePrefix) {
         super.dumpToBuilder(builder, linePrefix);
-        if(this.parameters != null) {
+        if(this.parametersHead != null) {
             builder.append(linePrefix).append("  PARAMETERS\n");
-            for(ParamInst inst : this.parameters) {
+            ParamInst inst = this.parametersHead;
+            while(inst != null) {
                 if(inst.remove) {
                     builder.append(linePrefix).append("    REMOVE '").append(inst.key).append("'\n");
                 } else if(inst.key != null) {
@@ -105,6 +134,15 @@ final class NodeURL extends NodeListBase {
                 if(inst.value != null) {
                     inst.value.dumpToBuilder(builder, linePrefix+"      ");
                 }
+                inst = inst.nextInst;
+            }
+        }
+        if(this.fragmentsHead != null) {
+            builder.append(linePrefix).append("  FRAGMENT\n");
+            Node node = this.fragmentsHead;
+            while(node != null) {
+                node.dumpToBuilder(builder, linePrefix+"    ");
+                node = node.getNextNode();
             }
         }
     }

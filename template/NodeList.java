@@ -1,26 +1,23 @@
 package template;
 
-import java.util.List;
-import java.util.ArrayList;
-
 // NodeList is final because other implementations might not override
 // whitelistForLiteralStringOnly() and create a security bug.
 final class NodeList extends NodeListBase {
     protected Node orSimplifiedNode() {
-        return (this.nodes.size() == 1) ? this.nodes.get(0) : this;
+        return (hasOneMember()) ? getListHeadMaybe() : this;
     }
 
     protected Object value(Driver driver, Object view) {
-        if(this.nodes.size() == 1) {
-            return this.nodes.get(0).value(driver, view);
+        if(hasOneMember()) {
+            return getListHeadMaybe().value(driver, view);
         } else {
             return null;
         }
     }
 
     protected Iterable<Object> valueIterableViewList(Driver driver, Object view) {
-        if(this.nodes.size() == 1) {
-            return this.nodes.get(0).valueIterableViewList(driver, view);
+        if(hasOneMember()) {
+            return getListHeadMaybe().valueIterableViewList(driver, view);
         } else {
             return null;
         }
@@ -30,7 +27,8 @@ final class NodeList extends NodeListBase {
         if(context == Context.ATTRIBUTE_VALUE) {
             // Lists need to be space separated inside attributes
             int listStart = builder.length();
-            for(Node node : this.nodes) {
+            Node node = getListHeadMaybe();
+            while(node != null) {
                 // If something has been added already, add a space
                 if(listStart != builder.length()) {
                     builder.append(' ');
@@ -44,21 +42,26 @@ final class NodeList extends NodeListBase {
                         builder.setLength(valueStart - 1);
                     }
                 }
+                node = node.getNextNode();
             }
             
         } else {
             // For all other contexts, output values with nothing between them
-            for(Node node : this.nodes) {
+            Node node = getListHeadMaybe();
+            while(node != null) {
                 node.render(builder, driver, view, context);
+                node = node.getNextNode();
             }
         }
     }
 
     protected boolean whitelistForLiteralStringOnly() {
-        for(Node node : this.nodes) {
+        Node node = getListHeadMaybe();
+        while(node != null) {
             if(!node.whitelistForLiteralStringOnly()) {
                 return false;
             }
+            node = node.getNextNode();
         }
         return true;
     }

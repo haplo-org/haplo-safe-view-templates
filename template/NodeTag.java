@@ -1,11 +1,9 @@
 package template;
 
-import java.util.ArrayList;
-
 class NodeTag extends Node {
     private String name;
     private String start;
-    private ArrayList<Attribute> attributes;
+    private Attribute attributesHead;
 
     public NodeTag(String name) {
         // TODO: store both name and 'start'?
@@ -34,9 +32,6 @@ class NodeTag extends Node {
             }
             return;
         }
-        if(this.attributes == null) {
-            this.attributes = new ArrayList<Attribute>(6);
-        }
         Attribute attribute = new Attribute();
         attribute.name = name;
         attribute.preparedNameEquals = " "+name+"=\"";
@@ -46,7 +41,17 @@ class NodeTag extends Node {
             valueContext = Context.URL_PATH;
         }
         attribute.valueContext = valueContext;
-        this.attributes.add(attribute);
+        // Add to list
+        Attribute tail = this.attributesHead;
+        while(tail != null) {
+            if(tail.nextAttribute == null) { break; }
+            tail = tail.nextAttribute;
+        }
+        if(tail == null) {
+            this.attributesHead = attribute;
+        } else {
+            tail.nextAttribute = attribute;
+        }
     }
 
     private boolean canOmitQuotesForValue(CharSequence value) {
@@ -63,6 +68,7 @@ class NodeTag extends Node {
     }
 
     private static class Attribute {
+        public Attribute nextAttribute;
         public String name;
         public String preparedNameEquals; // " name=\"" for rendering
         public Node value;
@@ -70,7 +76,7 @@ class NodeTag extends Node {
     }
 
     protected Node orSimplifiedNode() {
-        if(this.attributes == null) {
+        if(this.attributesHead == null) {
             return new NodeLiteral(this.start+">");
         }
         return this;
@@ -78,33 +84,39 @@ class NodeTag extends Node {
 
     public void render(StringBuilder builder, Driver driver, Object view, Context context) {
         builder.append(this.start);
-        if(this.attributes != null) {
-            for(Attribute attribute : this.attributes) {
-                int attributeStart = builder.length();
-                builder.append(attribute.preparedNameEquals);
-                int valueStart = builder.length();
-                attribute.value.render(builder, driver, view, attribute.valueContext);
-                // If nothing was rendered, remove the attribute
-                if(valueStart == builder.length()) {
-                    builder.setLength(attributeStart);
-                } else {
-                    builder.append('"');
-                }
+        Attribute attribute = this.attributesHead;
+        while(attribute != null) {
+            int attributeStart = builder.length();
+            builder.append(attribute.preparedNameEquals);
+            int valueStart = builder.length();
+            attribute.value.render(builder, driver, view, attribute.valueContext);
+            // If nothing was rendered, remove the attribute
+            if(valueStart == builder.length()) {
+                builder.setLength(attributeStart);
+            } else {
+                builder.append('"');
             }
+            attribute = attribute.nextAttribute;
         }
         builder.append('>');
     }
 
     public void dumpToBuilder(StringBuilder builder, String linePrefix) {
         builder.append(linePrefix).append("TAG ").append(this.start);
-        if(this.attributes == null) {
-            builder.append(">\n");
+        if(this.attributesHead == null) {
+            builder.append(">\n");  // although this case should be simplified to a literal
         } else {
-            builder.append("> with "+this.attributes.size()+" attributes:\n");
-            for(Attribute attribute : this.attributes) {
-                builder.append(linePrefix+"  ").append(attribute.name).append("\n");
-                attribute.value.dumpToBuilder(builder, linePrefix+"  = ");
+            int count = 0;
+            StringBuilder attributesBuilder = new StringBuilder(256);
+            Attribute attribute = this.attributesHead;
+            while(attribute != null) {
+                count++;
+                attributesBuilder.append(linePrefix+"  ").append(attribute.name).append("\n");
+                attribute.value.dumpToBuilder(attributesBuilder, linePrefix+"    ");
+                attribute = attribute.nextAttribute;
             }
+            builder.append("> with "+count+" attributes:\n").
+                    append(attributesBuilder);
         }
     }
 }

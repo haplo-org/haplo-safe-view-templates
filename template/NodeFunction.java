@@ -1,10 +1,9 @@
 package template;
 
-import java.util.HashMap;
-
 abstract class NodeFunction extends Node {
     private NodeList arguments;
-    private HashMap<String,Node> blocks;
+    private Node anonymousBlock;
+    private Block blocksHead;
 
     public NodeFunction() {
     }
@@ -27,7 +26,7 @@ abstract class NodeFunction extends Node {
         return false;
     }
 
-    public void addBlock(Parser parser, String name, Node block, int startPos) throws ParseException {
+    public void addBlock(Parser parser, String name, Node blockNode, int startPos) throws ParseException {
         // Check block is permitted
         String[] permittedNames = this.getPermittedBlockNames();
         if(permittedNames != null) {
@@ -39,48 +38,79 @@ abstract class NodeFunction extends Node {
                     startPos);
             }
         }
-        if(this.blocks == null) {
-            this.blocks = new HashMap<String,Node>(4);
+        if(name == Node.BLOCK_ANONYMOUS) {
+            assert(this.anonymousBlock != null);
+            this.anonymousBlock = blockNode;
+        } else {
+            if(findBlockNamed(name) != null) {
+                parser.error("Repeated block for function: "+name);
+            }
+            Block block = new Block();
+            block.name = name;
+            block.node = blockNode;
+            Block tail = this.blocksHead;
+            while(tail != null) {
+                if(tail.nextBlock == null) { break; }
+                tail = tail.nextBlock;
+            }
+            if(tail == null) {
+                this.blocksHead = block;
+            } else {
+                tail.nextBlock = block;
+            }
         }
-        if(this.blocks.containsKey(name)) {
-            parser.error("Repeated block for function: "+name);
-        }
-        this.blocks.put(name, block);
     }
 
     public void postParse(Parser parser, int functionStartPos) throws ParseException {
         if(this.requiresAnonymousBlock()) {
-            if((this.blocks == null) || !(this.blocks.containsKey(Node.BLOCK_ANONYMOUS))) {
+            if(this.anonymousBlock == null) {
                 parser.error(this.getFunctionName()+"() requires an anonymous block", functionStartPos);
             }
         }
     }
 
+    protected Node findBlockNamed(String name) {
+        Block block = this.blocksHead;
+        while(block != null) {
+            if(block.name.equals(name)) {
+                return block.node;
+            }
+            block = block.nextBlock;
+        }
+        return null;
+    }
+
     protected Node getBlock(String name) {
-        if(this.blocks == null) { return null; }
-        return this.blocks.get(name);
+        return (name == Node.BLOCK_ANONYMOUS) ? this.anonymousBlock : findBlockNamed(name);
     }
 
     protected boolean checkBlocksWhitelistForLiteralStringOnly() {
-        if(this.blocks != null) {
-            for(Node node : this.blocks.values()) {
-                if(!node.whitelistForLiteralStringOnly()) {
-                    return false;
-                }
+        if((this.anonymousBlock != null) && !(this.anonymousBlock.whitelistForLiteralStringOnly())) {
+            return false;
+        }
+        Block block = this.blocksHead;
+        while(block != null) {
+            if(!block.node.whitelistForLiteralStringOnly()) {
+                return false;
             }
+            block = block.nextBlock;
         }
         return true;
     }
 
     public void dumpToBuilder(StringBuilder builder, String linePrefix) {
         builder.append(linePrefix).append(getDumpName()).
-                append(" within "+this.arguments.size()+" arguments:\n");
+                append(" with "+Node.nodeListLength(this.arguments.getListHeadMaybe())+" arguments:\n");
         arguments.dumpToBuilder(builder, linePrefix+"  ");
-        if(this.blocks != null) {
-            for(String blockName : this.blocks.keySet()) {
-                builder.append(linePrefix+"  BLOCK "+blockName+"\n");
-                this.blocks.get(blockName).dumpToBuilder(builder, linePrefix+"    ");
-            }
+        if(this.anonymousBlock != null) {
+            builder.append(linePrefix).append("  ANONYMOUS BLOCK\n");
+            this.anonymousBlock.dumpToBuilder(builder, linePrefix+"    ");
+        }
+        Block block = this.blocksHead;
+        while(block != null) {
+            builder.append(linePrefix).append("  BLOCK ").append(block.name).append('\n');
+            block.node.dumpToBuilder(builder, linePrefix+"    ");
+            block = block.nextBlock;
         }
     }
 
@@ -88,22 +118,30 @@ abstract class NodeFunction extends Node {
 
     // ----------------------------------------------------------------------
 
+    private static class Block {
+        Block nextBlock;
+        String name;
+        Node node;
+    }
+
+    // ----------------------------------------------------------------------
+
     public abstract static class ExactlyOneArgument extends NodeFunction {
         public void setArguments(Parser parser, NodeList arguments) throws ParseException {
-            if((arguments == null) || (arguments.size() != 1)) {
+            if((arguments == null) || !(arguments.hasOneMember())) {
                 parser.error(this.getFunctionName()+"() must take exactly one argument");
             }
             super.setArguments(parser, arguments);
         }
         public Node getSingleArgument() {
-            return this.getArguments().nodeAt(0);
+            return this.getArguments().getListHeadMaybe();
         }
     }
 
     public abstract static class ExactlyOneValueArgument extends ExactlyOneArgument {
         public void postParse(Parser parser, int functionStartPos) throws ParseException {
             super.postParse(parser, functionStartPos);
-            if(!(getSingleArgument() instanceof ValueNode)) {
+            if(!(getSingleArgument().nodeRepresentsValueFromView())) {
                 parser.error(this.getFunctionName()+"() must have a value as the argument", functionStartPos);
             }
         }

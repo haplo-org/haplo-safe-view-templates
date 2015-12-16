@@ -1,0 +1,28 @@
+
+Function blocks in the tree
+
+---
+<div>
+    generic-function(a) { "anon" }
+        abc { "ABC" }
+        xyz { "ZYZ" }
+        ducks { "lovely lovely ducks" }
+</div>
+---
+{}
+---
+TREE:
+LIST (3 nodes)
+  LITERAL <div>
+  FUNCTION generic-function() with 1 arguments:
+    LIST (1 nodes)
+      VALUE a
+    ANONYMOUS BLOCK
+      LITERAL anon
+    BLOCK abc
+      LITERAL ABC
+    BLOCK xyz
+      LITERAL ZYZ
+    BLOCK ducks
+      LITERAL lovely lovely ducks
+  LITERAL </div>

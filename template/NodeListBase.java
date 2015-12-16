@@ -1,31 +1,34 @@
 package template;
 
-import java.util.List;
-import java.util.ArrayList;
-
 abstract class NodeListBase extends Node {
-    protected ArrayList<Node> nodes;
+    protected Node listHead;
 
     protected NodeListBase() {
-        this.nodes = new ArrayList<Node>(16);
     }
 
-    public void add(Node node) {
-        this.nodes.add(node);
+    public void add(Node node, Context context) {
+        boolean tryMerge = (context == Context.TEXT);
+        this.listHead = Node.appendToNodeList(this.listHead, node, tryMerge);
     }
 
-    public int size() {
-        return this.nodes.size();
+    public boolean isEmpty() {
+        return (this.listHead == null);
     }
 
-    public Node nodeAt(int index) {
-        return this.nodes.get(index);
+    public boolean hasOneMember() {
+        return (this.listHead != null) && (this.listHead.getNextNode() == null);
+    }
+
+    public Node getListHeadMaybe() {
+        return this.listHead;
     }
 
     public void dumpToBuilder(StringBuilder builder, String linePrefix) {
-        builder.append(linePrefix).append(this.dumpName()).append(" ("+this.nodes.size()).append(" nodes)\n");
-        for(Node node : this.nodes) {
+        builder.append(linePrefix).append(this.dumpName()).append(" ("+Node.nodeListLength(this.listHead)).append(" nodes)\n");
+        Node node = this.listHead;
+        while(node != null) {
             node.dumpToBuilder(builder, linePrefix+"  ");
+            node = node.getNextNode();
         }
     }
 

@@ -1,0 +1,41 @@
+
+URLs with fragments
+
+---
+<a href=["/path/to/" id ? x=y # frag]>"link"</a>
+
+---
+{"id":23, "y":"Y"}
+---
+<a href="/path/to/23?x=Y">link</a>
+
+---
+{"id":23, "y":"Y", "frag":""}
+---
+<a href="/path/to/23?x=Y">link</a>
+
+---
+{"id":23, "y":"Y", "frag":"F1 "}
+---
+<a href="/path/to/23?x=Y#F1%20">link</a>
+
+---
+{"id":23, "y":"Y", "frag":"&/%"}
+---
+<a href="/path/to/23?x=Y#&/%25">link</a>
+
+
+---
+NEW TEMPLATE: Fragments with multiple nodes
+---
+<a href=[# "x" frag]>"link"</a>
+
+---
+{}
+---
+<a href="#x">link</a>
+
+---
+{"frag": "PING"}
+---
+<a href="#xPING">link</a>

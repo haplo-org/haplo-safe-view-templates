@@ -1,0 +1,11 @@
+
+PARSE ERROR: Can't repeat block names
+
+---
+<div>
+    switch(value) { } a { } b { } a { }
+</div>
+
+---
+
+Error at line 2 character 39: Repeated block for function: a

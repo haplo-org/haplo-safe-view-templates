@@ -1,0 +1,57 @@
+
+Literals nodes are merged, including literals from static tags.
+
+---
+<div> "Hello " "There" value </div>
+---
+{}
+---
+TREE: 
+LIST (3 nodes)
+  LITERAL <div>Hello There
+  VALUE value
+  LITERAL </div>
+
+
+---
+NEW TEMPLATE: Just literals
+---
+"Just " "Merged " "Literals"
+---
+{}
+---
+TREE: 
+LIST (1 nodes)
+  LITERAL Just Merged Literals
+
+
+---
+NEW TEMPLATE: More complex merged literals test
+---
+<div class="hello">
+    <div class="container">
+        each(array) {
+            <a class="s" href=link>
+                "Nice things " something " in list"
+            </a>
+        }
+    </div>
+</div>
+---
+{}
+---
+TREE:
+LIST (3 nodes)
+  LITERAL <div class=hello><div class=container>
+  EACH with 1 arguments:
+    LIST (1 nodes)
+      VALUE array
+    ANONYMOUS BLOCK
+      LIST (4 nodes)
+        TAG <a class=s> with 1 attributes:
+          href
+            VALUE link
+        LITERAL Nice things 
+        VALUE something
+        LITERAL  in list</a>
+  LITERAL </div></div>

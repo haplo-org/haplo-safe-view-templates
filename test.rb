@@ -111,7 +111,9 @@ files.each do |filename|
           template = Java::Template::Parser.new(required_cmd.call.strip).parse()
         rescue => e
           failed += 1
-          puts "#{filename}: Unexpected parse error: #{e.message}"
+          puts "\n#{filename}: Unexpected parse error"
+          (e.respond_to? :printStackTrace) ? e.printStackTrace() : p(e)
+          next
         end
       end
       view_json = required_cmd.call.strip
@@ -125,9 +127,14 @@ files.each do |filename|
       drivers = []
       drivers << Java::TemplateDriverNestedjava::NestedJavaDriver.new(view_value_to_java(view), template_inclusions)
       drivers << Java::TemplateDriverJrubyjson::JRubyJSONDriver.new(view, template_inclusions)
+      if expected_output =~ /\ATREE:(.+)\z/m
+        # Testing the tree, not the rendered output
+        expected_output = $1.strip
+        drivers = [:tree]
+      end
       drivers.each do |driver|
         tests += 1
-        output = template.renderString(driver)
+        output = (driver == :tree) ? template.dump().strip : template.renderString(driver)
         if output == expected_output
           passed += 1
         else

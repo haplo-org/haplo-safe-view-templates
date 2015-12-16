@@ -1,6 +1,6 @@
 package template;
 
-class NodeValue extends Node implements ValueNode {
+class NodeValue extends Node {
     private String[] path;
 
     final static java.util.regex.Pattern SPLIT_REGEX = java.util.regex.Pattern.compile("\\.");
@@ -27,6 +27,10 @@ class NodeValue extends Node implements ValueNode {
                 Escape.escape(string, builder, context);
             }
         }
+    }
+
+    protected boolean nodeRepresentsValueFromView() {
+        return true;
     }
 
     protected Object value(Driver driver, Object view) {

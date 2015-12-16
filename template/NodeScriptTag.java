@@ -1,7 +1,5 @@
 package template;
 
-import java.util.ArrayList;
-
 class NodeScriptTag extends Node {
     private NodeURL url;
 

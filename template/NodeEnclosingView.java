@@ -1,6 +1,6 @@
 package template;
 
-class NodeEnclosingView extends Node implements ValueNode {
+class NodeEnclosingView extends Node {
     private int rememberedViewIndex;
     private Node block;
 
@@ -11,6 +11,10 @@ class NodeEnclosingView extends Node implements ValueNode {
 
     public void render(StringBuilder builder, Driver driver, Object view, Context context) {
         this.block.render(builder, driver, driver.recallView(this.rememberedViewIndex), context);
+    }
+
+    protected boolean nodeRepresentsValueFromView() {
+        return true;
     }
 
     protected Object value(Driver driver, Object view) {

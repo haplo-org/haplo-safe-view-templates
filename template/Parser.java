@@ -45,7 +45,7 @@ public class Parser {
                 seenEndOfList = true;
                 break;
             }
-            nodes.add(node);
+            nodes.add(node, this.context);
         }
         if((endOfListCharacter != -1) && !seenEndOfList) {
             error("Did not find end of "+what, listStart);
@@ -329,6 +329,7 @@ public class Parser {
         NodeURL url = new NodeURL();
         this.nesting.push(url);
         boolean inParameters = false;
+        boolean inFragment = false;
         while(true) {
             int symbolStart = this.pos;
             CharSequence s = symbol();
@@ -346,6 +347,9 @@ public class Parser {
                     CharSequence name = symbol();
                     if(name == null) { error("Expected key name"); }
                     url.addParameterInstructionRemoveKey(name.toString());
+                } else if(singleChar == '#') {
+                    inParameters = false;
+                    inFragment = true;
                 } else {
                     if(!(VALID_URL_PARAMETER_NAME_REGEX.matcher(s).matches())) {
                         error("Invalid literal URL parameter name: '"+s+"'");
@@ -361,12 +365,28 @@ public class Parser {
             } else {
                 if(singleChar == '?') {
                     inParameters = true;
+                } else if(singleChar == '#') {
+                    inFragment = true;
                 } else if((singleChar == '=') || (singleChar == '!') || (singleChar == '*')) {
                     error("In URLs, "+s+" can only be used to declare parameters after the ? symbol");
                 } else {
                     this.pos = symbolStart; // go back before looked ahead symbol
-                    url.add(checkAllowedInURL(this.pos, parseOneValue(-1)));
+                    url.add(checkAllowedInURL(this.pos, parseOneValue(-1)), Context.URL);
                 }
+            }
+            if(inFragment) {
+                // Parse rest of arguments as a simple list of nodes
+                while(true) {
+                    Node fragmentNode = parseOneValue(endOfListCharacter);
+                    if(fragmentNode == null) {
+                        error("Unexpected end of template after # URL fragment");
+                    } if(fragmentNode == END_OF_LIST) {
+                        break;
+                    } else {
+                        url.addFragmentNode(fragmentNode);
+                    }
+                }
+                break;
             }
         }
         this.context = oldContext;
@@ -417,7 +437,7 @@ public class Parser {
                 (c == '{') || (c == '}') ||
                 (c == '<') || (c == '>') ||
                 (c == '[') || (c == ']') ||
-                (c == '?') || (c == '!') || (c == '*') || // for special URL syntax
+                (c == '?') || (c == '!') || (c == '*') || (c == '#') || // for special URL syntax
                 (c == '/') ||
                 (c == '"') ||
                 (c == '=');

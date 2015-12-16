@@ -180,10 +180,12 @@ The URL list may contain the `?` symbol, which triggers parameter mode. This is 
 
 Parameters are omitted if the values are not found in the view.
 
+After the (optional) parameters, the URL list may contain the '#' symbol, which triggers URL fragment mode. Any further values are concatenated and used as the URL fragment.
+
 For example, given the definition:
 
 ```
-<div> <a href=["/action" ? *params !sort kind="person" from=fromDate]> label </a> </div>
+<div> <a href=["/action" ? *params !sort kind="person" from=fromDate # "f" index]> label </a> </div>
 ```
 
 and the view
@@ -192,6 +194,7 @@ and the view
 {
   "params": {"q":"query string", "sort":"date"},
   "fromDate": "2015-12-01",
+  "index": 42,
   "label": "People"
 }
 ```
@@ -199,7 +202,7 @@ and the view
 the template would be rendered as
 
 ```
-<div><a href="/action?q=query%20string&kind=person&from=2015-12-01">People</a></div>
+<div><a href="/action?q=query%20string&kind=person&from=2015-12-01#f42">People</a></div>
 ```
 
 
