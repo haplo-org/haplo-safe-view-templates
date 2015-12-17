@@ -7,7 +7,7 @@ Literals nodes are merged, including literals from static tags.
 {}
 ---
 TREE: 
-LIST (3 nodes)
+LIST
   LITERAL <div>Hello There
   VALUE value
   LITERAL </div>
@@ -21,7 +21,7 @@ NEW TEMPLATE: Just literals
 {}
 ---
 TREE: 
-LIST (1 nodes)
+LIST
   LITERAL Just Merged Literals
 
 
@@ -41,13 +41,14 @@ NEW TEMPLATE: More complex merged literals test
 {}
 ---
 TREE:
-LIST (3 nodes)
+LIST
   LITERAL <div class=hello><div class=container>
-  EACH with 1 arguments:
-    LIST (1 nodes)
-      VALUE array
+  EACH
+    ARGUMENTS
+      LIST
+        VALUE array
     ANONYMOUS BLOCK
-      LIST (4 nodes)
+      LIST
         TAG <a class=s> with 1 attributes:
           href
             VALUE link

@@ -107,11 +107,7 @@ final class NodeURL extends NodeListBase {
         }
         if(this.fragmentsHead != null) {
             StringBuilder fragmentBuilder = new StringBuilder(64);
-            Node fragmentNode = this.fragmentsHead;
-            while(fragmentNode != null) {
-                fragmentNode.render(fragmentBuilder, driver, view, Context.URL_PATH);
-                fragmentNode = fragmentNode.getNextNode();
-            }
+            this.fragmentsHead.renderWithNextNodes(fragmentBuilder, driver, view, Context.URL_PATH);
             if(fragmentBuilder.length() > 0) {
                 builder.append('#').append(fragmentBuilder);
             }
@@ -139,11 +135,7 @@ final class NodeURL extends NodeListBase {
         }
         if(this.fragmentsHead != null) {
             builder.append(linePrefix).append("  FRAGMENT\n");
-            Node node = this.fragmentsHead;
-            while(node != null) {
-                node.dumpToBuilder(builder, linePrefix+"    ");
-                node = node.getNextNode();
-            }
+            this.fragmentsHead.dumpToBuilderWithNextNodes(builder, linePrefix+"    ");
         }
     }
 

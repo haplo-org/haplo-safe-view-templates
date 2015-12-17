@@ -1,0 +1,17 @@
+
+PARSE ERROR: template:X() & yield() cannot be used outside document context
+
+---
+<div class=template:x()></div>
+---
+Error at line 1 character 23: template: functions can only be used in document text
+
+---
+<div class=yield()></div>
+---
+Error at line 1 character 18: yield: functions can only be used in document text
+
+---
+<div class=yield:x()></div>
+---
+Error at line 1 character 20: yield: functions can only be used in document text

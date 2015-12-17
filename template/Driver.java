@@ -5,9 +5,9 @@ abstract public class Driver {
     abstract public Driver driverWithNewRoot(Object rootView);
     abstract public Object getValueFromView(Object view, String[] path);
     abstract public String valueToStringRepresentation(Object value);
-    abstract public Iterable<Object> valueToIterableViewList(Object value);
+    abstract public void iterateOverValueAsArray(Object value, ArrayIterator iterator);
     abstract public void iterateOverValueAsDictionary(Object value, DictionaryIterator iterator);
-    abstract public void renderInclusion(String inclusionName, StringBuilder builder, Context context);
+    abstract public void renderIncludedTemplate(String inclusionName, StringBuilder builder, Context context);
 
     public boolean valueIsTruthy(Object value) {
         if(value == null) {
@@ -24,6 +24,18 @@ abstract public class Driver {
 
     // ----------------------------------------------------------------------
 
+    public void renderYield(String blockName, StringBuilder builder, Object view, Context context) {
+        // TODO: Is it OK to silently ignore yield() calls when nothing was included with a template() ?
+        if(this.includedFromBinding == null) { return; }
+        this.includedFromBinding.renderBlock(blockName, builder, view, context);
+    }
+
+    // ----------------------------------------------------------------------
+
+    public static interface ArrayIterator {
+        void entry(Object value);
+    }
+
     public static interface DictionaryIterator {
         void entry(String key, Object value);
     }
@@ -35,6 +47,7 @@ abstract public class Driver {
     private boolean driverSetup = false;
     private int numberOfRememberedViews = 0;
     private Object[] rememberedViews;
+    private FunctionBinding includedFromBinding;
 
     public void setupForRender(int numberOfRememberedViews) {
         if(this.driverSetup) {
@@ -57,5 +70,12 @@ abstract public class Driver {
 
     public Object recallView(int index) {
         return (this.rememberedViews == null) ? null : this.rememberedViews[index];
+    }
+
+    public void setIncludedFromBinding(FunctionBinding includedFromBinding) {
+        if(this.includedFromBinding != null) {
+            throw new RuntimeException("Unexpected setIncludedFromBinding(), logic error");
+        }
+        this.includedFromBinding = includedFromBinding;
     }
 }

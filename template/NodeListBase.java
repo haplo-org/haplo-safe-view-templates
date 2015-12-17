@@ -23,12 +23,16 @@ abstract class NodeListBase extends Node {
         return this.listHead;
     }
 
+    public void renderList(StringBuilder builder, Driver driver, Object view, Context context) {
+        if(this.listHead != null) {
+            this.listHead.renderWithNextNodes(builder, driver, view, context);
+        }
+    }
+
     public void dumpToBuilder(StringBuilder builder, String linePrefix) {
-        builder.append(linePrefix).append(this.dumpName()).append(" ("+Node.nodeListLength(this.listHead)).append(" nodes)\n");
-        Node node = this.listHead;
-        while(node != null) {
-            node.dumpToBuilder(builder, linePrefix+"  ");
-            node = node.getNextNode();
+        builder.append(linePrefix).append(this.dumpName()).append('\n');
+        if(this.listHead != null) {
+            this.listHead.dumpToBuilderWithNextNodes(builder, linePrefix+"  ");
         }
     }
 

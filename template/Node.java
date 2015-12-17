@@ -12,6 +12,14 @@ public class Node {
         // TODO: Make Node's render() function abstract
     }
 
+    final public void renderWithNextNodes(StringBuilder builder, Driver driver, Object view, Context context) {
+        Node node = this;
+        while(node != null) {
+            node.render(builder, driver, view, context);
+            node = node.getNextNode();
+        }
+    }
+
     protected boolean nodeRepresentsValueFromView() {
         return false;
     }
@@ -20,8 +28,7 @@ public class Node {
         return null;
     }
 
-    protected Iterable<Object> valueIterableViewList(Driver driver, Object view) {
-        return null;
+    protected void iterateOverValueAsArray(Driver driver, Object view, Driver.ArrayIterator iterator) {
     }
 
     protected Node orSimplifiedNode() {
@@ -37,8 +44,15 @@ public class Node {
     }
 
     public void dumpToBuilder(StringBuilder builder, String linePrefix) {
-        builder.append(linePrefix);
-        builder.append("UNKNOWN\n");
+        builder.append(linePrefix).append("UNKNOWN\n");
+    }
+
+    final public void dumpToBuilderWithNextNodes(StringBuilder builder, String linePrefix) {
+        Node node = this;
+        while(node != null) {
+            node.dumpToBuilder(builder, linePrefix);
+            node = node.getNextNode();
+        }
     }
 
     // ----------------------------------------------------------------------
@@ -74,15 +88,5 @@ public class Node {
             }
             return maybeListHead; // head of list unchanged
         }
-    }
-
-    protected static int nodeListLength(Node maybeListHead) {
-        int count = 0;
-        Node scan = maybeListHead;
-        while(scan != null) {
-            count++;
-            scan = scan.getNextNode();
-        }
-        return count;
     }
 }

@@ -21,8 +21,8 @@ class NodeEnclosingView extends Node {
         return this.block.value(driver, driver.recallView(this.rememberedViewIndex));
     }
 
-    protected Iterable<Object> valueIterableViewList(Driver driver, Object view) {
-        return this.block.valueIterableViewList(driver, driver.recallView(this.rememberedViewIndex));
+    protected void iterateOverValueAsArray(Driver driver, Object view, Driver.ArrayIterator iterator) {
+        this.block.iterateOverValueAsArray(driver, driver.recallView(this.rememberedViewIndex), iterator);
     }
 
     public void dumpToBuilder(StringBuilder builder, String linePrefix) {

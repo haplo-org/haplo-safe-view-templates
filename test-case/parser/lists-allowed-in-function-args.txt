@@ -1,0 +1,13 @@
+
+Lists are allowed in function arguments
+
+---
+<div>
+    generic-function([a b c] "x") {
+        "ping"
+    }
+</div>
+---
+{}
+---
+<div></div>

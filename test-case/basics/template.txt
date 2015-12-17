@@ -1,9 +1,9 @@
 
-include() includes another template. View doesn't move (unlike languages like Handlebars). HTML inside isn't escaped.
+template:X() includes another template. View doesn't move (unlike languages like Handlebars). HTML inside isn't escaped.
 
 ---
 
-<div> <span class="hello"> include("template1") </span> </div>
+<div> <span class="hello"> template:template1() </span> </div>
 
 ---
 {"value1":"one"}
@@ -19,7 +19,7 @@ include() includes another template. View doesn't move (unlike languages like Ha
 ---
 NEW TEMPLATE: enclosing view works in included templates
 ---
-<div> include("template2") </div>
+<div> template:template2() </div>
 
 ---
 {"rootValue":"ABC","nested":{"rootValue":"XYZ"}}
@@ -32,7 +32,7 @@ NEW TEMPLATE: include() includes uses the current view as the root of the templa
 ---
 <div>
     within(nested) {
-        include("template1")
+        template:template1()
     }
 </div>
 
@@ -45,7 +45,7 @@ NEW TEMPLATE: include() includes uses the current view as the root of the templa
 ---
 NEW TEMPLATE: include() doesn't output anything if the template isn't known
 ---
-<div> include("unknown-template") </div>
+<div> template:unknown-template() </div>
 
 ---
 {}

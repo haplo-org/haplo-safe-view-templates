@@ -1,0 +1,9 @@
+
+PARSE ERROR: Tags can't be part of argument lists
+
+---
+<div>
+    generic-function(<span> </span>) {}
+</div>
+---
+Error at line 2 character 22: Tags are not valid in this context

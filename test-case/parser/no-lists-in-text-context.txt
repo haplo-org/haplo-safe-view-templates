@@ -1,0 +1,18 @@
+
+PARSE ERROR: Lists are not allowed in text context because it's a bit confusing
+
+---
+<div> [ a b c ] </div>
+---
+Error at line 1 character 7: Lists are not allowed within document text
+
+---
+<div>
+    <div>
+        each(x) {
+            "x" [ a b ]
+        }
+    </div>
+</div>
+---
+Error at line 4 character 17: Lists are not allowed within document text

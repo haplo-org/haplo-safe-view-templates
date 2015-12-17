@@ -1,0 +1,18 @@
+
+PARSE ERROR: template:x functions must be well formed
+
+---
+<div> template:x(a) </div>
+---
+Error at line 1 character 19: template: functions may not take any arguments
+
+---
+<div> template() </div>
+---
+Error at line 1 character 16: Bad template inclusion function name, must start 'template:'
+
+---
+<div> template:() </div>
+---
+Error at line 1 character 17: Bad template inclusion function name, must start 'template:'
+

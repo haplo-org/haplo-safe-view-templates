@@ -42,9 +42,11 @@ class NestedJavaDriver extends Driver {
         return (value == null) ? null : value.toString();
     }
 
-    public Iterable<Object> valueToIterableViewList(Object value) {
-        if(!(value instanceof Object[])) { return null; }
-        return Arrays.asList((Object[])value);
+    public void iterateOverValueAsArray(Object value, ArrayIterator iterator) {
+        if(!(value instanceof Object[])) { return; }
+        for(Object entry : ((Object[])value)) {
+            iterator.entry(entry);
+        }
     }
 
     @SuppressWarnings("unchecked")
@@ -57,7 +59,7 @@ class NestedJavaDriver extends Driver {
 
     // Uses default valueIsTruthy() implementation
 
-    public void renderInclusion(String inclusionName, StringBuilder builder, Context context) {
+    public void renderIncludedTemplate(String inclusionName, StringBuilder builder, Context context) {
         // TODO: Error if inclusion not found?
         if(this.inclusions == null) { return; }
         Template template = this.inclusions.get(inclusionName);

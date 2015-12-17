@@ -15,11 +15,9 @@ final class NodeList extends NodeListBase {
         }
     }
 
-    protected Iterable<Object> valueIterableViewList(Driver driver, Object view) {
+    protected void iterateOverValueAsArray(Driver driver, Object view, Driver.ArrayIterator iterator) {
         if(hasOneMember()) {
-            return getListHeadMaybe().valueIterableViewList(driver, view);
-        } else {
-            return null;
+            getListHeadMaybe().iterateOverValueAsArray(driver, view, iterator);
         }
     }
 
@@ -44,14 +42,9 @@ final class NodeList extends NodeListBase {
                 }
                 node = node.getNextNode();
             }
-            
         } else {
             // For all other contexts, output values with nothing between them
-            Node node = getListHeadMaybe();
-            while(node != null) {
-                node.render(builder, driver, view, context);
-                node = node.getNextNode();
-            }
+            renderList(builder, driver, view, context);
         }
     }
 

@@ -39,7 +39,7 @@ abstract class NodeFunction extends Node {
             }
         }
         if(name == Node.BLOCK_ANONYMOUS) {
-            assert(this.anonymousBlock != null);
+            if(this.anonymousBlock != null) { throw new RuntimeException("logic error"); }
             this.anonymousBlock = blockNode;
         } else {
             if(findBlockNamed(name) != null) {
@@ -99,9 +99,11 @@ abstract class NodeFunction extends Node {
     }
 
     public void dumpToBuilder(StringBuilder builder, String linePrefix) {
-        builder.append(linePrefix).append(getDumpName()).
-                append(" with "+Node.nodeListLength(this.arguments.getListHeadMaybe())+" arguments:\n");
-        arguments.dumpToBuilder(builder, linePrefix+"  ");
+        builder.append(linePrefix).append(getDumpName()).append('\n');
+        if(!this.arguments.isEmpty()) {
+            builder.append(linePrefix).append("  ARGUMENTS\n");
+            arguments.dumpToBuilder(builder, linePrefix+"    ");
+        }
         if(this.anonymousBlock != null) {
             builder.append(linePrefix).append("  ANONYMOUS BLOCK\n");
             this.anonymousBlock.dumpToBuilder(builder, linePrefix+"    ");

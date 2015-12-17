@@ -23,11 +23,9 @@ class NodeFunctionEach extends NodeFunction.ChangesView {
         rememberUnchangedViewIfNecessary(driver, view);
         Node block = getBlock(Node.BLOCK_ANONYMOUS);
         Node arg0 = getSingleArgument();
-        Iterable<Object> viewList = arg0.valueIterableViewList(driver, view);
-        if(viewList == null) { return; }
-        for(Object nestedView : viewList) {
+        arg0.iterateOverValueAsArray(driver, view, (nestedView) -> {
             block.render(builder, driver, nestedView, context);
-        }
+        });
     }
 
     public String getDumpName() {

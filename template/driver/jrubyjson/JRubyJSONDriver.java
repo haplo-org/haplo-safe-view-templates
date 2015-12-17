@@ -59,12 +59,11 @@ class JRubyJSONDriver extends Driver {
         return (value == null) ? null : value.toString();
     }
 
-    @SuppressWarnings("unchecked")
-    public Iterable<Object> valueToIterableViewList(Object value) {
-        if(value instanceof RubyArray) {
-            return (Iterable<Object>) () -> ((RubyArray)value).iterator();
+    public void iterateOverValueAsArray(Object value, ArrayIterator iterator) {
+        if(!(value instanceof RubyArray)) { return; }
+        for(Object entry : ((RubyArray)value)) {
+            iterator.entry(entry);
         }
-        return null;
     }
 
     @SuppressWarnings("unchecked")
@@ -97,7 +96,7 @@ class JRubyJSONDriver extends Driver {
         }
     }
 
-    public void renderInclusion(String inclusionName, StringBuilder builder, Context context) {
+    public void renderIncludedTemplate(String inclusionName, StringBuilder builder, Context context) {
         // TODO: Error if inclusion not found?
         if(this.inclusions == null) { return; }
         Template template = this.inclusions.get(inclusionName);

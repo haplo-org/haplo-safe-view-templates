@@ -269,9 +269,13 @@ Evaluate `value` as a string, then output directly in the template without escap
 
 The value name must begin with `unsafe` so that it's obvious in the code generating the view that the value will be used unsafely.
 
-### include("template")
+### template:X()
 
-Include another template in the rendered output, controlled by the Driver.
+Include another template in the rendered output, controlled by the Driver. The template name, `X`, is part of the function name.
+
+### yield() & yield:Y()
+
+When rendering a template which has been included in another using the template:X() function, render a template:X() function block. `yield()` renders the anonymous block, `yield:Y()` renders the block named `Y`.
 
 ### url(...)
 

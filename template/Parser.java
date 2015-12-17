@@ -24,9 +24,7 @@ public class Parser {
 
     public Template parse() throws ParseException {
         Template template = new Template(parseList(-1, "template"), this.nextRememberIndex);
-        if(!this.nesting.empty()) {
-            error("Bad nesting in template.");
-        }
+        if(!this.nesting.empty()) { throw new RuntimeException("logic error"); }
         return template;
     }
 
@@ -72,6 +70,9 @@ public class Parser {
             if(this.context == Context.URL) {
                 return parseURL(']');
             } else {
+                if(this.context == Context.TEXT) {
+                    error("Lists are not allowed within document text");
+                }
                 return parseList(']', "list").orSimplifiedNode();
             }
         } else if(singleChar == endOfListCharacter) {
@@ -161,18 +162,11 @@ public class Parser {
             return new NodeScriptTag(parseURL(')'));
         }
         int functionStartPos = this.pos;
+        Context oldContext = this.context;
+        this.context = Context.FUNCTION_ARGUMENTS;
         NodeList arguments = parseList(')', "arguments");
-        NodeFunction fn = null;
-        switch(functionName) {
-            case "include":     fn = new NodeFunctionInclude(); break;
-            case "within":      fn = new NodeFunctionWithin(); break;
-            case "if":          fn = new NodeFunctionConditional(false); break;
-            case "unless":      fn = new NodeFunctionConditional(true); break;
-            case "each":        fn = new NodeFunctionEach(); break;
-            case "switch":      fn = new NodeFunctionSwitch(); break;
-            case "unsafeHTML":  fn = new NodeFunctionUnsafeHTML(); break;
-            default:            fn = new NodeFunctionGeneric(functionName); break;
-        }
+        this.context = oldContext;
+        NodeFunction fn = functionNodeFromName(functionName);
         fn.setArguments(this, arguments);
         this.nesting.push(fn);
         // Are there any blocks?
@@ -205,6 +199,31 @@ public class Parser {
         fn.postParse(this, functionStartPos);
         popNestingAndCheckNodeWas(fn, functionStartPos);
         return fn;
+    }
+
+    protected NodeFunction functionNodeFromName(String functionName) throws ParseException {
+        switch(functionName) {
+            case "within":      return new NodeFunctionWithin();
+            case "if":          return new NodeFunctionConditional(false);
+            case "unless":      return new NodeFunctionConditional(true);
+            case "each":        return new NodeFunctionEach();
+            case "switch":      return new NodeFunctionSwitch();
+            case "unsafeHTML":  return new NodeFunctionUnsafeHTML();
+            case "yield":       return new NodeFunctionYield(Node.BLOCK_ANONYMOUS);
+            default: break;
+        }
+        if(functionName.startsWith("template")) {
+            if((functionName.length() <= 9) || (functionName.charAt(8) != ':')) {
+                error("Bad template inclusion function name, must start 'template:'");
+            }
+            return new NodeFunctionTemplate(functionName.substring(9));
+        } else if(functionName.startsWith("yield")) {
+            if((functionName.length() <= 6) || (functionName.charAt(5) != ':')) {
+                error("Bad named yield function name, must start 'yield:'");
+            }
+            return new NodeFunctionYield(functionName.substring(6));
+        }
+        return new NodeFunctionGeneric(functionName);
     }
 
     protected Node parseTag() throws ParseException {

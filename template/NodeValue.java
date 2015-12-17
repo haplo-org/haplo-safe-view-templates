@@ -37,9 +37,11 @@ class NodeValue extends Node {
         return driver.getValueFromView(view, this.path);
     }
 
-    protected Iterable<Object> valueIterableViewList(Driver driver, Object view) {
+    protected void iterateOverValueAsArray(Driver driver, Object view, Driver.ArrayIterator iterator) {
         Object value = driver.getValueFromView(view, this.path);
-        return (value == null) ? null : driver.valueToIterableViewList(value);
+        if(value != null) {
+            driver.iterateOverValueAsArray(value, iterator);
+        }
     }
 
     public void dumpToBuilder(StringBuilder builder, String linePrefix) {

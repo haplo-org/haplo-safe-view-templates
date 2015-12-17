@@ -12,11 +12,12 @@ Function blocks in the tree
 {}
 ---
 TREE:
-LIST (3 nodes)
+LIST
   LITERAL <div>
-  FUNCTION generic-function() with 1 arguments:
-    LIST (1 nodes)
-      VALUE a
+  FUNCTION generic-function()
+    ARGUMENTS
+      LIST
+        VALUE a
     ANONYMOUS BLOCK
       LITERAL anon
     BLOCK abc

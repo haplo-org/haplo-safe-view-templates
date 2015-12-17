@@ -1,0 +1,18 @@
+
+Templates inclusion uses yield to render blocks in this context
+
+---
+<div>
+    template:components() { "Anon block" }
+        extra1 { "value 1: " value1 }
+        extra2 { "Extra two" }
+</div>
+---
+{
+    "value1": "value in root view",
+    "component": {
+        "value1": "value in component view"
+    }
+}
+---
+<div><div class=component>value in component view <span class=anon>Anon block</span><span class=e1>value 1: value in root view</span><span class=e2>Extra two</span><span class=three></span></div></div>

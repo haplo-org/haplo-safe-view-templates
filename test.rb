@@ -11,6 +11,17 @@ template_inclusions.put("template2", Java::Template::Parser.new(<<__E).parse())
     <i> "Included Template 2: " ^{rootValue} </i>
   }
 __E
+template_inclusions.put("components", Java::Template::Parser.new(<<__E).parse())
+  within(component) {
+    <div class="component">
+      value1 " "
+      <span class="anon"> yield() </span>
+      <span class="e1"> yield:extra1() </span>
+      <span class="e2"> yield:extra2() </span>
+      <span class="three"> yield:extra3() </span>
+    </div>
+  }
+__E
 
 java_import Java::Template::Context
 def try_quoting

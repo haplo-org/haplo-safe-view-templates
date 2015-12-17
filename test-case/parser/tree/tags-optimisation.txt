@@ -7,7 +7,7 @@ Tags with no or literal attributes are optimised in the tree
 {}
 ---
 TREE:
-LIST (3 nodes)
+LIST
   LITERAL <div>
   VALUE value
   LITERAL </div>
@@ -21,7 +21,7 @@ NEW TEMPLATE: Tags with all literal attributes are output as literals
 {}
 ---
 TREE:
-LIST (3 nodes)
+LIST
   LITERAL <div class=hello data-value=x>
   VALUE value
   LITERAL </div>
@@ -35,7 +35,7 @@ NEW TEMPLATE: In tags with some dynamic and some literal attributes, the literal
 {}
 ---
 TREE:
-LIST (7 nodes)
+LIST
   LITERAL <div class=hello>
   VALUE value
   TAG <div class=boo> with 1 attributes:
