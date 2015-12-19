@@ -16,8 +16,7 @@ LIST
   LITERAL <div>
   FUNCTION generic-function()
     ARGUMENTS
-      LIST
-        VALUE a
+      VALUE a
     ANONYMOUS BLOCK
       LITERAL anon
     BLOCK abc

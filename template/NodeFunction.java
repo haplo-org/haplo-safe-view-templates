@@ -1,7 +1,7 @@
 package template;
 
 abstract class NodeFunction extends Node {
-    private NodeList arguments;
+    private Node argumentsHead; // can be null
     private Node anonymousBlock;
     private Block blocksHead;
 
@@ -10,16 +10,12 @@ abstract class NodeFunction extends Node {
 
     abstract public String getFunctionName();
 
-    public void setArguments(Parser parser, NodeList arguments) throws ParseException {
-        this.arguments = arguments;
+    public void setArguments(Parser parser, Node argumentsHead) throws ParseException {
+        this.argumentsHead = argumentsHead;
     }
 
-    protected NodeList getArguments() {
-        return this.arguments;
-    }
-
-    protected Node getFirstArgument() {
-        return this.arguments.getListHeadMaybe();
+    protected Node getArgumentsHead() {
+        return this.argumentsHead;
     }
 
     protected String[] getPermittedBlockNames() {
@@ -104,9 +100,9 @@ abstract class NodeFunction extends Node {
 
     public void dumpToBuilder(StringBuilder builder, String linePrefix) {
         builder.append(linePrefix).append(getDumpName()).append('\n');
-        if(!this.arguments.isEmpty()) {
+        if(this.argumentsHead != null) {
             builder.append(linePrefix).append("  ARGUMENTS\n");
-            arguments.dumpToBuilder(builder, linePrefix+"    ");
+            this.argumentsHead.dumpToBuilderWithNextNodes(builder, linePrefix+"    ");
         }
         if(this.anonymousBlock != null) {
             builder.append(linePrefix).append("  ANONYMOUS BLOCK\n");
@@ -133,14 +129,14 @@ abstract class NodeFunction extends Node {
     // ----------------------------------------------------------------------
 
     public abstract static class ExactlyOneArgument extends NodeFunction {
-        public void setArguments(Parser parser, NodeList arguments) throws ParseException {
-            if((arguments == null) || !(arguments.hasOneMember())) {
+        public void setArguments(Parser parser, Node argumentsHead) throws ParseException {
+            if((argumentsHead == null) || (argumentsHead.getNextNode() != null)) {
                 parser.error(this.getFunctionName()+"() must take exactly one argument");
             }
-            super.setArguments(parser, arguments);
+            super.setArguments(parser, argumentsHead);
         }
         public Node getSingleArgument() {
-            return this.getArguments().getListHeadMaybe();
+            return this.getArgumentsHead();
         }
     }
 

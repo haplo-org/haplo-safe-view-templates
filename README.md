@@ -216,6 +216,8 @@ There are some additional restrictions on templates to encourage secure coding.
 
 * id, class and style attributes may only contain literal strings, or conditionals which choose between one or more literal strings. This helps stop attackers from being able to manipulate the behaviour of client side scripts.
 
+* `<style>` tags are not allowed. Use external stylesheets instead.
+
 * if the use of `unsafeHTML()` is unavoidable, the value key must have a name beginning with 'unsafe' so the view generation code also contains a hint that it's unsafe.
 
 

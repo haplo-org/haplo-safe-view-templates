@@ -26,7 +26,7 @@ public class FunctionBinding {
     }
 
     public void restartArguments() {
-        this.nextArgument = this.function.getFirstArgument();
+        this.nextArgument = this.function.getArgumentsHead();
         this.argumentCount = 0;
     }
 

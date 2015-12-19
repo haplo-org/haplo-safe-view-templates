@@ -11,10 +11,6 @@ abstract class NodeListBase extends Node {
         this.listHead = Node.appendToNodeList(this.listHead, node, tryMerge);
     }
 
-    public boolean isEmpty() {
-        return (this.listHead == null);
-    }
-
     public boolean hasOneMember() {
         return (this.listHead != null) && (this.listHead.getNextNode() == null);
     }

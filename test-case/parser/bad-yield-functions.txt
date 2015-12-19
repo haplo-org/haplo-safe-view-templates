@@ -1,0 +1,12 @@
+
+PARSE ERROR: yield* functions must be well formed
+
+---
+<div> yield(a) </div>
+---
+Error at line 1 character 14: yield: functions may not take any arguments
+
+---
+<div> yield:x(a) </div>
+---
+Error at line 1 character 16: yield: functions may not take any arguments

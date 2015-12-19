@@ -1,0 +1,14 @@
+
+PARSE ERROR: <style> tags aren't allowed
+
+---
+
+<head>
+    <style type="text/css">
+        p { color: red }
+    </style>
+</head
+
+---
+
+Error at line 2 character 11: <style> tags are not allowed. Use the <link> tag to include external stylesheets.

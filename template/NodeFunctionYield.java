@@ -16,7 +16,7 @@ class NodeFunctionYield extends NodeFunction {
         if(parser.getCurrentParseContext() != Context.TEXT) {
             parser.error("yield: functions can only be used in document text");
         }
-        if(!getArguments().isEmpty()) {
+        if(getArgumentsHead() != null) {
             parser.error("yield: functions may not take any arguments");
         }
     }

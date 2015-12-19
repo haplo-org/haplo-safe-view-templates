@@ -1,0 +1,27 @@
+
+PARSE ERROR: Tag are well formed (with lower case names only containing a-z0-9, have correct x=y syntax)
+
+---
+<DIV> </DIV>
+---
+Error at line 1 character 1: Invalid tag name <DIV> (must be lower case, a-z0-9 only)
+
+---
+<a-b> </a-b>
+---
+Error at line 1 character 1: Invalid tag name <a-b> (must be lower case, a-z0-9 only)
+
+---
+<div =value>
+---
+Error at line 1 character 6: Unexpected = in tag
+
+---
+<div attr></div>
+---
+Error at line 1 character 10: No attribute value in tag
+
+---
+<div><
+---
+Error at line 1 character 6: Unexpected end of template after <

@@ -1,0 +1,24 @@
+
+PARSE ERROR: Can't duplicate attributes in a tag
+
+---
+
+<div class="x" data-value="y" id="ping">
+    <div class="x" id="pong" class="y">
+    </div>
+</div>
+
+---
+
+Error at line 2 character 35: Duplicate 'class' attribute in <div>
+
+---
+
+<div class="x" data-value="y" id="ping">
+    <div data-value="x" id="pong" data-value=y>
+    </div>
+</div>
+
+---
+
+Error at line 2 character 45: Duplicate 'data-value' attribute in <div>

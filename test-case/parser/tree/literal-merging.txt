@@ -45,8 +45,7 @@ LIST
   LITERAL <div class=hello><div class=container>
   EACH
     ARGUMENTS
-      LIST
-        VALUE array
+      VALUE array
     ANONYMOUS BLOCK
       LIST
         TAG <a class=s> with 1 attributes:

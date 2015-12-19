@@ -1,0 +1,11 @@
+
+PARSE ERROR: Tags unterminated at end of template
+
+---
+
+<div>
+    <div class="x"
+
+---
+
+Error at line 2 character 18: Unexpected end of template in tag

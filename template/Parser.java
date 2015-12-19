@@ -2,6 +2,7 @@ package template;
 
 import java.util.Stack;
 import java.util.regex.Pattern;
+import java.util.HashSet;
 
 public class Parser {
     private CharSequence source;
@@ -167,7 +168,7 @@ public class Parser {
         NodeList arguments = parseList(')', "arguments");
         this.context = oldContext;
         NodeFunction fn = functionNodeFromName(functionName);
-        fn.setArguments(this, arguments);
+        fn.setArguments(this, arguments.getListHeadMaybe());
         this.nesting.push(fn);
         // Are there any blocks?
         CharSequence possibleBlockName = Node.BLOCK_ANONYMOUS;
@@ -242,6 +243,10 @@ public class Parser {
         String tagName = name.toString();
         if(tagName.equals("script")) {
             error("<script> tags are not allowed. Use scriptTag(...) to generate tags which include external scripts.");
+        } else if(tagName.equals("style")) {
+            // Style tags aren't allowed because it needs a special parsing mode and escaping, and nothing
+            // is gained by allowing inline stylesheets.
+            error("<style> tags are not allowed. Use the <link> tag to include external stylesheets.");
         }
         if(this.childlessTagName != null) {
             error("Cannot include other tags inside <"+this.childlessTagName+">");
@@ -249,6 +254,7 @@ public class Parser {
             this.childlessTagName = tagName;
         }
         NodeTag tag = new NodeTag(tagName);
+        HashSet<String> seenAttributes = new HashSet<String>(4);
         String attributeName = null;
         while(true) {
             CharSequence s = symbol();
@@ -258,6 +264,9 @@ public class Parser {
             } else if(symbolIsSingleChar(s, '=')) {
                 if(attributeName == null) {
                     error("Unexpected = in tag");
+                }
+                if(!seenAttributes.add(attributeName)) {
+                    error("Duplicate '"+attributeName+"' attribute in <"+tagName+">");
                 }
                 // Automatically move to URL escaping & parsing mode if attribute is known to contains URLs
                 this.context = HTML.attributeIsURL(tagName, attributeName) ?

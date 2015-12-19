@@ -19,22 +19,22 @@ class NodeTag extends Node {
         return this.name;
     }
 
-    public void addAttribute(String name, Node value, Context valueContext) {
+    public void addAttribute(String attributeName, Node value, Context valueContext) {
         if(value instanceof NodeLiteral) {
             // Value is just a literal string, so can be optimised
             // Literal values should not be escaped, because the author is trusted
             // TODO: Linter should check literal values don't contain bad things
             String attributeValue = ((NodeLiteral)value).getLiteralString();
             if(canOmitQuotesForValue(attributeValue)) {
-                this.start += " "+name+"="+attributeValue;
+                this.start += " "+attributeName+"="+attributeValue;
             } else {
-                this.start += " "+name+"=\""+attributeValue+'"';
+                this.start += " "+attributeName+"=\""+attributeValue+'"';
             }
             return;
         }
         Attribute attribute = new Attribute();
-        attribute.name = name;
-        attribute.preparedNameEquals = " "+name+"=\"";
+        attribute.name = attributeName;
+        attribute.preparedNameEquals = " "+attributeName+"=\"";
         attribute.value = value;
         // If a URL, and the value is a single NodeValue element, it has to output as a URL path
         if((valueContext == Context.URL) && (value instanceof NodeValue)) {
