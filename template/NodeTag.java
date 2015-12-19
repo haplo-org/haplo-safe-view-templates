@@ -24,7 +24,7 @@ class NodeTag extends Node {
             // Value is just a literal string, so can be optimised
             // Literal values should not be escaped, because the author is trusted
             // TODO: Linter should check literal values don't contain bad things
-            String attributeValue = ((NodeLiteral)value).getLiteralHTML();
+            String attributeValue = ((NodeLiteral)value).getLiteralString();
             if(canOmitQuotesForValue(attributeValue)) {
                 this.start += " "+name+"="+attributeValue;
             } else {
@@ -82,7 +82,7 @@ class NodeTag extends Node {
         return this;
     }
 
-    public void render(StringBuilder builder, Driver driver, Object view, Context context) {
+    public void render(StringBuilder builder, Driver driver, Object view, Context context) throws RenderException {
         builder.append(this.start);
         Attribute attribute = this.attributesHead;
         while(attribute != null) {

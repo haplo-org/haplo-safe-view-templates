@@ -11,6 +11,10 @@ class NodeFunctionGeneric extends NodeFunction {
         return this.name;
     }
 
+    public void render(StringBuilder builder, Driver driver, Object view, Context context) throws RenderException {
+        driver.renderFunction(builder, new FunctionBinding(this, driver, view));
+    }
+
     public String getDumpName() {
         return "FUNCTION "+this.name+"()";
     }

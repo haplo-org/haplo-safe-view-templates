@@ -23,7 +23,7 @@ abstract class NodeListBase extends Node {
         return this.listHead;
     }
 
-    public void renderList(StringBuilder builder, Driver driver, Object view, Context context) {
+    public void renderList(StringBuilder builder, Driver driver, Object view, Context context) throws RenderException {
         if(this.listHead != null) {
             this.listHead.renderWithNextNodes(builder, driver, view, context);
         }

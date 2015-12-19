@@ -8,7 +8,7 @@ class NodeFunctionSwitch extends NodeFunction.ExactlyOneArgument {
         return "switch";
     }
 
-    public void render(StringBuilder builder, Driver driver, Object view, Context context) {
+    public void render(StringBuilder builder, Driver driver, Object view, Context context) throws RenderException {
         StringBuilder blockName = new StringBuilder(240);
         getSingleArgument().render(blockName, driver, view, Context.UNSAFE);
         Node block = getBlock(blockName.toString());

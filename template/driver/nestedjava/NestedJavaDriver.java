@@ -6,6 +6,7 @@ import java.util.Arrays;
 import template.Driver;
 import template.Template;
 import template.Context;
+import template.RenderException;
 
 class NestedJavaDriver extends Driver {
     private Object rootView;
@@ -42,7 +43,7 @@ class NestedJavaDriver extends Driver {
         return (value == null) ? null : value.toString();
     }
 
-    public void iterateOverValueAsArray(Object value, ArrayIterator iterator) {
+    public void iterateOverValueAsArray(Object value, ArrayIterator iterator) throws RenderException {
         if(!(value instanceof Object[])) { return; }
         for(Object entry : ((Object[])value)) {
             iterator.entry(entry);
@@ -50,7 +51,7 @@ class NestedJavaDriver extends Driver {
     }
 
     @SuppressWarnings("unchecked")
-    public void iterateOverValueAsDictionary(Object value, DictionaryIterator iterator) {
+    public void iterateOverValueAsDictionary(Object value, DictionaryIterator iterator) throws RenderException {
         if(!(value instanceof Map)) { return; }
         for(Map.Entry<String,Object> entry : ((Map<String,Object>)value).entrySet()) {
             iterator.entry(entry.getKey(), entry.getValue());
@@ -59,7 +60,7 @@ class NestedJavaDriver extends Driver {
 
     // Uses default valueIsTruthy() implementation
 
-    public void renderIncludedTemplate(String inclusionName, StringBuilder builder, Context context) {
+    public void renderIncludedTemplate(String inclusionName, StringBuilder builder, Context context) throws RenderException {
         // TODO: Error if inclusion not found?
         if(this.inclusions == null) { return; }
         Template template = this.inclusions.get(inclusionName);

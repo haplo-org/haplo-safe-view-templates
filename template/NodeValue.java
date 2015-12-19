@@ -19,7 +19,7 @@ class NodeValue extends Node {
         return this.path[0];
     }
 
-    public void render(StringBuilder builder, Driver driver, Object view, Context context) {
+    public void render(StringBuilder builder, Driver driver, Object view, Context context) throws RenderException {
         Object value = driver.getValueFromView(view, this.path);
         if(value != null) {
             String string = driver.valueToStringRepresentation(value);
@@ -37,7 +37,7 @@ class NodeValue extends Node {
         return driver.getValueFromView(view, this.path);
     }
 
-    protected void iterateOverValueAsArray(Driver driver, Object view, Driver.ArrayIterator iterator) {
+    protected void iterateOverValueAsArray(Driver driver, Object view, Driver.ArrayIterator iterator) throws RenderException {
         Object value = driver.getValueFromView(view, this.path);
         if(value != null) {
             driver.iterateOverValueAsArray(value, iterator);

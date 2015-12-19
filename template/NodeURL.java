@@ -65,7 +65,7 @@ final class NodeURL extends NodeListBase {
         return false;   // can't nest URLs
     }
 
-    public void render(StringBuilder builder, Driver driver, Object view, Context context) {
+    public void render(StringBuilder builder, Driver driver, Object view, Context context) throws RenderException {
         Context urlContext = Context.URL_PATH;
         Node node = getListHeadMaybe();
         while(node != null) {

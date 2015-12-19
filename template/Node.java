@@ -8,11 +8,11 @@ public class Node {
         return true;
     }
 
-    public void render(StringBuilder builder, Driver driver, Object view, Context context) {
+    public void render(StringBuilder builder, Driver driver, Object view, Context context) throws RenderException {
         // TODO: Make Node's render() function abstract
     }
 
-    final public void renderWithNextNodes(StringBuilder builder, Driver driver, Object view, Context context) {
+    final public void renderWithNextNodes(StringBuilder builder, Driver driver, Object view, Context context) throws RenderException {
         Node node = this;
         while(node != null) {
             node.render(builder, driver, view, context);
@@ -28,7 +28,11 @@ public class Node {
         return null;
     }
 
-    protected void iterateOverValueAsArray(Driver driver, Object view, Driver.ArrayIterator iterator) {
+    protected Object valueForFunctionArgument(Driver driver, Object view) {
+        return this.value(driver, view);
+    }
+
+    protected void iterateOverValueAsArray(Driver driver, Object view, Driver.ArrayIterator iterator) throws RenderException {
     }
 
     protected Node orSimplifiedNode() {

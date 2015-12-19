@@ -21,7 +21,7 @@ class NodeFunctionYield extends NodeFunction {
         }
     }
 
-    public void render(StringBuilder builder, Driver driver, Object view, Context context) {
+    public void render(StringBuilder builder, Driver driver, Object view, Context context) throws RenderException {
         driver.renderYield(this.blockName, builder, view, context);
     }
 

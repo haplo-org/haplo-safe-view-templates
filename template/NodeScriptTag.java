@@ -7,7 +7,7 @@ class NodeScriptTag extends Node {
         this.url = url;
     }
 
-    public void render(StringBuilder builder, Driver driver, Object view, Context context) {
+    public void render(StringBuilder builder, Driver driver, Object view, Context context) throws RenderException {
         int tagStart = builder.length();
         builder.append("<script src=\"");
         int attrStart = builder.length();

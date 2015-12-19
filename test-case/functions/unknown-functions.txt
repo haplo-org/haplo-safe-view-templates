@@ -1,0 +1,16 @@
+
+Unknown functions throw a renderer error
+
+---
+
+<div>
+    unknown-function(a)
+</div>
+
+---
+
+{}
+
+---
+
+RENDER ERROR: No renderable implementation for function unknown-function()

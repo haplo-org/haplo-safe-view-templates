@@ -9,7 +9,7 @@ class NodeEnclosingView extends Node {
         this.block = block;
     }
 
-    public void render(StringBuilder builder, Driver driver, Object view, Context context) {
+    public void render(StringBuilder builder, Driver driver, Object view, Context context) throws RenderException {
         this.block.render(builder, driver, driver.recallView(this.rememberedViewIndex), context);
     }
 
@@ -21,7 +21,7 @@ class NodeEnclosingView extends Node {
         return this.block.value(driver, driver.recallView(this.rememberedViewIndex));
     }
 
-    protected void iterateOverValueAsArray(Driver driver, Object view, Driver.ArrayIterator iterator) {
+    protected void iterateOverValueAsArray(Driver driver, Object view, Driver.ArrayIterator iterator) throws RenderException {
         this.block.iterateOverValueAsArray(driver, driver.recallView(this.rememberedViewIndex), iterator);
     }
 

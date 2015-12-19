@@ -21,7 +21,7 @@ class NodeFunctionConditional extends NodeFunction.ExactlyOneValueArgument {
         return true;
     }
 
-    public void render(StringBuilder builder, Driver driver, Object view, Context context) {
+    public void render(StringBuilder builder, Driver driver, Object view, Context context) throws RenderException {
         Object testValue = getSingleArgument().value(driver, view);
         boolean renderAnonBlock = driver.valueIsTruthy(testValue);
         if(this.inverse) { renderAnonBlock = !renderAnonBlock; }

@@ -33,7 +33,7 @@ class NodeFunctionUnsafeHTML extends NodeFunction.ExactlyOneValueArgument {
         }
     }
 
-    public void render(StringBuilder builder, Driver driver, Object view, Context context) {
+    public void render(StringBuilder builder, Driver driver, Object view, Context context) throws RenderException {
         // Render argument without any escaping
         getSingleArgument().render(builder, driver, view, Context.UNSAFE);
     }

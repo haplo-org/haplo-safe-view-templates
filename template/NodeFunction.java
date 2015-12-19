@@ -18,6 +18,10 @@ abstract class NodeFunction extends Node {
         return this.arguments;
     }
 
+    protected Node getFirstArgument() {
+        return this.arguments.getListHeadMaybe();
+    }
+
     protected String[] getPermittedBlockNames() {
         return null;    // no restrictions on block names
     }

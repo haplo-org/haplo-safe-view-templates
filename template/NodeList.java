@@ -15,13 +15,13 @@ final class NodeList extends NodeListBase {
         }
     }
 
-    protected void iterateOverValueAsArray(Driver driver, Object view, Driver.ArrayIterator iterator) {
+    protected void iterateOverValueAsArray(Driver driver, Object view, Driver.ArrayIterator iterator) throws RenderException {
         if(hasOneMember()) {
             getListHeadMaybe().iterateOverValueAsArray(driver, view, iterator);
         }
     }
 
-    public void render(StringBuilder builder, Driver driver, Object view, Context context) {
+    public void render(StringBuilder builder, Driver driver, Object view, Context context) throws RenderException {
         if(context == Context.ATTRIBUTE_VALUE) {
             // Lists need to be space separated inside attributes
             int listStart = builder.length();

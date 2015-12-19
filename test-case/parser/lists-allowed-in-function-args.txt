@@ -10,4 +10,4 @@ Lists are allowed in function arguments
 ---
 {}
 ---
-<div></div>
+<div>TEST GENERIC FUNCTION RENDER</div>

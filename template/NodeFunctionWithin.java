@@ -19,7 +19,7 @@ class NodeFunctionWithin extends NodeFunction.ChangesView {
         return true;
     }
 
-    public void render(StringBuilder builder, Driver driver, Object view, Context context) {
+    public void render(StringBuilder builder, Driver driver, Object view, Context context) throws RenderException {
         rememberUnchangedViewIfNecessary(driver, view);
         Object nestedView = getSingleArgument().value(driver, view);
         if(nestedView == null) { return; }

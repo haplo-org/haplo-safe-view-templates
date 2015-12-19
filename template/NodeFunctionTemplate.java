@@ -21,7 +21,7 @@ class NodeFunctionTemplate extends NodeFunction {
         }
     }
 
-    public void render(StringBuilder builder, Driver driver, Object view, Context context) {
+    public void render(StringBuilder builder, Driver driver, Object view, Context context) throws RenderException {
         // Clone the driver with a new root, so all state is reset for included template
         // and store a binding to this function so yield() works.
         Driver nestedDriver = driver.driverWithNewRoot(view);

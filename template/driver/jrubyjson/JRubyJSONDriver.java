@@ -6,6 +6,7 @@ import java.util.Iterator;
 import template.Driver;
 import template.Template;
 import template.Context;
+import template.RenderException;
 
 import org.jruby.runtime.builtin.IRubyObject;
 import org.jruby.RubyObject;
@@ -59,7 +60,7 @@ class JRubyJSONDriver extends Driver {
         return (value == null) ? null : value.toString();
     }
 
-    public void iterateOverValueAsArray(Object value, ArrayIterator iterator) {
+    public void iterateOverValueAsArray(Object value, ArrayIterator iterator) throws RenderException {
         if(!(value instanceof RubyArray)) { return; }
         for(Object entry : ((RubyArray)value)) {
             iterator.entry(entry);
@@ -67,7 +68,7 @@ class JRubyJSONDriver extends Driver {
     }
 
     @SuppressWarnings("unchecked")
-    public void iterateOverValueAsDictionary(Object value, DictionaryIterator iterator) {
+    public void iterateOverValueAsDictionary(Object value, DictionaryIterator iterator) throws RenderException {
         if(value instanceof Map) {
             for(Map.Entry<Object,Object> entry : ((Map<Object,Object>)value).entrySet()) {
                 String key = valueToStringRepresentation(entry.getKey());
@@ -96,7 +97,7 @@ class JRubyJSONDriver extends Driver {
         }
     }
 
-    public void renderIncludedTemplate(String inclusionName, StringBuilder builder, Context context) {
+    public void renderIncludedTemplate(String inclusionName, StringBuilder builder, Context context) throws RenderException {
         // TODO: Error if inclusion not found?
         if(this.inclusions == null) { return; }
         Template template = this.inclusions.get(inclusionName);

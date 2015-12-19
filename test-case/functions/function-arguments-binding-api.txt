@@ -1,0 +1,110 @@
+
+Platform defined functions check their arguments with a simple API. testargs-*() function is defined by test and name after - is instructions on what arguments are expected.
+
+---
+<div> testargs-(x) </div>
+---
+{}
+---
+<div>`</div>
+
+
+---
+NEW TEMPLATE: zero arguments expected
+---
+<div> testargs-L(x) </div>
+---
+{}
+---
+RENDER ERROR: Too many arguments for testargs-L()
+
+
+---
+NEW TEMPLATE: zero arguments given
+---
+<div> testargs-L() </div>
+---
+{}
+---
+<div>`NULL`</div>
+
+
+---
+NEW TEMPLATE: arguments as strings
+---
+<div> testargs-SSL(x "ping") </div>
+---
+{"x":"pong"}
+---
+<div>`pong`ping`NULL`</div>
+
+
+---
+NEW TEMPLATE: not enough required arguments
+---
+<div> testargs-SSL(x) </div>
+---
+{"x":"pong"}
+---
+RENDER ERROR: Argument 2 expected for testargs-SSL()
+
+
+---
+NEW TEMPLATE: optional arguments as strings
+---
+<div> testargs-ssL(x) </div>
+---
+{"x":"pong"}
+---
+<div>`pong`NULL`NULL`</div>
+
+
+---
+NEW TEMPLATE: restart arguments
+---
+<div> testargs-SSrssL(x "ping") </div>
+---
+{"x":"pong"}
+---
+<div>`pong`ping`NULL`pong`ping`NULL`</div>
+
+
+---
+NEW TEMPLATE: skip arguments
+---
+<div> testargs-SNSNrnsnsL(x "ping" "hello" "there") </div>
+---
+{"x":"pong"}
+---
+<div>`pong`NULL`hello`NULL`NULL`NULL`ping`NULL`there`NULL`</div>
+
+
+---
+NEW TEMPLATE: optional skip
+---
+<div> testargs-nnnL(x) </div>
+---
+{"x":"pong"}
+---
+<div>`NULL`NULL`NULL`NULL`</div>
+
+
+---
+NEW TEMPLATE: arguments as view objects
+---
+<div> testargs-VVL(x "ping") </div>
+---
+{"x":{"x":"y"}}
+---
+<div>`{"x"=>"y"}/Hash`ping/String`NULL`</div>
+
+
+---
+NEW TEMPLATE: arguments as view objects, optional
+---
+<div> testargs-vvL(x) </div>
+---
+{"x":{"x":"y"}}
+---
+<div>`{"x"=>"y"}/Hash`/NilClass`NULL`</div>
+

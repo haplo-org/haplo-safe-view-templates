@@ -19,7 +19,7 @@ class NodeFunctionEach extends NodeFunction.ChangesView {
         return true;
     }
 
-    public void render(StringBuilder builder, Driver driver, Object view, Context context) {
+    public void render(StringBuilder builder, Driver driver, Object view, Context context) throws RenderException {
         rememberUnchangedViewIfNecessary(driver, view);
         Node block = getBlock(Node.BLOCK_ANONYMOUS);
         Node arg0 = getSingleArgument();

@@ -9,17 +9,17 @@ public class Template {
         this.numberOfRememberedViews = numberOfRememberedViews;
     }
 
-    public void render(StringBuilder builder, Driver driver) {
+    public void render(StringBuilder builder, Driver driver) throws RenderException {
         driver.setupForRender(this.numberOfRememberedViews);
         this.nodes.render(builder, driver, driver.getRootView(), Context.TEXT);
     }
 
-    public void renderAsInclusion(StringBuilder builder, Driver driver, Object view, Context context) {
+    public void renderAsInclusion(StringBuilder builder, Driver driver, Object view, Context context) throws RenderException {
         driver.setupForRender(this.numberOfRememberedViews);
         this.nodes.render(builder, driver, view, context);
     }
 
-    public String renderString(Driver driver) {
+    public String renderString(Driver driver) throws RenderException {
         StringBuilder builder = new StringBuilder();
         render(builder, driver);
         return builder.toString();

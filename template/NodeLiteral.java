@@ -1,26 +1,30 @@
 package template;
 
 final class NodeLiteral extends Node {
-    private String html;
+    private String literal;
 
-    public NodeLiteral(String html) {
-        this.html = html;
+    public NodeLiteral(String literal) {
+        this.literal = literal;
     }
 
-    protected String getLiteralHTML() {
-        return this.html;
+    protected String getLiteralString() {
+        return this.literal;
     }
 
     protected boolean tryToMergeWith(Node otherNode) {
         if(otherNode instanceof NodeLiteral) {
-            this.html += ((NodeLiteral)otherNode).html;
+            this.literal += ((NodeLiteral)otherNode).literal;
             return true;
         }
         return false;
     }
 
-    public void render(StringBuilder builder, Driver driver, Object view, Context context) {
-        builder.append(this.html);
+    public void render(StringBuilder builder, Driver driver, Object view, Context context) throws RenderException {
+        builder.append(this.literal);
+    }
+
+    protected Object valueForFunctionArgument(Driver driver, Object view) {
+        return this.literal;
     }
 
     protected boolean whitelistForLiteralStringOnly() {
@@ -28,6 +32,6 @@ final class NodeLiteral extends Node {
     }
 
     public void dumpToBuilder(StringBuilder builder, String linePrefix) {
-        builder.append(linePrefix).append("LITERAL ").append(this.html).append("\n");
+        builder.append(linePrefix).append("LITERAL ").append(this.literal).append("\n");
     }
 }

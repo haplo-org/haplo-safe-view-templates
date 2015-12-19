@@ -5,9 +5,9 @@ abstract public class Driver {
     abstract public Driver driverWithNewRoot(Object rootView);
     abstract public Object getValueFromView(Object view, String[] path);
     abstract public String valueToStringRepresentation(Object value);
-    abstract public void iterateOverValueAsArray(Object value, ArrayIterator iterator);
-    abstract public void iterateOverValueAsDictionary(Object value, DictionaryIterator iterator);
-    abstract public void renderIncludedTemplate(String inclusionName, StringBuilder builder, Context context);
+    abstract public void iterateOverValueAsArray(Object value, ArrayIterator iterator) throws RenderException;
+    abstract public void iterateOverValueAsDictionary(Object value, DictionaryIterator iterator) throws RenderException;
+    abstract public void renderIncludedTemplate(String inclusionName, StringBuilder builder, Context context) throws RenderException;
 
     public boolean valueIsTruthy(Object value) {
         if(value == null) {
@@ -24,7 +24,7 @@ abstract public class Driver {
 
     // ----------------------------------------------------------------------
 
-    public void renderYield(String blockName, StringBuilder builder, Object view, Context context) {
+    public void renderYield(String blockName, StringBuilder builder, Object view, Context context) throws RenderException {
         // TODO: Is it OK to silently ignore yield() calls when nothing was included with a template() ?
         if(this.includedFromBinding == null) { return; }
         this.includedFromBinding.renderBlock(blockName, builder, view, context);
@@ -32,12 +32,27 @@ abstract public class Driver {
 
     // ----------------------------------------------------------------------
 
+    private FunctionRenderer functionRenderer;
+
+    public void setFunctionRenderer(FunctionRenderer renderer) {
+        this.functionRenderer = renderer;
+    }
+
+    protected void renderFunction(StringBuilder builder, FunctionBinding binding) throws RenderException {
+        if(     (this.functionRenderer == null) ||
+                !this.functionRenderer.renderFunction(builder, binding) ) {
+            throw new RenderException("No renderable implementation for function "+binding.getFunctionName()+"()");
+        }
+    }
+
+    // ----------------------------------------------------------------------
+
     public static interface ArrayIterator {
-        void entry(Object value);
+        void entry(Object value) throws RenderException;
     }
 
     public static interface DictionaryIterator {
-        void entry(String key, Object value);
+        void entry(String key, Object value) throws RenderException;
     }
 
     // ----------------------------------------------------------------------

@@ -76,6 +76,46 @@ if ARGV[0] == 'run' || ARGV[0] == 'tree'
 end
 # ---------------------------------------------------------------------------
 
+class TestFunctionRenderer
+  ArgumentRequirement = Java::Template::FunctionBinding::ArgumentRequirement
+  def renderFunction(builder, binding)
+    case binding.getFunctionName()
+    when "generic-function"
+      builder.append("TEST GENERIC FUNCTION RENDER")
+      true
+    when /\Atestargs-(.*)\z/
+      builder.append('`')
+      $1.split(//).each do |i|
+        str = nil
+        case i
+        when 's'; str = binding.nextUnescapedStringArgument(ArgumentRequirement::OPTIONAL)
+        when 'S'; str = binding.nextUnescapedStringArgument(ArgumentRequirement::REQUIRED)
+        when 'v'; str = obj_with_class(binding.nextViewObjectArgument(ArgumentRequirement::OPTIONAL))
+        when 'V'; str = obj_with_class(binding.nextViewObjectArgument(ArgumentRequirement::REQUIRED))
+        when 'r'; binding.restartArguments()
+        when 'n'; binding.skipArgument(ArgumentRequirement::OPTIONAL)
+        when 'N'; binding.skipArgument(ArgumentRequirement::REQUIRED)
+        when 'L'; binding.noMoreArgumentsExpected()
+        else raise "Unknown instruction in test"
+        end
+        builder.append(str.nil? ? "NULL" : str)
+        builder.append('`')
+      end
+      true
+    else
+      false
+    end
+  end
+  CLASS_NAME_MAP = {
+    'Java::JavaUtil::LinkedHashMap' => 'Hash'
+  }
+  def obj_with_class(obj)
+    obj.to_s+"/"+(CLASS_NAME_MAP[obj.class.name] || obj.class.name)
+  end
+end
+
+# ---------------------------------------------------------------------------
+
 try_quoting
 
 tests = 0
@@ -145,7 +185,17 @@ files.each do |filename|
       end
       drivers.each do |driver|
         tests += 1
-        output = (driver == :tree) ? template.dump().strip : template.renderString(driver)
+        output = nil
+        begin
+          if driver == :tree
+            output = template.dump().strip
+          else
+            driver.setFunctionRenderer(TestFunctionRenderer.new)
+            output = template.renderString(driver)
+          end
+        rescue Java::Template::RenderException => render_exception
+          output = "RENDER ERROR: #{render_exception.message}"
+        end
         if output == expected_output
           passed += 1
         else
