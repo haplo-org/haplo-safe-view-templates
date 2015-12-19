@@ -1,0 +1,11 @@
+
+PARSE ERROR: Enclosing blocks cannot be empty
+
+---
+<div>
+    within(x) {
+        ^{ }
+    }
+</div>
+---
+Error at line 3 character 12: Enclosing view blocks cannot be empty

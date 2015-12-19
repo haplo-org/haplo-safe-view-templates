@@ -149,7 +149,10 @@ public class Parser {
         }
         // Ask the function node to remember the value when the view is remembered
         nodeWhichChangesView.shouldRemember(this);
-        Node block = parseList('}', "enclosing view block").orSimplifiedNode();
+        Node block = parseList('}', "enclosing view block").getListHeadMaybe();
+        if(block == null) {
+            error("Enclosing view blocks cannot be empty");
+        }
         this.inEnclosingViewBlock = false;
         return new NodeEnclosingView(nodeWhichChangesView.getRememberedViewIndex(), block);
     }

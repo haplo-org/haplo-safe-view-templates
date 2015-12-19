@@ -2,15 +2,15 @@ package template;
 
 class NodeEnclosingView extends Node {
     private int rememberedViewIndex;
-    private Node block;
+    private Node blockHead;
 
-    NodeEnclosingView(int rememberedViewIndex, Node block) {
+    NodeEnclosingView(int rememberedViewIndex, Node blockHead) {
         this.rememberedViewIndex = rememberedViewIndex;
-        this.block = block;
+        this.blockHead = blockHead;
     }
 
     public void render(StringBuilder builder, Driver driver, Object view, Context context) throws RenderException {
-        this.block.render(builder, driver, driver.recallView(this.rememberedViewIndex), context);
+        this.blockHead.renderWithNextNodes(builder, driver, driver.recallView(this.rememberedViewIndex), context);
     }
 
     protected boolean nodeRepresentsValueFromView() {
@@ -18,11 +18,13 @@ class NodeEnclosingView extends Node {
     }
 
     protected Object value(Driver driver, Object view) {
-        return this.block.value(driver, driver.recallView(this.rememberedViewIndex));
+        if(this.blockHead.getNextNode() != null) { return null; }
+        return this.blockHead.value(driver, driver.recallView(this.rememberedViewIndex));
     }
 
     protected void iterateOverValueAsArray(Driver driver, Object view, Driver.ArrayIterator iterator) throws RenderException {
-        this.block.iterateOverValueAsArray(driver, driver.recallView(this.rememberedViewIndex), iterator);
+        if(this.blockHead.getNextNode() != null) { return; }
+        this.blockHead.iterateOverValueAsArray(driver, driver.recallView(this.rememberedViewIndex), iterator);
     }
 
     public void dumpToBuilder(StringBuilder builder, String linePrefix) {
@@ -30,6 +32,6 @@ class NodeEnclosingView extends Node {
                 append("ENCLOSING VIEW index=").
                 append(this.rememberedViewIndex).
                 append('\n');
-        this.block.dumpToBuilder(builder, linePrefix+"  ");
+        this.blockHead.dumpToBuilderWithNextNodes(builder, linePrefix+"  ");
     }
 }

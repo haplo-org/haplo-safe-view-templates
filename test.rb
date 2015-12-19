@@ -107,7 +107,8 @@ class TestFunctionRenderer
     end
   end
   CLASS_NAME_MAP = {
-    'Java::JavaUtil::LinkedHashMap' => 'Hash'
+    'Java::JavaUtil::LinkedHashMap' => 'Hash',
+    'Java::OrgMozillaJavascript::NativeObject' => 'Hash'
   }
   def obj_with_class(obj)
     obj.to_s+"/"+(CLASS_NAME_MAP[obj.class.name] || obj.class.name)
@@ -116,8 +117,23 @@ end
 
 # ---------------------------------------------------------------------------
 
+JSContext = Java::OrgMozillaJavascript::Context
+$jscontext = JSContext.enter();
+$jscontext.setLanguageVersion(JSContext::VERSION_1_7)
+$jsscope = $jscontext.initStandardObjects()
+def view_json_to_rhino(json)
+  $jsscope.put('inputJSON', $jsscope, json)
+  $jscontext.evaluateString($jsscope, "parsedJSON = JSON.parse(inputJSON);", "<testjson>", 1, nil);
+  $jsscope.get('parsedJSON', $jsscope)
+end
+
+# ---------------------------------------------------------------------------
+
 try_quoting
 
+JavaSystem = Java::JavaLang::System
+template_render_time = 0
+number_of_renders = 0
 tests = 0
 passed = 0
 failed = 0
@@ -178,6 +194,7 @@ files.each do |filename|
       drivers = []
       drivers << Java::TemplateDriverNestedjava::NestedJavaDriver.new(view_value_to_java(view), template_inclusions)
       drivers << Java::TemplateDriverJrubyjson::JRubyJSONDriver.new(view, template_inclusions)
+      drivers << Java::TemplateDriverRhinojs::RhinoJavaScriptDriver.new(view_json_to_rhino(view_json), template_inclusions)
       if expected_output =~ /\ATREE:(.+)\z/m
         # Testing the tree, not the rendered output
         expected_output = $1.strip
@@ -191,7 +208,11 @@ files.each do |filename|
             output = template.dump().strip
           else
             driver.setFunctionRenderer(TestFunctionRenderer.new)
+            # This is not a very good benchmark
+            render_start = JavaSystem.nanoTime()
             output = template.renderString(driver)
+            template_render_time += JavaSystem.nanoTime() - render_start
+            number_of_renders += 1
           end
         rescue Java::Template::RenderException => render_exception
           output = "RENDER ERROR: #{render_exception.message}"
@@ -212,6 +233,8 @@ files.each do |filename|
   end
 end
 
+
 puts
 puts (failed == 0) ? "PASSED" : "FAILED"
+puts "Approx render time per template: #{(template_render_time.to_f / number_of_renders / 1000000).round(2)} ms"
 puts "#{tests} tests, #{passed} passed, #{failed} failed, in #{files.length} files"

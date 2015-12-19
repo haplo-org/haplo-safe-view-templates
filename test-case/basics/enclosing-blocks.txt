@@ -70,6 +70,7 @@ NEW TEMPLATE
 
 ---
 {
+    "explaination of output": "some of the named blocks don't exist, so within() doesn't enter them",
     "v": "B",
     "one": {
         "v": "A"
@@ -82,3 +83,20 @@ NEW TEMPLATE
 }
 ---
 <div>E</div>
+
+
+---
+NEW TEMPLATE: Enclosing blocks with multiple nodes in the list
+---
+<div>
+    within(x) {
+        ^{"root: " y}
+    }
+</div>
+---
+{
+    "x":{},
+    "y":"ROOT"
+}
+---
+<div>root: ROOT</div>

@@ -1,7 +1,6 @@
 package template.driver.jrubyjson;
 
 import java.util.Map;
-import java.util.Iterator;
 
 import template.Driver;
 import template.Template;
@@ -24,7 +23,7 @@ class JRubyJSONDriver extends Driver {
     }
 
     public Driver driverWithNewRoot(Object rootView) {
-        if(!(rootView instanceof IRubyObject)) {
+        if((rootView != null) && !(rootView instanceof IRubyObject)) {
             throw new RuntimeException("Unexpected view object when creating driver for new root");
         }
         return new JRubyJSONDriver((IRubyObject)rootView, this.inclusions);

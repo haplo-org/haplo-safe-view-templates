@@ -1,3 +1,5 @@
 *.class
 .fslckout
 .fossil-settings/*
+lib/downloads/*
+lib/*.jar

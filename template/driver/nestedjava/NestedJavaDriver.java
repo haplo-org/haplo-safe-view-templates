@@ -1,7 +1,6 @@
 package template.driver.nestedjava;
 
 import java.util.Map;
-import java.util.Arrays;
 
 import template.Driver;
 import template.Template;

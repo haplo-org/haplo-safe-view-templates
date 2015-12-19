@@ -56,3 +56,44 @@ NEW TEMPLATE
 }
 ---
 <div>FALSE</div>
+
+
+---
+NEW TEMPLATE: but they're going to always been falsey if they've got more than one entry
+---
+<div>
+    within(b) {
+        if(^{a "b"}) {
+            "TRUE"
+        } else {
+            "FALSE"
+        }
+    }
+</div>
+---
+{"a":true,"b":{}}
+---
+<div>FALSE</div>
+---
+{"a":false,"b":{}}
+---
+<div>FALSE</div>
+
+
+---
+NEW TEMPLATE: Won't iterate if more than one entry
+---
+<div>
+    within(b) {
+        each(^{a "b"}) {
+            <span> b "-" v </span>
+        }
+    }
+</div>
+---
+{
+    "a": [ {"b":"X", "v":"0"}, {"b":"Y", "v":"1"} ],
+    "b": {}
+}
+---
+<div></div>
