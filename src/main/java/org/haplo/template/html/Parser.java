@@ -218,7 +218,7 @@ public class Parser {
         }
         if(functionName.startsWith("template")) {
             if((functionName.length() <= 9) || (functionName.charAt(8) != ':')) {
-                error("Bad template inclusion function name, must start 'template:'");
+                error("Bad included template function name, must start 'template:'");
             }
             return new NodeFunctionTemplate(functionName.substring(9));
         } else if(functionName.startsWith("yield")) {

@@ -15,6 +15,9 @@ template_inclusions.put("template2", Parser.new(<<__E).parse())
     <i> "Included Template 2: " ^{rootValue} </i>
   }
 __E
+template_inclusions.put("template3", Parser.new(<<__E).parse())
+  <span> "T3 " template:template1() " - " generic-function() </span>
+__E
 template_inclusions.put("components", Parser.new(<<__E).parse())
   within(component) {
     <div class="component">
@@ -26,6 +29,7 @@ template_inclusions.put("components", Parser.new(<<__E).parse())
     </div>
   }
 __E
+included_template_renderer = Java::OrgHaploTemplateDriverUtil::SimpleIncludedTemplateRenderer.new(template_inclusions)
 
 # ---------------------------------------------------------------------------
 
@@ -204,9 +208,9 @@ files.each do |filename|
       expected_output = required_cmd.call.strip
       view = JSON.parse(view_json)
       drivers = []
-      drivers << NestedJavaDriver.new(view_value_to_java(view), template_inclusions)
-      drivers << JRubyJSONDriver.new(view, template_inclusions)
-      drivers << RhinoJavaScriptDriver.new(view_json_to_rhino(view_json), template_inclusions)
+      drivers << NestedJavaDriver.new(view_value_to_java(view))
+      drivers << JRubyJSONDriver.new(view)
+      drivers << RhinoJavaScriptDriver.new(view_json_to_rhino(view_json))
       if expected_output =~ /\ATREE:(.+)\z/m
         # Testing the tree, not the rendered output
         expected_output = $1.strip
@@ -220,6 +224,7 @@ files.each do |filename|
             output = template.dump().strip
           else
             driver.setFunctionRenderer(TestFunctionRenderer.new)
+            driver.setIncludedTemplateRenderer(included_template_renderer)
             # This is not a very good benchmark
             render_start = JavaSystem.nanoTime()
             output = template.renderString(driver)

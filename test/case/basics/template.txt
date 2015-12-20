@@ -43,11 +43,22 @@ NEW TEMPLATE: include() includes uses the current view as the root of the templa
 
 
 ---
-NEW TEMPLATE: include() doesn't output anything if the template isn't known
+NEW TEMPLATE: Templates can include other templates and call functions
+---
+<div>
+    template:template3()
+</div>
+---
+{"value1": "hello"}
+---
+<div><span>T3 <b>Included Template 1: hello</b> - TEST GENERIC FUNCTION RENDER</span></div>
+
+---
+NEW TEMPLATE: include() throws an exception if the template isn't known
 ---
 <div> template:unknown-template() </div>
 
 ---
 {}
 ---
-<div></div>
+RENDER ERROR: Could not find included template 'unknown-template'

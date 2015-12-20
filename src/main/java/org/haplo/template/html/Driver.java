@@ -7,7 +7,6 @@ abstract public class Driver {
     abstract public String valueToStringRepresentation(Object value);
     abstract public void iterateOverValueAsArray(Object value, ArrayIterator iterator) throws RenderException;
     abstract public void iterateOverValueAsDictionary(Object value, DictionaryIterator iterator) throws RenderException;
-    abstract public void renderIncludedTemplate(String inclusionName, StringBuilder builder, Context context) throws RenderException;
 
     public boolean valueIsTruthy(Object value) {
         if(value == null) {
@@ -24,6 +23,23 @@ abstract public class Driver {
 
     // ----------------------------------------------------------------------
 
+    public interface IncludedTemplateRenderer {
+        void renderIncludedTemplate(String templateName, StringBuilder builder, Driver driver, Context context) throws RenderException;
+    }
+
+    private IncludedTemplateRenderer includedTemplateRenderer;
+
+    public void setIncludedTemplateRenderer(IncludedTemplateRenderer includedTemplateRenderer) {
+        this.includedTemplateRenderer = includedTemplateRenderer;
+    }
+
+    public void renderIncludedTemplate(String templateName, StringBuilder builder, Context context) throws RenderException {
+        if(this.includedTemplateRenderer == null) {
+            throw new RenderException("No IncludedTemplateRenderer available for rendering included templates");
+        }
+        this.includedTemplateRenderer.renderIncludedTemplate(templateName, builder, this, context);
+    }
+
     public void renderYield(String blockName, StringBuilder builder, Object view, Context context) throws RenderException {
         // TODO: Is it OK to silently ignore yield() calls when nothing was included with a template() ?
         if(this.includedFromBinding == null) { return; }
@@ -31,6 +47,10 @@ abstract public class Driver {
     }
 
     // ----------------------------------------------------------------------
+
+    public interface FunctionRenderer {
+        boolean renderFunction(StringBuilder builder, FunctionBinding binding) throws RenderException;
+    }
 
     private FunctionRenderer functionRenderer;
 
@@ -53,6 +73,15 @@ abstract public class Driver {
 
     public static interface DictionaryIterator {
         void entry(String key, Object value) throws RenderException;
+    }
+
+    // ----------------------------------------------------------------------
+
+    final public Driver driverWithNewRootAndCopyOfConfig(Object rootView) {
+        Driver driver = this.driverWithNewRoot(rootView);
+        driver.includedTemplateRenderer = this.includedTemplateRenderer;
+        driver.functionRenderer = this.functionRenderer;
+        return driver;
     }
 
     // ----------------------------------------------------------------------

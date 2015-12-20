@@ -9,15 +9,13 @@ import org.haplo.template.html.RenderException;
 
 class NestedJavaDriver extends Driver {
     private Object rootView;
-    private Map<String,Template> inclusions;
 
-    public NestedJavaDriver(Object view, Map<String,Template> inclusions) {
+    public NestedJavaDriver(Object view) {
         this.rootView = view;
-        this.inclusions = inclusions;
     }
 
     public Driver driverWithNewRoot(Object rootView) {
-        return new NestedJavaDriver(rootView, this.inclusions);
+        return new NestedJavaDriver(rootView);
     }
 
     public Object getRootView() {
@@ -58,13 +56,4 @@ class NestedJavaDriver extends Driver {
     }
 
     // Uses default valueIsTruthy() implementation
-
-    public void renderIncludedTemplate(String inclusionName, StringBuilder builder, Context context) throws RenderException {
-        // TODO: Error if inclusion not found?
-        if(this.inclusions == null) { return; }
-        Template template = this.inclusions.get(inclusionName);
-        if(template != null) {
-            template.renderAsInclusion(builder, this, this.getRootView(), context);
-        }
-    }
 }

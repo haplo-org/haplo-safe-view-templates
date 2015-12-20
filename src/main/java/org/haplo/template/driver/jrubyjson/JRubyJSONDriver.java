@@ -15,18 +15,16 @@ import org.jruby.RubyArray;
 
 class JRubyJSONDriver extends Driver {
     private IRubyObject rootView;
-    private Map<String,Template> inclusions;
 
-    public JRubyJSONDriver(IRubyObject view, Map<String,Template> inclusions) {
+    public JRubyJSONDriver(IRubyObject view) {
         this.rootView = view;
-        this.inclusions = inclusions;
     }
 
     public Driver driverWithNewRoot(Object rootView) {
         if((rootView != null) && !(rootView instanceof IRubyObject)) {
             throw new RuntimeException("Unexpected view object when creating driver for new root");
         }
-        return new JRubyJSONDriver((IRubyObject)rootView, this.inclusions);
+        return new JRubyJSONDriver((IRubyObject)rootView);
     }
 
     public Object getRootView() {
@@ -93,15 +91,6 @@ class JRubyJSONDriver extends Driver {
             return false;
         } else {
             return super.valueIsTruthy(value);
-        }
-    }
-
-    public void renderIncludedTemplate(String inclusionName, StringBuilder builder, Context context) throws RenderException {
-        // TODO: Error if inclusion not found?
-        if(this.inclusions == null) { return; }
-        Template template = this.inclusions.get(inclusionName);
-        if(template != null) {
-            template.renderAsInclusion(builder, this, this.getRootView(), context);
         }
     }
 }

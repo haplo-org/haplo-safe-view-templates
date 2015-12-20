@@ -14,11 +14,9 @@ import org.mozilla.javascript.ScriptRuntime;
 
 class RhinoJavaScriptDriver extends Driver {
     private Scriptable rootView;
-    private Map<String,Template> inclusions;
 
-    public RhinoJavaScriptDriver(Scriptable view, Map<String,Template> inclusions) {
+    public RhinoJavaScriptDriver(Scriptable view) {
         this.rootView = view;
-        this.inclusions = inclusions;
     }
 
     public Object getRootView() {
@@ -29,7 +27,7 @@ class RhinoJavaScriptDriver extends Driver {
         if((rootView != null) && !(rootView instanceof Scriptable)) {
             throw new RuntimeException("Unexpected view object when creating driver for new root");
         }
-        return new RhinoJavaScriptDriver((Scriptable)rootView, this.inclusions);
+        return new RhinoJavaScriptDriver((Scriptable)rootView);
     }
 
     public Object getValueFromView(Object view, String[] path) {
@@ -75,15 +73,6 @@ class RhinoJavaScriptDriver extends Driver {
         if(!(value instanceof Map)) { return; }
         for(Map.Entry<Object,Object> entry : ((Map<Object,Object>)value).entrySet()) {
             iterator.entry(entry.getKey().toString(), entry.getValue());
-        }
-    }
-
-    public void renderIncludedTemplate(String inclusionName, StringBuilder builder, Context context) throws RenderException {
-        // TODO: Error if inclusion not found?
-        if(this.inclusions == null) { return; }
-        Template template = this.inclusions.get(inclusionName);
-        if(template != null) {
-            template.renderAsInclusion(builder, this, this.getRootView(), context);
         }
     }
 

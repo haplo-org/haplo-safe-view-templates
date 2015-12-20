@@ -14,7 +14,7 @@ public class Template {
         this.nodes.render(builder, driver, driver.getRootView(), Context.TEXT);
     }
 
-    public void renderAsInclusion(StringBuilder builder, Driver driver, Object view, Context context) throws RenderException {
+    public void renderAsIncludedTemplate(StringBuilder builder, Driver driver, Object view, Context context) throws RenderException {
         driver.setupForRender(this.numberOfRememberedViews);
         this.nodes.render(builder, driver, view, context);
     }
