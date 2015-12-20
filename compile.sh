@@ -13,5 +13,5 @@ if ! [ -f lib/js.jar ]; then
     exit 1
 fi
 
-mkdir -p built/template
-javac -classpath built:lib/*:$JRUBY_BIN/../lib/jruby.jar -d built -Xlint:unchecked `find template -name *.java | xargs echo`
+mkdir -p built
+javac -classpath built:lib/*:$JRUBY_BIN/../lib/jruby.jar -d built -Xlint:unchecked `find src -name *.java | xargs echo`
