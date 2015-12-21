@@ -8,14 +8,15 @@ import org.haplo.template.html.Context;
 import org.haplo.template.html.RenderException;
 
 import org.mozilla.javascript.Scriptable;
+import org.mozilla.javascript.ScriptableObject;
 import org.mozilla.javascript.Undefined;
 import org.mozilla.javascript.UniqueTag;
 import org.mozilla.javascript.ScriptRuntime;
 
 class RhinoJavaScriptDriver extends Driver {
-    private Scriptable rootView;
+    private Object rootView;
 
-    public RhinoJavaScriptDriver(Scriptable view) {
+    public RhinoJavaScriptDriver(Object view) {
         this.rootView = view;
     }
 
@@ -24,9 +25,6 @@ class RhinoJavaScriptDriver extends Driver {
     }
 
     public Driver driverWithNewRoot(Object rootView) {
-        if((rootView != null) && !(rootView instanceof Scriptable)) {
-            throw new RuntimeException("Unexpected view object when creating driver for new root");
-        }
         return new RhinoJavaScriptDriver((Scriptable)rootView);
     }
 
@@ -35,7 +33,7 @@ class RhinoJavaScriptDriver extends Driver {
             Scriptable o = (Scriptable)view;
             for(int i = 0; i < path.length; ++i) {
                 if(o == null || (o instanceof Undefined)) { return null; }
-                Object value = o.get(path[i], o);
+                Object value = ScriptableObject.getProperty(o, path[i]);
                 if(value instanceof Scriptable) {
                     o = (Scriptable)value;
                 } else {
@@ -54,7 +52,15 @@ class RhinoJavaScriptDriver extends Driver {
     }
 
     public String valueToStringRepresentation(Object value) {
-        return hasValue(value) ? value.toString() : null;
+        if(!hasValue(value)) { return null; }
+        if((value instanceof Double) && !((Double)value).isInfinite()) {
+            // Special handling for Doubles representing Integers
+            long valueAsLong = ((Double)value).longValue();
+            if((double)valueAsLong == ((Double)value).doubleValue()) {
+                return Long.toString(valueAsLong);
+            }
+        }
+        return value.toString();
     }
 
     public void iterateOverValueAsArray(Object value, ArrayIterator iterator) throws RenderException {

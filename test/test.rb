@@ -141,10 +141,14 @@ end
 
 # ---------------------------------------------------------------------------
 
+JSScriptableObject = Java::OrgMozillaJavascript::ScriptableObject
 JSContext = Java::OrgMozillaJavascript::Context
 $jscontext = JSContext.enter();
 $jscontext.setLanguageVersion(JSContext::VERSION_1_7)
 $jsscope = $jscontext.initStandardObjects()
+JSScriptableObject.defineClass($jsscope, Java::OrgHaploTemplateDriverRhinojs::HaploTemplate.java_class)
+JSScriptableObject.defineClass($jsscope, Java::OrgHaploTemplateDriverRhinojs::HaploTemplateDeferredRender.java_class)
+
 def view_json_to_rhino(json)
   $jsscope.put('inputJSON', $jsscope, json)
   $jscontext.evaluateString($jsscope, "parsedJSON = JSON.parse(inputJSON);", "<testjson>", 1, nil);
@@ -277,6 +281,15 @@ files.each do |filename|
   end
 end
 
+# Also run some tests of the Rhino JavaScript integration
+$jsscope.put('$testcount', $jsscope, 0.to_java)
+$jsscope.put('$testpass', $jsscope, 0.to_java)
+$jscontext.evaluateString($jsscope, File.read("test/rhino.js"), "test/rhino.js", 1, nil);
+js_test_count = $jsscope.get('$testcount', $jsscope).to_i
+raise "No JS tests" unless js_test_count > 0
+tests += js_test_count
+passed += (js_test_pass =  $jsscope.get('$testpass', $jsscope).to_i)
+failed += js_test_count - js_test_pass
 
 puts
 puts (failed == 0) ? "PASSED" : "FAILED"
