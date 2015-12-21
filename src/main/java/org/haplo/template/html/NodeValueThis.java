@@ -1,6 +1,6 @@
 package org.haplo.template.html;
 
-class NodeValueThis extends NodeValue {
+final class NodeValueThis extends NodeValue {
     static private final String[] THIS = new String[] {};
 
     public NodeValueThis() {

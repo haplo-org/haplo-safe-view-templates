@@ -1,6 +1,6 @@
 package org.haplo.template.html;
 
-class NodeFunctionTemplate extends NodeFunction {
+final class NodeFunctionTemplate extends NodeFunction {
     private String templateName;
 
     NodeFunctionTemplate(String templateName) {

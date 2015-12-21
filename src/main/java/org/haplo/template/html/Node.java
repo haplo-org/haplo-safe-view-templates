@@ -1,6 +1,6 @@
 package org.haplo.template.html;
 
-public class Node {
+abstract public class Node {
     protected final static String BLOCK_ANONYMOUS = ""; // used as key & object identity comparison
 
     // Used during parsing, not rendering
@@ -8,9 +8,7 @@ public class Node {
         return true;
     }
 
-    public void render(StringBuilder builder, Driver driver, Object view, Context context) throws RenderException {
-        // TODO: Make Node's render() function abstract
-    }
+    abstract public void render(StringBuilder builder, Driver driver, Object view, Context context) throws RenderException;
 
     final public void renderWithNextNodes(StringBuilder builder, Driver driver, Object view, Context context) throws RenderException {
         Node node = this;

@@ -1,6 +1,6 @@
 package org.haplo.template.html;
 
-class NodeFunctionYield extends NodeFunction {
+final class NodeFunctionYield extends NodeFunction {
     private String blockName;
 
     NodeFunctionYield(String blockName) {

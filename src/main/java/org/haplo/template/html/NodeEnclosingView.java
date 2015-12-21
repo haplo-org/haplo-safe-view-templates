@@ -1,6 +1,6 @@
 package org.haplo.template.html;
 
-class NodeEnclosingView extends Node {
+final class NodeEnclosingView extends Node {
     private int rememberedViewIndex;
     private Node blockHead;
 

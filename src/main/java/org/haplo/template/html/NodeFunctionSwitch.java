@@ -1,6 +1,6 @@
 package org.haplo.template.html;
 
-class NodeFunctionSwitch extends NodeFunction.ExactlyOneArgument {
+final class NodeFunctionSwitch extends NodeFunction.ExactlyOneArgument {
     NodeFunctionSwitch() {
     }
 

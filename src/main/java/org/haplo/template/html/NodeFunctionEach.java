@@ -1,6 +1,6 @@
 package org.haplo.template.html;
 
-class NodeFunctionEach extends NodeFunction.ChangesView {
+final class NodeFunctionEach extends NodeFunction.ChangesView {
 
     static private final String[] PERMITTED_BLOCK_NAMES = {NodeFunction.BLOCK_ANONYMOUS};
 

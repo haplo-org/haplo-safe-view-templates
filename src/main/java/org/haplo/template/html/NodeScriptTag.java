@@ -1,6 +1,6 @@
 package org.haplo.template.html;
 
-class NodeScriptTag extends Node {
+final class NodeScriptTag extends Node {
     private NodeURL url;
 
     protected NodeScriptTag(NodeURL url) {

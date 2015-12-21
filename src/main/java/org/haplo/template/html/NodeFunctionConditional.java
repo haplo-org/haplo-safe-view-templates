@@ -1,6 +1,6 @@
 package org.haplo.template.html;
 
-class NodeFunctionConditional extends NodeFunction.ExactlyOneValueArgument {
+final class NodeFunctionConditional extends NodeFunction.ExactlyOneValueArgument {
     private boolean inverse;
 
     static private final String[] PERMITTED_BLOCK_NAMES = {NodeFunction.BLOCK_ANONYMOUS, "else"};

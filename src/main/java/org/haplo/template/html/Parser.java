@@ -4,7 +4,7 @@ import java.util.Stack;
 import java.util.regex.Pattern;
 import java.util.HashSet;
 
-public class Parser {
+final public class Parser {
     private CharSequence source;
     private String templateName;
     private int pos = 0;
@@ -111,7 +111,11 @@ public class Parser {
         }
     }
 
-    private static final Node END_OF_LIST = new Node();
+    private static final Node END_OF_LIST = new Node() {
+        public void render(StringBuilder builder, Driver driver, Object view, Context context) throws RenderException {
+            throw new RenderException(driver, "Logic error in template engine, END_OF_LIST should never be rendered");
+        }
+    };
 
     protected <T extends Node> T parseOneValueOfType(Class<T> type, String expected, int endOfListCharacter, int startPos) throws ParseException {
         Node node = parseOneValue(endOfListCharacter);
@@ -350,7 +354,6 @@ public class Parser {
 
     protected void checkTagName(CharSequence name, boolean isCloseTag, int tagStartPos) throws ParseException {
         if(name == null) { error("Unexpected end of template after <"); }
-        // TODO: Validate tag name a bit better?
         if(!(VALID_TAG_NAME_REGEX.matcher(name).matches())) {
             error("Invalid tag name <"+(isCloseTag?"/":"")+name+"> (must be lower case, a-z0-9 only)", tagStartPos);
         }
@@ -494,7 +497,6 @@ public class Parser {
     }
 
     protected void error(String error, int errorPosition) throws ParseException {
-        // TODO: Report errors nicely
         int p = errorPosition - 1;  // back one so the relevant character is found
         while((p > 0) && (this.source.charAt(p) == '\n')) {
             // If the position is on a newline, then move back another character,

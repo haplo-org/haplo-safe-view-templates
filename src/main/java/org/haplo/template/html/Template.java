@@ -1,6 +1,6 @@
 package org.haplo.template.html;
 
-public class Template {
+final public class Template {
     private String name;
     private NodeList nodes;
     private int numberOfRememberedViews;

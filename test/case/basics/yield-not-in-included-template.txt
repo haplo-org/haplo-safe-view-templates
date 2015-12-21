@@ -1,0 +1,9 @@
+
+yield() is an error unless it's an included template
+
+---
+<div> yield() </div>
+---
+{}
+---
+RENDER ERROR: When rendering template 'test-case': yield() used in a template which isn't being included in another template

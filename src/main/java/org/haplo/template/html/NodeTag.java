@@ -1,12 +1,11 @@
 package org.haplo.template.html;
 
-class NodeTag extends Node {
+final class NodeTag extends Node {
     private String name;
     private String start;
     private Attribute attributesHead;
 
     public NodeTag(String name) {
-        // TODO: store both name and 'start'?
         this.name = name;
         this.start = "<"+name;
     }
@@ -23,7 +22,6 @@ class NodeTag extends Node {
         if(value instanceof NodeLiteral) {
             // Value is just a literal string, so can be optimised
             // Literal values should not be escaped, because the author is trusted
-            // TODO: Linter should check literal values don't contain bad things
             String attributeValue = ((NodeLiteral)value).getLiteralString();
             if(canOmitQuotesForValue(attributeValue)) {
                 this.start += " "+attributeName+"="+attributeValue;

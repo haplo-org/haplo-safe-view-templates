@@ -1,6 +1,6 @@
 package org.haplo.template.html;
 
-public class FunctionBinding {
+final public class FunctionBinding {
     private NodeFunction function;
     private Driver driver;
     private Object view;

@@ -1,6 +1,6 @@
 package org.haplo.template.html;
 
-class NodeFunctionUnsafeHTML extends NodeFunction.ExactlyOneValueArgument {
+final class NodeFunctionUnsafeHTML extends NodeFunction.ExactlyOneValueArgument {
 
     static private final String[] PERMITTED_BLOCK_NAMES = {};
 

@@ -55,20 +55,21 @@ abstract public class Driver {
 
     private IncludedTemplateRenderer includedTemplateRenderer;
 
-    public void setIncludedTemplateRenderer(IncludedTemplateRenderer includedTemplateRenderer) {
+    final public void setIncludedTemplateRenderer(IncludedTemplateRenderer includedTemplateRenderer) {
         this.includedTemplateRenderer = includedTemplateRenderer;
     }
 
-    public void renderIncludedTemplate(String templateName, StringBuilder builder, Context context) throws RenderException {
+    final public void renderIncludedTemplate(String templateName, StringBuilder builder, Context context) throws RenderException {
         if(this.includedTemplateRenderer == null) {
             throw new RenderException(this, "No IncludedTemplateRenderer available for rendering included templates");
         }
         this.includedTemplateRenderer.renderIncludedTemplate(templateName, builder, this, context);
     }
 
-    public void renderYield(String blockName, StringBuilder builder, Object view, Context context) throws RenderException {
-        // TODO: Is it OK to silently ignore yield() calls when nothing was included with a template() ?
-        if(this.includedFromBinding == null) { return; }
+    final public void renderYield(String blockName, StringBuilder builder, Object view, Context context) throws RenderException {
+        if(this.includedFromBinding == null) {
+            throw new RenderException(this, "yield() used in a template which isn't being included in another template");
+        }
         this.includedFromBinding.renderBlock(blockName, builder, view, context);
     }
 
@@ -80,11 +81,11 @@ abstract public class Driver {
 
     private FunctionRenderer functionRenderer;
 
-    public void setFunctionRenderer(FunctionRenderer renderer) {
+    final public void setFunctionRenderer(FunctionRenderer renderer) {
         this.functionRenderer = renderer;
     }
 
-    protected void renderFunction(StringBuilder builder, FunctionBinding binding) throws RenderException {
+    final protected void renderFunction(StringBuilder builder, FunctionBinding binding) throws RenderException {
         if(     (this.functionRenderer == null) ||
                 !this.functionRenderer.renderFunction(builder, binding) ) {
             throw new RenderException(this, "No renderable implementation for function "+binding.getFunctionName()+"()");
@@ -119,14 +120,14 @@ abstract public class Driver {
     private Object[] rememberedViews;
     private FunctionBinding includedFromBinding;
 
-    public void setupForRender(Template template) {
+    final public void setupForRender(Template template) {
         if(this.template != null) {
             throw new RuntimeException("Can't use same Driver twice");
         }
         this.template = template;
     }
 
-    public void rememberView(int index, Object view) {
+    final public void rememberView(int index, Object view) {
         if(this.rememberedViews == null) {
             // Allocate remembered views on demand
             int numberOfRememberedViews = (this.template == null) ? -1 : this.template.getNumberOfRememberedViews();
@@ -138,11 +139,11 @@ abstract public class Driver {
         this.rememberedViews[index] = view;
     }
 
-    public Object recallView(int index) {
+    final public Object recallView(int index) {
         return (this.rememberedViews == null) ? null : this.rememberedViews[index];
     }
 
-    public void setIncludedFromBinding(FunctionBinding includedFromBinding) {
+    final public void setIncludedFromBinding(FunctionBinding includedFromBinding) {
         if(this.includedFromBinding != null) {
             throw new RuntimeException("Unexpected setIncludedFromBinding(), logic error");
         }
