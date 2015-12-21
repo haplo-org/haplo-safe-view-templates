@@ -279,6 +279,10 @@ Include another template in the rendered output, controlled by the Driver. The t
 
 When rendering a template which has been included in another using the template:X() function, render a template:X() function block. `yield()` renders the anonymous block, `yield:Y()` renders the block named `Y`.
 
+### render(deferred)
+
+Include a deferred render into the current template.
+
 ### url(...)
 
 Pseudo function with special parsing. See URLs section above.

@@ -1,0 +1,32 @@
+
+Rendering can be deferred and then included in another template
+
+---
+<div>
+    <span> value1 </span>
+    render(deferred)
+</div>
+
+---
+{
+    "deferred": "** This value will be set by the test scripts",
+    "value1": "Hello"
+}
+---
+<div><span>Hello</span><b>Included Template 1: Deferred view</b></div>
+
+---
+{
+    "deferred": "incorrect value type",
+    "value1":23
+}
+---
+RENDER ERROR: When rendering template 'test-case': Can't use render() on the value found in the view
+
+---
+{
+    "deferred": false,
+    "value1":23
+}
+---
+RENDER ERROR: When rendering template 'test-case': Can't use render() on the value found in the view

@@ -17,7 +17,7 @@ public class SimpleIncludedTemplateRenderer implements Driver.IncludedTemplateRe
     public void renderIncludedTemplate(String templateName, StringBuilder builder, Driver driver, Context context) throws RenderException {
         Template template = (this.templates == null) ? null : this.templates.get(templateName);
         if(template == null) {
-            throw new RenderException("Could not find included template '"+templateName+"'");
+            throw new RenderException(driver, "Could not find included template '"+templateName+"'");
         }
         template.renderAsIncludedTemplate(builder, driver, driver.getRootView(), context);
     }

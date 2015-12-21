@@ -61,4 +61,16 @@ NEW TEMPLATE: include() throws an exception if the template isn't known
 ---
 {}
 ---
-RENDER ERROR: Could not find included template 'unknown-template'
+RENDER ERROR: When rendering template 'test-case': Could not find included template 'unknown-template'
+
+
+---
+NEW TEMPLATE: Attempt to include template which doesn't exist in included template blames the right template
+---
+<div>
+    template:template4()
+</div>
+---
+{}
+---
+RENDER ERROR: When rendering template 'template4': Could not find included template 'unknown-template'

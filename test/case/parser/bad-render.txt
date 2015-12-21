@@ -1,0 +1,22 @@
+
+PARSE ERROR: render() functions must take a single value argument
+
+---
+<div> render() </div>
+---
+Error at line 1 character 14: render() must take exactly one argument
+
+---
+<div> render("x") </div>
+---
+Error at line 1 character 13: render() must have a value as the argument
+
+---
+<div> render(x) { "abc" } </div>
+---
+Error at line 1 character 15: render() may not take an anonymous block
+
+---
+<div class=render(x)> </div>
+---
+Error at line 1 character 18: render() cannot be used in this context

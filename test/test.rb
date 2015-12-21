@@ -3,22 +3,28 @@
 require 'json'
 
 Parser = Java::OrgHaploTemplateHtml::Parser
+NestedJavaDriver = Java::OrgHaploTemplateDriverNestedjava::NestedJavaDriver
+JRubyJSONDriver = Java::OrgHaploTemplateDriverJrubyjson::JRubyJSONDriver
+RhinoJavaScriptDriver = Java::OrgHaploTemplateDriverRhinojs::RhinoJavaScriptDriver
 
 # ---------------------------------------------------------------------------
 
 template_inclusions = java.util.HashMap.new
-template_inclusions.put("template1", Parser.new(<<__E).parse())
+template_inclusions.put("template1", Parser.new(<<__E, "template1").parse())
   <b> "Included Template 1: " value1 </b>
 __E
-template_inclusions.put("template2", Parser.new(<<__E).parse())
+template_inclusions.put("template2", Parser.new(<<__E, "template2").parse())
   within(nested) {
     <i> "Included Template 2: " ^{rootValue} </i>
   }
 __E
-template_inclusions.put("template3", Parser.new(<<__E).parse())
+template_inclusions.put("template3", Parser.new(<<__E, "template2").parse())
   <span> "T3 " template:template1() " - " generic-function() </span>
 __E
-template_inclusions.put("components", Parser.new(<<__E).parse())
+template_inclusions.put("template4", Parser.new(<<__E, "template4").parse())
+  <span> template:unknown-template() </span>
+__E
+template_inclusions.put("components", Parser.new(<<__E, "components").parse())
   within(component) {
     <div class="component">
       value1 " "
@@ -30,6 +36,8 @@ template_inclusions.put("components", Parser.new(<<__E).parse())
   }
 __E
 included_template_renderer = Java::OrgHaploTemplateDriverUtil::SimpleIncludedTemplateRenderer.new(template_inclusions)
+
+$template_for_deferred = template_inclusions.get("template1")
 
 # ---------------------------------------------------------------------------
 
@@ -88,6 +96,10 @@ if ARGV[0] == 'run' || ARGV[0] == 'tree'
 end
 # ---------------------------------------------------------------------------
 
+try_quoting
+
+# ---------------------------------------------------------------------------
+
 class TestFunctionRenderer
   ArgumentRequirement = Java::OrgHaploTemplateHtml::FunctionBinding::ArgumentRequirement
   def renderFunction(builder, binding)
@@ -141,11 +153,26 @@ end
 
 # ---------------------------------------------------------------------------
 
-try_quoting
+def maybe_add_in_deferred_render(view_kind, view)
+  value = case view_kind
+    when :java; view.get("deferred")
+    when :rubyjson; view["deferred"]
+    when :js; view.get("deferred", view)
+  end
+  if(value.kind_of?(String) && value =~ /\A\*\*/)
+    # Contains a magic var, create a new deferred render
+    template = $template_for_deferred
+    render_view = {"value1" => "Deferred view"}
+    case view_kind
+      when :java; view.put("deferred", template.deferredRender(NestedJavaDriver.new(view_value_to_java(render_view))))
+      when :rubyjson; view["deferred"] = template.deferredRender(JRubyJSONDriver.new(render_view))
+      when :js; view.put("deferred", view, template.deferredRender(RhinoJavaScriptDriver.new(view_json_to_rhino('{"value1":"Deferred view"}'))))
+    end
+  end
+  view
+end
 
-NestedJavaDriver = Java::OrgHaploTemplateDriverNestedjava::NestedJavaDriver
-JRubyJSONDriver = Java::OrgHaploTemplateDriverJrubyjson::JRubyJSONDriver
-RhinoJavaScriptDriver = Java::OrgHaploTemplateDriverRhinojs::RhinoJavaScriptDriver
+# ---------------------------------------------------------------------------
 
 JavaSystem = Java::JavaLang::System
 template_render_time = 0
@@ -169,7 +196,7 @@ files.each do |filename|
       tests += 1
       exception = nil
       begin
-        template = Parser.new(template_source.strip).parse()
+        template = Parser.new(template_source.strip, "expected-parse-error").parse()
       rescue => e
         exception = e
       end
@@ -191,7 +218,7 @@ files.each do |filename|
     while ! commands.empty?
       if template == nil
         begin
-          template = Parser.new(required_cmd.call.strip).parse()
+          template = Parser.new(required_cmd.call.strip, "test-case").parse()
         rescue => e
           failed += 1
           puts "\n#{filename}: Unexpected parse error"
@@ -208,9 +235,9 @@ files.each do |filename|
       expected_output = required_cmd.call.strip
       view = JSON.parse(view_json)
       drivers = []
-      drivers << NestedJavaDriver.new(view_value_to_java(view))
-      drivers << JRubyJSONDriver.new(view)
-      drivers << RhinoJavaScriptDriver.new(view_json_to_rhino(view_json))
+      drivers << NestedJavaDriver.new(maybe_add_in_deferred_render(:java, view_value_to_java(view)))
+      drivers << JRubyJSONDriver.new(maybe_add_in_deferred_render(:rubyjson, view))
+      drivers << RhinoJavaScriptDriver.new(maybe_add_in_deferred_render(:js, view_json_to_rhino(view_json)))
       if expected_output =~ /\ATREE:(.+)\z/m
         # Testing the tree, not the rendered output
         expected_output = $1.strip

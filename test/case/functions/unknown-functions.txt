@@ -13,4 +13,4 @@ Unknown functions throw a renderer error
 
 ---
 
-RENDER ERROR: No renderable implementation for function unknown-function()
+RENDER ERROR: When rendering template 'test-case': No renderable implementation for function unknown-function()

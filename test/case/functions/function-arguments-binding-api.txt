@@ -16,7 +16,7 @@ NEW TEMPLATE: zero arguments expected
 ---
 {}
 ---
-RENDER ERROR: Too many arguments for testargs-L()
+RENDER ERROR: When rendering template 'test-case': Too many arguments for testargs-L()
 
 
 ---
@@ -46,7 +46,7 @@ NEW TEMPLATE: not enough required arguments
 ---
 {"x":"pong"}
 ---
-RENDER ERROR: Argument 2 expected for testargs-SSL()
+RENDER ERROR: When rendering template 'test-case': Argument 2 expected for testargs-SSL()
 
 
 ---

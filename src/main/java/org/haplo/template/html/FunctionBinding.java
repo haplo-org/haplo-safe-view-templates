@@ -50,7 +50,7 @@ public class FunctionBinding {
 
     public void noMoreArgumentsExpected() throws RenderException {
         if(this.nextArgument != null) {
-            throw new RenderException("Too many arguments for "+this.getFunctionName()+"()");
+            throw new RenderException(driver, "Too many arguments for "+this.getFunctionName()+"()");
         }
     }
 
@@ -58,7 +58,7 @@ public class FunctionBinding {
         Node arg = this.nextArgument;
         if(arg == null) {
             if(requirement == ArgumentRequirement.REQUIRED) {
-                throw new RenderException("Argument "+(this.argumentCount+1)+" expected for "+this.getFunctionName()+"()");
+                throw new RenderException(driver, "Argument "+(this.argumentCount+1)+" expected for "+this.getFunctionName()+"()");
             }
         } else {
             this.argumentCount++;

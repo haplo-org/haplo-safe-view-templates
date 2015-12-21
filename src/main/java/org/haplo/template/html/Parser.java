@@ -6,6 +6,7 @@ import java.util.HashSet;
 
 public class Parser {
     private CharSequence source;
+    private String templateName;
     private int pos = 0;
     private Context context = Context.TEXT;
     private Stack<Node> nesting;
@@ -18,13 +19,14 @@ public class Parser {
     final static Pattern VALID_ATTRIBUTE_NAME_REGEX = Pattern.compile("\\A(?!on)[a-z0-9_-]+\\Z");   // probits names starting onX for security
     final static Pattern VALID_URL_PARAMETER_NAME_REGEX = Pattern.compile("\\A[a-z0-9_-]+\\Z");
 
-    public Parser(CharSequence source) {
+    public Parser(CharSequence source, String templateName) {
         this.source = source;
+        this.templateName = templateName;
         this.nesting = new Stack<Node>();
     }
 
     public Template parse() throws ParseException {
-        Template template = new Template(parseList(-1, "template"), this.nextRememberIndex);
+        Template template = new Template(this.templateName, parseList(-1, "template"), this.nextRememberIndex);
         if(!this.nesting.empty()) { throw new RuntimeException("logic error"); }
         return template;
     }
@@ -212,6 +214,7 @@ public class Parser {
             case "unless":      return new NodeFunctionConditional(true);
             case "each":        return new NodeFunctionEach();
             case "switch":      return new NodeFunctionSwitch();
+            case "render":      return new NodeFunctionRender();
             case "unsafeHTML":  return new NodeFunctionUnsafeHTML();
             case "yield":       return new NodeFunctionYield(Node.BLOCK_ANONYMOUS);
             default: break;

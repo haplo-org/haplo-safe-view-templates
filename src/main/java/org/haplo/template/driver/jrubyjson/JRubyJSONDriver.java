@@ -12,6 +12,7 @@ import org.jruby.RubyObject;
 import org.jruby.RubyString;
 import org.jruby.RubyBoolean;
 import org.jruby.RubyArray;
+import org.jruby.java.proxies.ConcreteJavaProxy;
 
 class JRubyJSONDriver extends Driver {
     private IRubyObject rootView;
@@ -38,6 +39,9 @@ class JRubyJSONDriver extends Driver {
                 if(o == null || o.isNil()) { return null; }
                 o = o.callMethod(o.getRuntime().getCurrentContext(), "[]",
                         RubyString.newUnicodeString(o.getRuntime(), key));
+            }
+            if(o instanceof ConcreteJavaProxy) {
+                return ((ConcreteJavaProxy)o).getObject();
             }
             return ((o == null) || o.isNil()) ? null : o;
         } else if(path.length == 0) {

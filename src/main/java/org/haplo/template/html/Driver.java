@@ -23,6 +23,32 @@ abstract public class Driver {
 
     // ----------------------------------------------------------------------
 
+    final public void setParentDriver(Driver parentDriver) {
+        this.parentDriver = parentDriver;
+    }
+
+    final public Driver getParentDriver() {
+        return this.parentDriver;
+    }
+
+    final public Template getTemplate() {
+        return this.template;
+    }
+
+    // Some RenderExceptions are thrown when there isn't a template. This is usually
+    // the fault of the last template which was rendered, so this function is used
+    // to blame something which can be used for tracking down the problem.
+    final public Template getLastTemplate() {
+        Driver search = this;
+        while(search != null) {
+            if(search.template != null) { return search.template; }
+            search = search.parentDriver;
+        }
+        return null;
+    }
+
+    // ----------------------------------------------------------------------
+
     public interface IncludedTemplateRenderer {
         void renderIncludedTemplate(String templateName, StringBuilder builder, Driver driver, Context context) throws RenderException;
     }
@@ -35,7 +61,7 @@ abstract public class Driver {
 
     public void renderIncludedTemplate(String templateName, StringBuilder builder, Context context) throws RenderException {
         if(this.includedTemplateRenderer == null) {
-            throw new RenderException("No IncludedTemplateRenderer available for rendering included templates");
+            throw new RenderException(this, "No IncludedTemplateRenderer available for rendering included templates");
         }
         this.includedTemplateRenderer.renderIncludedTemplate(templateName, builder, this, context);
     }
@@ -61,7 +87,7 @@ abstract public class Driver {
     protected void renderFunction(StringBuilder builder, FunctionBinding binding) throws RenderException {
         if(     (this.functionRenderer == null) ||
                 !this.functionRenderer.renderFunction(builder, binding) ) {
-            throw new RenderException("No renderable implementation for function "+binding.getFunctionName()+"()");
+            throw new RenderException(this, "No renderable implementation for function "+binding.getFunctionName()+"()");
         }
     }
 
@@ -88,26 +114,26 @@ abstract public class Driver {
     // Because the driver is passed to all rendering functions, it is a
     // useful place to store state while rendering. Nodes themselves can't
     // store any state because they need to be thread-safe.
-    private boolean driverSetup = false;
-    private int numberOfRememberedViews = 0;
+    private Template template;
+    private Driver parentDriver;
     private Object[] rememberedViews;
     private FunctionBinding includedFromBinding;
 
-    public void setupForRender(int numberOfRememberedViews) {
-        if(this.driverSetup) {
+    public void setupForRender(Template template) {
+        if(this.template != null) {
             throw new RuntimeException("Can't use same Driver twice");
         }
-        this.numberOfRememberedViews = numberOfRememberedViews;
-        this.driverSetup = true;
+        this.template = template;
     }
 
     public void rememberView(int index, Object view) {
         if(this.rememberedViews == null) {
             // Allocate remembered views on demand
-            if(this.numberOfRememberedViews <= 0) {
+            int numberOfRememberedViews = (this.template == null) ? -1 : this.template.getNumberOfRememberedViews();
+            if(numberOfRememberedViews <= 0) {
                 throw new RuntimeException("Unexpected rememberView(), logic error");
             }
-            this.rememberedViews = new Object[this.numberOfRememberedViews];
+            this.rememberedViews = new Object[numberOfRememberedViews];
         }
         this.rememberedViews[index] = view;
     }
