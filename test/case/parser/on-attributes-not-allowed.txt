@@ -7,6 +7,11 @@ PARSE ERROR: onX="" attributes not allowed because they contains JavaScript
 Error at line 1 character 10: Invalid attribute name: 'onclick' (attribute names must be lower case, and not begin with 'on' as these attributes are security risks)
 
 ---
+<a onClick="alert()">link</a>
+---
+Error at line 1 character 10: Invalid attribute name: 'onClick' (attribute names must be lower case, and not begin with 'on' as these attributes are security risks)
+
+---
 <a on="alert()">link</a>
 ---
 Error at line 1 character 5: Invalid attribute name: 'on' (attribute names must be lower case, and not begin with 'on' as these attributes are security risks)

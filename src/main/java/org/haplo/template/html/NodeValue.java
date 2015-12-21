@@ -3,11 +3,8 @@ package org.haplo.template.html;
 class NodeValue extends Node {
     private String[] path;
 
-    final static java.util.regex.Pattern SPLIT_REGEX = java.util.regex.Pattern.compile("\\.");
-
-    public NodeValue(String pathString) {
-        // TODO: Split more efficiently than a regex?
-        this.path = SPLIT_REGEX.split(pathString);
+    public NodeValue(String valuePath) {
+        this.path = splitValuePath(valuePath);
     }
 
     protected NodeValue(String[] path) {
@@ -52,5 +49,27 @@ class NodeValue extends Node {
             builder.append(s);
         }
         builder.append("\n");
+    }
+
+    // ----------------------------------------------------------------------
+
+    private static String[] splitValuePath(String s) {
+        int dots = 0, len = s.length();
+        for(int i = 0; i < len; ++i) {
+            if(s.charAt(i) == '.') { dots++; }
+        }
+        if(dots == 0) {
+            return new String[] { s };
+        }
+        String[] path = new String[dots + 1];
+        int start = 0, segment = 0;
+        for(int i = 0; i < len; ++i) {
+            if(s.charAt(i) == '.') {
+                path[segment++] = s.substring(start, i);
+                start = i+1;
+            }
+        }
+        path[dots] = s.substring(start, len);
+        return path;
     }
 }

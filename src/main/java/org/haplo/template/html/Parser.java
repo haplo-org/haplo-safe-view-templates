@@ -1,7 +1,6 @@
 package org.haplo.template.html;
 
 import java.util.Stack;
-import java.util.regex.Pattern;
 import java.util.HashSet;
 
 final public class Parser {
@@ -13,11 +12,6 @@ final public class Parser {
     private String childlessTagName = null;
     private boolean inEnclosingViewBlock = false;
     private int nextRememberIndex = 0;
-
-    final static Pattern VALID_TAG_NAME_REGEX = Pattern.compile("\\A[a-z0-9]+\\Z");
-    // TODO: Is this overly restrictive regex valid? Is it worth writing a scanner function for it?
-    final static Pattern VALID_ATTRIBUTE_NAME_REGEX = Pattern.compile("\\A(?!on)[a-z0-9_-]+\\Z");   // probits names starting onX for security
-    final static Pattern VALID_URL_PARAMETER_NAME_REGEX = Pattern.compile("\\A[a-z0-9_-]+\\Z");
 
     public Parser(CharSequence source, String templateName) {
         this.source = source;
@@ -294,7 +288,7 @@ final public class Parser {
                 if(attributeName != null) {
                     error("Expected = after attribute name");
                 }
-                if(!(VALID_ATTRIBUTE_NAME_REGEX.matcher(s).matches())) {
+                if(!(validAttributeName(s))) {
                     error("Invalid attribute name: '"+s+"' (attribute names must be lower case, "+
                         "and not begin with 'on' as these attributes are security risks)");
                 }
@@ -354,9 +348,29 @@ final public class Parser {
 
     protected void checkTagName(CharSequence name, boolean isCloseTag, int tagStartPos) throws ParseException {
         if(name == null) { error("Unexpected end of template after <"); }
-        if(!(VALID_TAG_NAME_REGEX.matcher(name).matches())) {
-            error("Invalid tag name <"+(isCloseTag?"/":"")+name+"> (must be lower case, a-z0-9 only)", tagStartPos);
+        int len = name.length();
+        for(int i = 0; i < len; ++i) {
+            char c = name.charAt(i);
+            if(!( ((c >= 'a') && (c <= 'z')) || ((c >= '0') && (c <= '9')) )) {
+                error("Invalid tag name <"+(isCloseTag?"/":"")+name+"> (must be lower case, a-z0-9 only)", tagStartPos);
+            }
         }
+    }
+
+    private boolean validRestrictedName(CharSequence name) {
+        int len = name.length();
+        for(int i = 0; i < len; ++i) {
+            char c = name.charAt(i);
+            if(!( ((c >= 'a') && (c <= 'z')) || ((c >= '0') && (c <= '9')) || (c == '-') || (c == '_') )) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private boolean validAttributeName(CharSequence name) {
+        if(!validRestrictedName(name)) { return false; }
+        return !((name.length() >= 2) && (name.charAt(0) == 'o') && (name.charAt(1) == 'n'));
     }
 
     protected NodeURL parseURL(char endOfListCharacter) throws ParseException {
@@ -388,7 +402,7 @@ final public class Parser {
                     inParameters = false;
                     inFragment = true;
                 } else {
-                    if(!(VALID_URL_PARAMETER_NAME_REGEX.matcher(s).matches())) {
+                    if(!(validRestrictedName(s))) {
                         error("Invalid literal URL parameter name: '"+s+"'");
                     }
                     if(!symbolIsSingleChar(symbol(), '=')) {
