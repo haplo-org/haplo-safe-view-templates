@@ -15,7 +15,7 @@ then all possible input views will write the HTML structure described by the tem
 
 That is, when using a template written by the application author, is it impossible for an attacker controlled view to inject arbitary HTML, such as unwelcome JavaScript.
 
-Licensed under the MPLv2, but with a temporary additional clause to request you don't use it in production until it's done.
+Licensed under the MPLv2.
 
 ## Introduction
 
