@@ -24,6 +24,9 @@ __E
 template_inclusions.put("template4", Parser.new(<<__E, "template4").parse())
   <span> template:unknown-template() </span>
 __E
+template_inclusions.put("self-inclusion", Parser.new(<<__E, "self-inclusion").parse())
+  <span> template:self-inclusion() </span>
+__E
 template_inclusions.put("components", Parser.new(<<__E, "components").parse())
   within(component) {
     <div class="component">

@@ -1,0 +1,44 @@
+
+yield() within do() throws exception if used carelessly
+
+---
+<div>
+    do() { yield:contents() } contents { yield() }
+</div>
+---
+{}
+---
+RENDER ERROR: When rendering template 'test-case': yield() used in a position where it cannot refer to a renderable block
+
+---
+NEW TEMPLATE: yield() within do() can't refer to its own block
+---
+<div>
+    do() { yield() } contents { yield:contents() }
+</div>
+---
+{}
+---
+RENDER ERROR: When rendering template 'test-case': yield() used in a position where it cannot refer to a renderable block
+
+---
+NEW TEMPLATE: yield() within do() can't recurse
+---
+<div>
+    do() { yield:contents() } contents { yield:contents() }
+</div>
+---
+{}
+---
+RENDER ERROR: When rendering template 'test-case': yield() used in a position where it cannot refer to a renderable block
+
+---
+NEW TEMPLATE: and the final combination of yield()s
+---
+<div>
+    do() { yield() } contents { yield() }
+</div>
+---
+{}
+---
+RENDER ERROR: When rendering template 'test-case': yield() used in a position where it cannot refer to a renderable block

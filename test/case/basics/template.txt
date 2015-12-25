@@ -74,3 +74,13 @@ NEW TEMPLATE: Attempt to include template which doesn't exist in included templa
 {}
 ---
 RENDER ERROR: When rendering template 'template4': Could not find included template 'unknown-template'
+
+
+---
+NEW TEMPLATE: Too much temple nesting results in exception
+---
+<div> template:self-inclusion() </div>
+---
+{}
+---
+RENDER ERROR: When rendering template 'self-inclusion': Template rendering nesting depth exceeded.

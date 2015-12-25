@@ -1,0 +1,26 @@
+
+do() allows you to do things like conditionally linking something
+
+---
+
+<div>
+    do() {
+        if(action) {
+            <a href=action> yield:contents() </a>
+        } else {
+            <span> yield:contents() </span>
+        }
+    } contents {
+         <b> "Hello " name </b>
+    }
+</div>
+
+---
+{"action":"/abc", "name":"Joe"}
+---
+<div><a href="/abc"><b>Hello Joe</b></a></div>
+
+---
+{"name":"John"}
+---
+<div><span><b>Hello John</b></span></div>

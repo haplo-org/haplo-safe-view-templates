@@ -1,6 +1,8 @@
 package org.haplo.template.html;
 
 abstract public class Driver {
+    public static final int MAX_DRIVER_NESTING = 256;
+
     abstract public Object getRootView();
     abstract public Driver driverWithNewRoot(Object rootView);
     abstract public Object getValueFromView(Object view, String[] path);
@@ -22,10 +24,6 @@ abstract public class Driver {
     }
 
     // ----------------------------------------------------------------------
-
-    final public void setParentDriver(Driver parentDriver) {
-        this.parentDriver = parentDriver;
-    }
 
     final public Driver getParentDriver() {
         return this.parentDriver;
@@ -67,10 +65,10 @@ abstract public class Driver {
     }
 
     final public void renderYield(String blockName, StringBuilder builder, Object view, Context context) throws RenderException {
-        if(this.includedFromBinding == null) {
-            throw new RenderException(this, "yield() used in a template which isn't being included in another template");
+        if(this.bindingForYield == null) {
+            throw new RenderException(this, "yield() used in a position where it cannot refer to a renderable block");
         }
-        this.includedFromBinding.renderBlock(blockName, builder, view, context);
+        this.bindingForYield.renderBlock(blockName, builder, view, context);
     }
 
     // ----------------------------------------------------------------------
@@ -104,8 +102,14 @@ abstract public class Driver {
 
     // ----------------------------------------------------------------------
 
-    final public Driver driverWithNewRootAndCopyOfConfig(Object rootView) {
+    final public Driver newNestedDriverWithView(Object rootView) throws RenderException {
+        int newNestingDepth = this.nestingDepth + 1;
+        if(newNestingDepth > MAX_DRIVER_NESTING) {
+            throw new RenderException(this, "Template rendering nesting depth exceeded.");
+        }
         Driver driver = this.driverWithNewRoot(rootView);
+        driver.parentDriver = this;
+        driver.nestingDepth = newNestingDepth;
         driver.includedTemplateRenderer = this.includedTemplateRenderer;
         driver.functionRenderer = this.functionRenderer;
         return driver;
@@ -116,9 +120,10 @@ abstract public class Driver {
     // useful place to store state while rendering. Nodes themselves can't
     // store any state because they need to be thread-safe.
     private Template template;
+    private int nestingDepth = 0;
     private Driver parentDriver;
     private Object[] rememberedViews;
-    private FunctionBinding includedFromBinding;
+    private FunctionBinding bindingForYield;
 
     final public void setupForRender(Template template) {
         if(this.template != null) {
@@ -143,10 +148,10 @@ abstract public class Driver {
         return (this.rememberedViews == null) ? null : this.rememberedViews[index];
     }
 
-    final public void setIncludedFromBinding(FunctionBinding includedFromBinding) {
-        if(this.includedFromBinding != null) {
-            throw new RuntimeException("Unexpected setIncludedFromBinding(), logic error");
+    final public void setBindingForYield(FunctionBinding bindingForYield) {
+        if(this.bindingForYield != null) {
+            throw new RuntimeException("Unexpected setBindingForYield(), logic error");
         }
-        this.includedFromBinding = includedFromBinding;
+        this.bindingForYield = bindingForYield;
     }
 }

@@ -265,6 +265,12 @@ The view is moved to the `value`, then the anonymous block is rendered.
 
 Evaluate `value` as a string, then render the named block with that name. If that block doesn't exist, render the anonymous block.
 
+### do() { }
+
+Render the anonymous block. `yield:name()` within that block renders the named block to the `do()` function.
+
+This is useful for things like conditionally adding links around generated HTML.
+
 ### unsafeHTML(value)
 
 Evaluate `value` as a string, then output directly in the template without escaping. A parse error is thrown if it is used outside the text context (eg can't be used in an attribute value).
@@ -277,7 +283,7 @@ Include another template in the rendered output, controlled by the Driver. The t
 
 ### yield() & yield:Y()
 
-When rendering a template which has been included in another using the template:X() function, render a template:X() function block. `yield()` renders the anonymous block, `yield:Y()` renders the block named `Y`.
+When rendering a do() anonymous block, or template which has been included in another using the template:X() function, render a block from the calling function. `yield()` renders the anonymous block, `yield:Y()` renders the block named `Y`.
 
 ### render(deferred)
 

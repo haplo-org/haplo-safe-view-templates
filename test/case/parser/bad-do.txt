@@ -1,0 +1,16 @@
+
+PARSE ERROR: do() needs no args and an anonymous block
+
+---
+<div>
+    do(b) {}
+</div>
+---
+Error at line 2 character 12: do() must not take any arguments
+
+---
+<div>
+    do() x
+</div>
+---
+Error at line 2 character 8: do() requires an anonymous block

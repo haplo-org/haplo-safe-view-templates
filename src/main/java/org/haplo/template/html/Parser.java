@@ -212,6 +212,7 @@ final public class Parser {
             case "unless":      return new NodeFunctionConditional(true);
             case "each":        return new NodeFunctionEach();
             case "switch":      return new NodeFunctionSwitch();
+            case "do"    :      return new NodeFunctionDo();
             case "render":      return new NodeFunctionRender();
             case "unsafeHTML":  return new NodeFunctionUnsafeHTML();
             case "yield":       return new NodeFunctionYield(Node.BLOCK_ANONYMOUS);
