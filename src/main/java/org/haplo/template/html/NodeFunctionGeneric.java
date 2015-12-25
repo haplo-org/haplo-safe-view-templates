@@ -12,7 +12,7 @@ final class NodeFunctionGeneric extends NodeFunction {
     }
 
     public void render(StringBuilder builder, Driver driver, Object view, Context context) throws RenderException {
-        driver.renderFunction(builder, new FunctionBinding(this, driver, view));
+        driver.renderFunction(builder, new FunctionBinding(this, driver, view, context));
     }
 
     public String getDumpName() {

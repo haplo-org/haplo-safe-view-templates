@@ -148,6 +148,7 @@ $jscontext.setLanguageVersion(JSContext::VERSION_1_7)
 $jsscope = $jscontext.initStandardObjects()
 JSScriptableObject.defineClass($jsscope, Java::OrgHaploTemplateDriverRhinojs::HaploTemplate.java_class)
 JSScriptableObject.defineClass($jsscope, Java::OrgHaploTemplateDriverRhinojs::HaploTemplateDeferredRender.java_class)
+JSScriptableObject.defineClass($jsscope, Java::OrgHaploTemplateDriverRhinojs::JSFunctionThis.java_class)
 
 def view_json_to_rhino(json)
   $jsscope.put('inputJSON', $jsscope, json)
@@ -282,6 +283,7 @@ files.each do |filename|
 end
 
 # Also run some tests of the Rhino JavaScript integration
+Java::OrgHaploTemplateDriverRhinojs::JSPlatformIntegration.platformFunctionRenderer = TestFunctionRenderer.new
 $jsscope.put('$testcount', $jsscope, 0.to_java)
 $jsscope.put('$testpass', $jsscope, 0.to_java)
 $jscontext.evaluateString($jsscope, File.read("test/rhino.js"), "test/rhino.js", 1, nil);

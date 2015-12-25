@@ -22,10 +22,15 @@ public class HaploTemplate extends ScriptableObject implements Callable {
         this.template = new Parser(source, name).parse();
     }
 
+    protected Template getTemplate() {
+        return this.template;
+    }
+
     public String jsFunction_render(Object view) throws RenderException {
         RhinoJavaScriptDriver driver = new RhinoJavaScriptDriver(view);
         if(this.template == null) { throw new RenderException(driver, "No template"); }
-        return this.template.renderString(new RhinoJavaScriptDriver(view));
+        driver.setFunctionRenderer(new JSFunctionRenderer(this));
+        return this.template.renderString(driver);
     }
 
     // Can also call the template as a function
@@ -40,8 +45,10 @@ public class HaploTemplate extends ScriptableObject implements Callable {
     public Scriptable jsFunction_deferredRender(Object view) throws RenderException {
         RhinoJavaScriptDriver driver = new RhinoJavaScriptDriver(view);
         if(this.template == null) { throw new RenderException(driver, "No template"); }
+        driver.setFunctionRenderer(new JSFunctionRenderer(this));
+        Scriptable newObjectScope = JSPlatformIntegration.scope.rootScope(this);
         HaploTemplateDeferredRender deferred =
-            (HaploTemplateDeferredRender)Context.getCurrentContext().newObject(this.getParentScope(), "$HaploTemplateDeferredRender");
+            (HaploTemplateDeferredRender)Context.getCurrentContext().newObject(newObjectScope, "$HaploTemplateDeferredRender");
         deferred.setDeferredRender(this.template.deferredRender(driver));
         return deferred;
     }

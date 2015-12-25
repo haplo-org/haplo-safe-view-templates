@@ -26,7 +26,7 @@ final class NodeFunctionTemplate extends NodeFunction {
         // and store a binding to this function so yield() works.
         Driver nestedDriver = driver.driverWithNewRootAndCopyOfConfig(view);
         nestedDriver.setParentDriver(driver);
-        nestedDriver.setIncludedFromBinding(new FunctionBinding(this, driver, view));
+        nestedDriver.setIncludedFromBinding(new FunctionBinding(this, driver, view, context));
         // Delegate the rendering of the included template to the driver, so it can
         // implement driver specific templates, templates written in other languages, etc.
         nestedDriver.renderIncludedTemplate(this.templateName, builder, context);

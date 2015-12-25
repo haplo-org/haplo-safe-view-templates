@@ -4,18 +4,52 @@ final public class FunctionBinding {
     private NodeFunction function;
     private Driver driver;
     private Object view;
+    private Context context;
     private Node nextArgument;
     private int argumentCount;
 
-    FunctionBinding(NodeFunction function, Driver driver, Object view) {
+    FunctionBinding(NodeFunction function, Driver driver, Object view, Context context) {
         this.function = function;
         this.driver = driver;
         this.view = view;
+        this.context = context;
         this.restartArguments();
     }
 
-    protected String getFunctionName() {
+    public String getFunctionName() {
         return this.function.getFunctionName();
+    }
+
+    public Driver getDriver() {
+        return this.driver;
+    }
+
+    public Object getView() {
+        return this.view;
+    }
+
+    public Context getContext() {
+        return this.context;
+    }
+
+    // ----------------------------------------------------------------------
+
+    public Object[] allValueArguments() {
+        int count = 0;
+        Node argument = this.function.getArgumentsHead();
+        while(argument != null) {
+            count++;
+            argument = argument.getNextNode();
+        }
+        Object[] arguments = new Object[count];
+        argument = this.function.getArgumentsHead();
+        int i = 0;
+        while(argument != null) {
+            arguments[i] = argument.valueForFunctionArgument(this.driver, this.view);
+            i++;
+            argument = argument.getNextNode();
+        }
+        return arguments;
     }
 
     // ----------------------------------------------------------------------
@@ -69,7 +103,11 @@ final public class FunctionBinding {
 
     // ----------------------------------------------------------------------
 
-    protected void renderBlock(String blockName, StringBuilder builder, Object view, Context context) throws RenderException {
+    public boolean hasBlock(String blockName) {
+        return null != this.function.getBlock(blockName);
+    }
+
+    public void renderBlock(String blockName, StringBuilder builder, Object view, Context context) throws RenderException {
         Node block = this.function.getBlock(blockName);
         if(block != null) {
             block.render(builder, this.driver, this.view, context);

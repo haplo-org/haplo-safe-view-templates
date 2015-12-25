@@ -1,7 +1,7 @@
 package org.haplo.template.html;
 
 abstract public class Node {
-    protected final static String BLOCK_ANONYMOUS = ""; // used as key & object identity comparison
+    public final static String BLOCK_ANONYMOUS = ""; // used as key & object identity comparison
 
     // Used during parsing, not rendering
     public boolean allowedInURLContext() {
