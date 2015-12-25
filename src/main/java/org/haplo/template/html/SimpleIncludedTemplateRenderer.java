@@ -1,4 +1,4 @@
-package org.haplo.template.driver.util;
+package org.haplo.template.html;
 
 import java.util.Map;
 

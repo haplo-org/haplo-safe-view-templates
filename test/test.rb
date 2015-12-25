@@ -38,7 +38,7 @@ template_inclusions.put("components", Parser.new(<<__E, "components").parse())
     </div>
   }
 __E
-included_template_renderer = Java::OrgHaploTemplateDriverUtil::SimpleIncludedTemplateRenderer.new(template_inclusions)
+included_template_renderer = Java::OrgHaploTemplateHtml::SimpleIncludedTemplateRenderer.new(template_inclusions)
 
 $template_for_deferred = template_inclusions.get("template1")
 
