@@ -59,6 +59,10 @@ final public class FunctionBinding {
         REQUIRED
     }
 
+    public boolean hasArguments() {
+        return (this.function.getArgumentsHead() != null);
+    }
+
     public void restartArguments() {
         this.nextArgument = this.function.getArgumentsHead();
         this.argumentCount = 0;

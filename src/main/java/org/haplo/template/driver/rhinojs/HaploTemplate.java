@@ -2,6 +2,7 @@ package org.haplo.template.driver.rhinojs;
 
 import org.haplo.template.html.Parser;
 import org.haplo.template.html.Template;
+import org.haplo.template.html.Driver;
 import org.haplo.template.html.ParseException;
 import org.haplo.template.html.RenderException;
 
@@ -13,6 +14,7 @@ import org.mozilla.javascript.WrappedException;
 
 public class HaploTemplate extends ScriptableObject implements Callable {
     private Template template;
+    private Driver.IncludedTemplateRenderer includedTemplateRenderer;
 
     public String getClassName() {
         return "$HaploTemplate";
@@ -22,14 +24,17 @@ public class HaploTemplate extends ScriptableObject implements Callable {
         this.template = new Parser(source, name).parse();
     }
 
-    protected Template getTemplate() {
+    public Template getTemplate() {
         return this.template;
     }
 
+    public void setIncludedTemplateRenderer(Driver.IncludedTemplateRenderer renderer) {
+        this.includedTemplateRenderer = renderer;
+    }
+
     public String jsFunction_render(Object view) throws RenderException {
-        RhinoJavaScriptDriver driver = new RhinoJavaScriptDriver(view);
+        RhinoJavaScriptDriver driver = createDriver(view);
         if(this.template == null) { throw new RenderException(driver, "No template"); }
-        driver.setFunctionRenderer(new JSFunctionRenderer(this));
         return this.template.renderString(driver);
     }
 
@@ -43,13 +48,21 @@ public class HaploTemplate extends ScriptableObject implements Callable {
     }
 
     public Scriptable jsFunction_deferredRender(Object view) throws RenderException {
-        RhinoJavaScriptDriver driver = new RhinoJavaScriptDriver(view);
+        RhinoJavaScriptDriver driver = createDriver(view);
         if(this.template == null) { throw new RenderException(driver, "No template"); }
-        driver.setFunctionRenderer(new JSFunctionRenderer(this));
-        Scriptable newObjectScope = JSPlatformIntegration.scope.rootScope(this);
         HaploTemplateDeferredRender deferred =
-            (HaploTemplateDeferredRender)Context.getCurrentContext().newObject(newObjectScope, "$HaploTemplateDeferredRender");
+            (HaploTemplateDeferredRender)Context.getCurrentContext().
+                newObject(this.getParentScope(), "$HaploTemplateDeferredRender");
         deferred.setDeferredRender(this.template.deferredRender(driver));
         return deferred;
+    }
+
+    protected RhinoJavaScriptDriver createDriver(Object view) {
+        RhinoJavaScriptDriver driver = new RhinoJavaScriptDriver(view);
+        if(this.includedTemplateRenderer != null) {
+            driver.setIncludedTemplateRenderer(this.includedTemplateRenderer);
+        }
+        driver.setFunctionRenderer(new JSFunctionRenderer(this));
+        return driver;
     }
 }

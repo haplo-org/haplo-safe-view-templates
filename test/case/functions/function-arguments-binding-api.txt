@@ -108,3 +108,42 @@ NEW TEMPLATE: arguments as view objects, optional
 ---
 <div>`{"x"=>"y"}/Hash`/NilClass`NULL`</div>
 
+
+---
+NEW TEMPLATE: has arguments?
+---
+<div> testargs-a() </div>
+---
+{}
+---
+<div>`false`</div>
+
+
+---
+NEW TEMPLATE: has arguments 2?
+---
+<div> testargs-a(a) </div>
+---
+{}
+---
+<div>`true`</div>
+
+
+---
+NEW TEMPLATE: has arguments 3?
+---
+<div> testargs-a("x") </div>
+---
+{}
+---
+<div>`true`</div>
+
+
+---
+NEW TEMPLATE: has arguments 3?
+---
+<div> testargs-a("x" x a b) </div>
+---
+{}
+---
+<div>`true`</div>

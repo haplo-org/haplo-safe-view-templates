@@ -7,6 +7,7 @@ import org.haplo.template.html.Escape;
 
 import org.mozilla.javascript.Context;
 import org.mozilla.javascript.Scriptable;
+import org.mozilla.javascript.ScriptableObject;
 import org.mozilla.javascript.Callable;
 import org.mozilla.javascript.Undefined;
 
@@ -32,7 +33,7 @@ class JSFunctionRenderer implements Driver.FunctionRenderer {
         // Otherwise call a JS function to find the implementation
         Object function = null;
         Context jsContext = Context.getCurrentContext();
-        Scriptable rootScope = JSPlatformIntegration.scope.rootScope(this.template);
+        Scriptable rootScope = this.template.getParentScope();
         // A single function is cached to catch the common case where one JS function
         // is used over and over again in a template.
         String functionName = binding.getFunctionName();
@@ -40,7 +41,7 @@ class JSFunctionRenderer implements Driver.FunctionRenderer {
             function = this.cachedFunction;
         }
         if(function == null) {
-            Object functionFinder = rootScope.get(FUNCTION_FINDER_NAME, rootScope);
+            Object functionFinder = ScriptableObject.getProperty(rootScope, FUNCTION_FINDER_NAME);
             if(functionFinder instanceof Callable) {
                 function = ((Callable)functionFinder).call(jsContext, rootScope, rootScope,
                     new Object[] {functionName});

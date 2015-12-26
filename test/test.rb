@@ -123,6 +123,7 @@ class TestFunctionRenderer
         when 'n'; binding.skipArgument(ArgumentRequirement::OPTIONAL)
         when 'N'; binding.skipArgument(ArgumentRequirement::REQUIRED)
         when 'L'; binding.noMoreArgumentsExpected()
+        when 'a'; str = binding.hasArguments().to_s
         else raise "Unknown instruction in test"
         end
         builder.append(str.nil? ? "NULL" : str)
