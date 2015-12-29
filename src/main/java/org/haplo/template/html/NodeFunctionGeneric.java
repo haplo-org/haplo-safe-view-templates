@@ -1,6 +1,6 @@
 package org.haplo.template.html;
 
-final class NodeFunctionGeneric extends NodeFunction {
+public final class NodeFunctionGeneric extends NodeFunction {
     private String name;
 
     NodeFunctionGeneric(String name) {

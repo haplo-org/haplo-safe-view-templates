@@ -4,6 +4,7 @@ import java.util.Stack;
 import java.util.HashSet;
 
 final public class Parser {
+    private ParserConfiguration configuration;
     private CharSequence source;
     private String templateName;
     private int pos = 0;
@@ -13,7 +14,14 @@ final public class Parser {
     private boolean inEnclosingViewBlock = false;
     private int nextRememberIndex = 0;
 
+    static final ParserConfiguration DEFAULT_CONFIGURATION = new ParserConfiguration();
+
     public Parser(CharSequence source, String templateName) {
+        this(source, templateName, DEFAULT_CONFIGURATION);
+    }
+
+    public Parser(CharSequence source, String templateName, ParserConfiguration configuration) {
+        this.configuration = configuration;
         this.source = source;
         this.templateName = templateName;
         this.nesting = new Stack<Node>();
@@ -168,10 +176,14 @@ final public class Parser {
         int functionStartPos = this.pos;
         Context oldContext = this.context;
         this.context = Context.FUNCTION_ARGUMENTS;
-        NodeList arguments = parseList(')', "arguments");
-        this.context = oldContext;
         NodeFunction fn = functionNodeFromName(functionName);
-        fn.setArguments(this, arguments.getListHeadMaybe());
+        if(this.configuration.functionArgumentsAreURL(functionName)) {
+            fn.setArguments(this, parseURL(')'));
+        } else {
+            NodeList arguments = parseList(')', "arguments");
+            fn.setArguments(this, arguments.getListHeadMaybe());
+        }
+        this.context = oldContext;
         this.nesting.push(fn);
         // Are there any blocks?
         CharSequence possibleBlockName = Node.BLOCK_ANONYMOUS;
@@ -201,6 +213,7 @@ final public class Parser {
             possibleBlockName = null;
         }
         fn.postParse(this, functionStartPos);
+        this.configuration.validateFunction(this, fn);
         popNestingAndCheckNodeWas(fn, functionStartPos);
         return fn;
     }

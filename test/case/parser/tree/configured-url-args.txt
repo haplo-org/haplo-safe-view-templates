@@ -1,0 +1,24 @@
+
+Can configure functions have a URL as a single argument
+
+---
+<div>
+    testFunctionWithURL("/abc/" id ? a=b # "f" f)
+</div>
+---
+{}
+---
+TREE: LIST
+  LITERAL <div>
+  FUNCTION testFunctionWithURL()
+    ARGUMENTS
+      URL
+        LITERAL /abc/
+        VALUE id
+        PARAMETERS
+          SET 'a' to
+            VALUE b
+        FRAGMENT
+          LITERAL f
+          VALUE f
+  LITERAL </div>

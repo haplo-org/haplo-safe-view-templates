@@ -1,6 +1,6 @@
 package org.haplo.template.html;
 
-abstract class NodeFunction extends Node {
+public abstract class NodeFunction extends Node {
     private Node argumentsHead; // can be null
     private Node anonymousBlock;
     private Block blocksHead;

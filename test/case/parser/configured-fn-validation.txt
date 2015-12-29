@@ -1,0 +1,12 @@
+
+PARSE ERROR: Configuration can throw parser errors
+
+---
+
+<div>
+    badFunction()
+</div>
+
+---
+
+Error at line 2 character 17: badFunction doesn't validate

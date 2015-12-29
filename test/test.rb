@@ -103,6 +103,17 @@ try_quoting
 
 # ---------------------------------------------------------------------------
 
+class TestParserConfiguration < Java::OrgHaploTemplateHtml::ParserConfiguration
+  def functionArgumentsAreURL(functionName)
+    (functionName == "testFunctionWithURL")
+  end
+  def validateFunction(parser, function)
+    if function.getFunctionName() == "badFunction"
+      parser.error("badFunction doesn't validate")
+    end
+  end
+end
+
 class TestFunctionRenderer
   ArgumentRequirement = Java::OrgHaploTemplateHtml::FunctionBinding::ArgumentRequirement
   def renderFunction(builder, binding)
@@ -205,7 +216,7 @@ files.each do |filename|
       tests += 1
       exception = nil
       begin
-        template = Parser.new(template_source.strip, "expected-parse-error").parse()
+        template = Parser.new(template_source.strip, "expected-parse-error", TestParserConfiguration.new).parse()
       rescue => e
         exception = e
       end
@@ -227,7 +238,7 @@ files.each do |filename|
     while ! commands.empty?
       if template == nil
         begin
-          template = Parser.new(required_cmd.call.strip, "test-case").parse()
+          template = Parser.new(required_cmd.call.strip, "test-case", TestParserConfiguration.new).parse()
         rescue => e
           failed += 1
           puts "\n#{filename}: Unexpected parse error"

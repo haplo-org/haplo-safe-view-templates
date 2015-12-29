@@ -9,10 +9,10 @@ Error at line 1 character 19: template: functions may not take any arguments
 ---
 <div> template() </div>
 ---
-Error at line 1 character 16: Bad included template function name, must start 'template:'
+Error at line 1 character 15: Bad included template function name, must start 'template:'
 
 ---
 <div> template:() </div>
 ---
-Error at line 1 character 17: Bad included template function name, must start 'template:'
+Error at line 1 character 16: Bad included template function name, must start 'template:'
 
