@@ -151,6 +151,11 @@ assertException(function() {
     templateCheckContext2.render({context:"TEXT"});
 }, "org.haplo.template.html.RenderException: When rendering template 'undefined': In checkContext(), must be used in TEXT context, attempt to use in ATTRIBUTE_VALUE context");
 
+// Make sure parser configuration is active
+assertException(function() {
+    new $HaploTemplate("<div>badFunction()</div>");
+}, "org.haplo.template.html.ParseException: Error at line 1 character 18: badFunction doesn't validate");
+
 // Call platform defined function
 var templateWithPlatformFns = new $HaploTemplate("<div> generic-function() </div>");
 assertEqual(templateWithPlatformFns.render({}), "<div>TEST GENERIC FUNCTION RENDER</div>", "JS template calls platform function");

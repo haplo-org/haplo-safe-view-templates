@@ -1,0 +1,9 @@
+
+Check that the textOnly() function does actually work in TEXT context. (failure checked in other file)
+
+---
+<div>textOnly()</div>
+---
+{}
+---
+<div>TEXT ONLY</div>

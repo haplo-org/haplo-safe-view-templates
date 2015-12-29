@@ -110,6 +110,10 @@ class TestParserConfiguration < Java::OrgHaploTemplateHtml::ParserConfiguration
   def validateFunction(parser, function)
     if function.getFunctionName() == "badFunction"
       parser.error("badFunction doesn't validate")
+    elsif function.getFunctionName() == "textOnly"
+      if parser.getCurrentParseContext() != Context::TEXT
+        parser.error("textOnly() can only be used in text context")
+      end
     end
   end
 end
@@ -120,6 +124,9 @@ class TestFunctionRenderer
     case binding.getFunctionName()
     when "generic-function"
       builder.append("TEST GENERIC FUNCTION RENDER")
+      true
+    when 'textOnly'
+      builder.append('TEXT ONLY')
       true
     when /\Atestargs-(.*)\z/
       builder.append('`')
@@ -298,6 +305,7 @@ files.each do |filename|
 end
 
 # Also run some tests of the Rhino JavaScript integration
+Java::OrgHaploTemplateDriverRhinojs::JSPlatformIntegration.parserConfiguration = TestParserConfiguration.new
 Java::OrgHaploTemplateDriverRhinojs::JSPlatformIntegration.platformFunctionRenderer = TestFunctionRenderer.new
 $jsscope.put('$testcount', $jsscope, 0.to_java)
 $jsscope.put('$testpass', $jsscope, 0.to_java)

@@ -21,7 +21,7 @@ public class HaploTemplate extends ScriptableObject implements Callable {
     }
 
     public void jsConstructor(String source, String name) throws ParseException {
-        this.template = new Parser(source, name).parse();
+        this.template = new Parser(source, name, JSPlatformIntegration.parserConfiguration).parse();
     }
 
     public Template getTemplate() {

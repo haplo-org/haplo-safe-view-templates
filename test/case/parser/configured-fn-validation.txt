@@ -2,11 +2,14 @@
 PARSE ERROR: Configuration can throw parser errors
 
 ---
-
 <div>
     badFunction()
 </div>
+---
+Error at line 2 character 17: badFunction doesn't validate
 
 ---
-
-Error at line 2 character 17: badFunction doesn't validate
+<div data-value=textOnly()>
+</div>
+---
+Error at line 1 character 26: textOnly() can only be used in text context

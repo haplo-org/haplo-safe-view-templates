@@ -17,11 +17,11 @@ final public class Parser {
     static final ParserConfiguration DEFAULT_CONFIGURATION = new ParserConfiguration();
 
     public Parser(CharSequence source, String templateName) {
-        this(source, templateName, DEFAULT_CONFIGURATION);
+        this(source, templateName, null);
     }
 
     public Parser(CharSequence source, String templateName, ParserConfiguration configuration) {
-        this.configuration = configuration;
+        this.configuration = (configuration != null) ? configuration : DEFAULT_CONFIGURATION;
         this.source = source;
         this.templateName = templateName;
         this.nesting = new Stack<Node>();
