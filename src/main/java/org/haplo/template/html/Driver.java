@@ -29,6 +29,16 @@ abstract public class Driver {
         return this.parentDriver;
     }
 
+    final public Driver getRootDriver() {
+        Driver search = this;
+        while(true) {
+            if(search.parentDriver == null) {
+                return search;
+            }
+            search = search.parentDriver;
+        }
+    }
+
     final public Template getTemplate() {
         return this.template;
     }

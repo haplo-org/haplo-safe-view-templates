@@ -159,3 +159,7 @@ assertException(function() {
 // Call platform defined function
 var templateWithPlatformFns = new $HaploTemplate("<div> generic-function() </div>");
 assertEqual(templateWithPlatformFns.render({}), "<div>TEST GENERIC FUNCTION RENDER</div>", "JS template calls platform function");
+
+// Include platform templates
+var templateWithIncludedTemplate = new $HaploTemplate("<div> template:template1() </div>");
+assertEqual(templateWithIncludedTemplate.render({value1:"Hello!"}), "<div><b>Included Template 1: Hello!</b></div>", "JS template includes other template");

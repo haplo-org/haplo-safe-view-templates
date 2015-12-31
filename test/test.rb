@@ -161,6 +161,24 @@ class TestFunctionRenderer
   end
 end
 
+class JSTestFunctionRenderer
+  def initialize(renderer)
+    @renderer = renderer
+  end
+  def renderFunction(owner, builder, binding)
+    @renderer.renderFunction(builder, binding)
+  end
+end
+
+class JSIncludedTemplateRenderer
+  def initialize(renderer)
+    @renderer = renderer
+  end
+  def renderIncludedTemplate(owner, *args)
+    @renderer.renderIncludedTemplate(*args)
+  end
+end
+
 # ---------------------------------------------------------------------------
 
 JSScriptableObject = Java::OrgMozillaJavascript::ScriptableObject
@@ -306,7 +324,8 @@ end
 
 # Also run some tests of the Rhino JavaScript integration
 Java::OrgHaploTemplateDriverRhinojs::JSPlatformIntegration.parserConfiguration = TestParserConfiguration.new
-Java::OrgHaploTemplateDriverRhinojs::JSPlatformIntegration.platformFunctionRenderer = TestFunctionRenderer.new
+Java::OrgHaploTemplateDriverRhinojs::JSPlatformIntegration.includedTemplateRenderer = JSIncludedTemplateRenderer.new(included_template_renderer)
+Java::OrgHaploTemplateDriverRhinojs::JSPlatformIntegration.platformFunctionRenderer = JSTestFunctionRenderer.new(TestFunctionRenderer.new)
 $jsscope.put('$testcount', $jsscope, 0.to_java)
 $jsscope.put('$testpass', $jsscope, 0.to_java)
 $jscontext.evaluateString($jsscope, File.read("test/rhino.js"), "test/rhino.js", 1, nil);

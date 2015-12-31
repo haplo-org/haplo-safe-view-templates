@@ -12,9 +12,9 @@ import org.mozilla.javascript.Context;
 import org.mozilla.javascript.ScriptableObject;
 import org.mozilla.javascript.WrappedException;
 
-public class HaploTemplate extends ScriptableObject implements Callable {
+public class HaploTemplate extends ScriptableObject implements Callable, Driver.IncludedTemplateRenderer {
     private Template template;
-    private Driver.IncludedTemplateRenderer includedTemplateRenderer;
+    private Scriptable owner;
 
     public String getClassName() {
         return "$HaploTemplate";
@@ -28,8 +28,16 @@ public class HaploTemplate extends ScriptableObject implements Callable {
         return this.template;
     }
 
-    public void setIncludedTemplateRenderer(Driver.IncludedTemplateRenderer renderer) {
-        this.includedTemplateRenderer = renderer;
+    public void setOwner(Scriptable owner) {
+        this.owner = owner;
+    }
+
+    public Scriptable getOwner() {
+        return this.owner;
+    }
+
+    public void renderIncludedTemplate(String templateName, StringBuilder builder, Driver driver, org.haplo.template.html.Context context) throws RenderException {
+        JSPlatformIntegration.includedTemplateRenderer.renderIncludedTemplate(this.owner, templateName, builder, driver, context);
     }
 
     public String jsFunction_render(Object view) throws RenderException {
@@ -59,9 +67,7 @@ public class HaploTemplate extends ScriptableObject implements Callable {
 
     protected RhinoJavaScriptDriver createDriver(Object view) {
         RhinoJavaScriptDriver driver = new RhinoJavaScriptDriver(view);
-        if(this.includedTemplateRenderer != null) {
-            driver.setIncludedTemplateRenderer(this.includedTemplateRenderer);
-        }
+        driver.setIncludedTemplateRenderer(this);
         driver.setFunctionRenderer(new JSFunctionRenderer(this));
         return driver;
     }

@@ -26,7 +26,7 @@ class JSFunctionRenderer implements Driver.FunctionRenderer {
     public boolean renderFunction(StringBuilder builder, FunctionBinding binding) throws RenderException {
         // Attempt fast call of platform function implementation
         if(JSPlatformIntegration.platformFunctionRenderer != null) {
-            if(JSPlatformIntegration.platformFunctionRenderer.renderFunction(builder, binding)) {
+            if(JSPlatformIntegration.platformFunctionRenderer.renderFunction(this.template.getOwner(), builder, binding)) {
                 return true;
             }
         }

@@ -69,7 +69,7 @@ final public class FunctionBinding {
     }
 
     public String nextUnescapedStringArgument(ArgumentRequirement requirement) throws RenderException {
-        Node arg = getNextArg(requirement);
+        Node arg = getNextArgument(requirement);
         if(arg == null) { return null; }
         StringBuilder builder = new StringBuilder(128);
         arg.render(builder, this.driver, this.view, Context.UNSAFE);
@@ -77,13 +77,22 @@ final public class FunctionBinding {
     }
 
     public Object nextViewObjectArgument(ArgumentRequirement requirement) throws RenderException {
-        Node arg = getNextArg(requirement);
+        Node arg = getNextArgument(requirement);
         if(arg == null) { return null; }
         return arg.valueForFunctionArgument(this.driver, this.view);
     }
 
+    public String nextLiteralStringArgument(ArgumentRequirement requirement) throws RenderException {
+        Node arg = getNextArgument(requirement);
+        if(arg == null) { return null; }
+        if(!(arg instanceof NodeLiteral)) {
+            throw new RenderException(driver, "Literal string argument expected for "+this.getFunctionName()+"()");
+        }
+        return ((NodeLiteral)arg).getLiteralString();
+    }
+
     public void skipArgument(ArgumentRequirement requirement) throws RenderException {
-        getNextArg(requirement);
+        getNextArgument(requirement);
     }
 
     public void noMoreArgumentsExpected() throws RenderException {
@@ -92,7 +101,7 @@ final public class FunctionBinding {
         }
     }
 
-    protected Node getNextArg(ArgumentRequirement requirement) throws RenderException {
+    public Node getNextArgument(ArgumentRequirement requirement) throws RenderException {
         Node arg = this.nextArgument;
         if(arg == null) {
             if(requirement == ArgumentRequirement.REQUIRED) {
