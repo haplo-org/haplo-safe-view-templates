@@ -1,0 +1,17 @@
+
+PARSE ERROR: Function names can't have a space before the bracket
+
+---
+<div> generic-function (a) </div>
+---
+Error at line 1 character 23: No space allowed between function name and opening bracket
+
+---
+<div> generic-function  (a) </div>
+---
+Error at line 1 character 23: No space allowed between function name and opening bracket
+
+---
+<div> generic-function   (a) </div>
+---
+Error at line 1 character 23: No space allowed between function name and opening bracket

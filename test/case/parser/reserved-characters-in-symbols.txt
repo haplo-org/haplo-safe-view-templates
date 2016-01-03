@@ -15,3 +15,23 @@ Error at line 1 character 8: Reserved character: "'"
 <div> x;y </div>
 ---
 Error at line 1 character 8: Reserved character: ";"
+
+---
+<div> x`y </div>
+---
+Error at line 1 character 8: Reserved character: "`"
+
+---
+<div> `xy </div>
+---
+Error at line 1 character 7: Reserved character: "`"
+
+---
+<div> x~y </div>
+---
+Error at line 1 character 8: Reserved character: "~"
+
+---
+<div> ~xy </div>
+---
+Error at line 1 character 7: Reserved character: "~"

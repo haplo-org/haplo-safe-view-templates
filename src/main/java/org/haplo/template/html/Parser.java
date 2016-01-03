@@ -101,10 +101,17 @@ final public class Parser {
                 error("Value names cannot be prefixed with . (single dot is used for 'this')");
             }
         }
+        if(firstChar == ':') {
+            error("Value names cannot be prefixed with :");
+        }
         // Is it a value, or a function? Get next symbol to check.
         int savedPos = this.pos;
         CharSequence nextSymbol = symbol();
         if(symbolIsSingleChar(nextSymbol, '(')) {
+            // Peek the previous character to check it's not whitespace
+            if((savedPos > 0) && isWhitespace(this.source.charAt(savedPos-1))) {
+                error("No space allowed between function name and opening bracket", savedPos);
+            }
             return parseFunction(s.toString());
         } else {
             // Simple value, restore position then return
@@ -510,7 +517,8 @@ final public class Parser {
 
     protected boolean isReservedCharacter(int c) {
         // NOTE: Don't remove ' from the reserved characters as the escaper assumes it can't be used
-        return (c == ',') || (c == '\'') || (c == ';');
+        // TODO: Use ` for generic quoted symbol name?
+        return (c == ',') || (c == '\'') || (c == ';') || (c == '~') || (c == '`');
     }
 
     protected void popNestingAndCheckNodeWas(Node node, int errorPosition) throws ParseException {
