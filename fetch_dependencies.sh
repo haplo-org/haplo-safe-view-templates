@@ -1,17 +1,21 @@
 #!/bin/sh
 
-RHINO_FILENAME=rhino1.7.7.zip
-RHINO_JAR_DIR=rhino1.7.7
-RHINO_URL=https://github.com/mozilla/rhino/releases/download/Rhino1_7_7_RELEASE/${RHINO_FILENAME}
-RHINO_DIGEST=01209a126a0b27d37f923a5408298e3072b9433c
-
-cd lib
+DOWNLOADS_DIR=target/downloads
+OUTPUT_DIR=target/lib
+TEMPORARY_DOWNLOAD_FILE=$DOWNLOADS_DIR/_tmp_download
 
 # ---------------------------------------------------------------------------
 
 set -e
 
-RHINO_JAR_IN_ZIP=${RHINO_JAR_DIR}/js.jar
+download_dependencies() {
+    get_file \
+        Rhino \
+        https://github.com/mozilla/rhino/releases/download/Rhino1_7_7_RELEASE/rhino1.7.7.zip \
+        $DOWNLOADS_DIR/rhino1.7.7.zip \
+        01209a126a0b27d37f923a5408298e3072b9433c
+    unzip -p $DOWNLOADS_DIR/rhino1.7.7.zip rhino1.7.7/js.jar > $OUTPUT_DIR/rhino.jar
+}
 
 if ! which curl; then
     echo curl is not available, cannot fetch archives
@@ -31,22 +35,18 @@ get_file() {
         echo "${GET_NAME} already downloaded."
     else
         echo "Downloading ${GET_NAME}..."
-        curl -L $GET_URL > _tmp_download
-        DOWNLOAD_DIGEST=`openssl sha1 < _tmp_download`
+        curl -fL $GET_URL > $TEMPORARY_DOWNLOAD_FILE
+        DOWNLOAD_DIGEST=`openssl sha1 < $TEMPORARY_DOWNLOAD_FILE`
         if [ "$GET_DIGEST" = "$DOWNLOAD_DIGEST" -o "(stdin)= $GET_DIGEST" = "$DOWNLOAD_DIGEST" ]; then
-            mv _tmp_download $GET_FILE
+            mv $TEMPORARY_DOWNLOAD_FILE $GET_FILE
         else
-            rm _tmp_download
+            rm $TEMPORARY_DOWNLOAD_FILE
             echo "Digest of ${GET_NAME} download was incorrect, expected ${GET_DIGEST}, got ${DOWNLOAD_DIGEST}"
             exit 1
         fi
     fi
 }
 
-# ---------------------------------------------------------------------------
-
-mkdir -p downloads
-get_file Rhino $RHINO_URL downloads/$RHINO_FILENAME $RHINO_DIGEST
-unzip downloads/$RHINO_FILENAME $RHINO_JAR_IN_ZIP
-mv $RHINO_JAR_IN_ZIP js.jar
-rmdir $RHINO_JAR_DIR
+mkdir -p $DOWNLOADS_DIR
+mkdir -p $OUTPUT_DIR
+download_dependencies

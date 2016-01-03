@@ -1,5 +1,6 @@
-*.class
+# Artifacts
+target
+
+# Fossil
 .fslckout
 .fossil-settings/*
-lib/downloads/*
-lib/*.jar
