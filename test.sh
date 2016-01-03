@@ -1,4 +1,4 @@
 #!/bin/sh
 
-export CLASSPATH=built:lib/*
-jruby test/test.rb $@
+export CLASSPATH=target/classes:target/lib/*
+java -cp $CLASSPATH org.jruby.Main test/test.rb $@
