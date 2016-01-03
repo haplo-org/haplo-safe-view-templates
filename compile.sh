@@ -2,9 +2,6 @@
 
 set -e
 
-JRUBY_EXECUTABLE=`which jruby`
-JRUBY_BIN=`dirname $JRUBY_EXECUTABLE`
-
 if ! [ -f target/lib/rhino.jar ]; then
     echo
     echo Rhino JavaScript has not been downloaded.
@@ -16,4 +13,4 @@ if ! [ -f target/lib/rhino.jar ]; then
 fi
 
 mkdir -p target/classes
-javac -classpath target/classes:target/lib/*:$JRUBY_BIN/../lib/jruby.jar -d target/classes -Xlint:unchecked `find src -name *.java | xargs echo`
+javac -classpath target/classes:target/lib/* -d target/classes -Xlint:unchecked `find src -name *.java | xargs echo`

@@ -10,7 +10,7 @@
     <dependencies>
         <dependency>
             <groupId>org.jruby</groupId>
-            <artifactId>jruby</artifactId>
+            <artifactId>jruby-complete</artifactId>
             <version>9.0.4.0</version>
             <scope>compile</scope>
         </dependency>
@@ -49,12 +49,12 @@
                             <artifactItems>
                                 <artifactItem>
                                     <groupId>org.jruby</groupId>
-                                    <artifactId>jruby</artifactId>
+                                    <artifactId>jruby-complete</artifactId>
                                     <version>9.0.4.0</version>
                                     <type>jar</type>
                                     <overWrite>false</overWrite>
                                     <outputDirectory>${project.build.directory}/lib</outputDirectory>
-                                    <destFileName>jruby.jar</destFileName>
+                                    <destFileName>jruby-complete.jar</destFileName>
                                 </artifactItem>
                                 <artifactItem>
                                     <groupId>org.mozilla</groupId>

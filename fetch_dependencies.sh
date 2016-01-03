@@ -10,6 +10,11 @@ set -e
 
 download_dependencies() {
     get_file \
+        JRuby \
+        https://search.maven.org/remotecontent?filepath=org/jruby/jruby-complete/9.0.4.0/jruby-complete-9.0.4.0.jar \
+        $OUTPUT_DIR/jruby-complete.jar \
+        4f094b4b7915def9d1cd35ce69ee12c1f102c8b2
+    get_file \
         Rhino \
         https://github.com/mozilla/rhino/releases/download/Rhino1_7_7_RELEASE/rhino1.7.7.zip \
         $DOWNLOADS_DIR/rhino1.7.7.zip \
