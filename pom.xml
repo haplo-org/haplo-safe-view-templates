@@ -20,6 +20,32 @@
             <version>1.7.7</version>
             <scope>compile</scope>
         </dependency>
+
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.12</version>
+            <scope>test</scope>
+            <exclusions>
+                <!--
+                    Hamcrest has changed artifact name from "hamcrest-core" and "hamcrest-library" to "java-hamcrest".
+                    As JUnit depends on hamcrest-core (with hamcrest-library an optional extra), we need to exclude
+                    the old version so we can include the new version.
+
+                    Yes, yes, we should be using Nix or something and depend on digests. I know.
+                -->
+                <exclusion>
+                    <groupId>org.hamcrest</groupId>
+                    <artifactId>hamcrest-core</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>org.hamcrest</groupId>
+            <artifactId>java-hamcrest</artifactId>
+            <version>2.0.0.0</version>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 
     <build>
@@ -53,7 +79,7 @@
                                     <version>9.0.4.0</version>
                                     <type>jar</type>
                                     <overWrite>false</overWrite>
-                                    <outputDirectory>${project.build.directory}/lib</outputDirectory>
+                                    <outputDirectory>${project.build.directory}/lib/compile</outputDirectory>
                                     <destFileName>jruby-complete.jar</destFileName>
                                 </artifactItem>
                                 <artifactItem>
@@ -62,8 +88,26 @@
                                     <version>1.7.7</version>
                                     <type>jar</type>
                                     <overWrite>false</overWrite>
-                                    <outputDirectory>${project.build.directory}/lib</outputDirectory>
+                                    <outputDirectory>${project.build.directory}/lib/compile</outputDirectory>
                                     <destFileName>rhino.jar</destFileName>
+                                </artifactItem>
+                                <artifactItem>
+                                    <groupId>junit</groupId>
+                                    <artifactId>junit</artifactId>
+                                    <version>4.12</version>
+                                    <type>jar</type>
+                                    <overWrite>false</overWrite>
+                                    <outputDirectory>${project.build.directory}/lib/test</outputDirectory>
+                                    <destFileName>junit.jar</destFileName>
+                                </artifactItem>
+                                <artifactItem>
+                                    <groupId>org.hamcrest</groupId>
+                                    <artifactId>java-hamcrest</artifactId>
+                                    <version>2.0.0.0</version>
+                                    <type>jar</type>
+                                    <overWrite>false</overWrite>
+                                    <outputDirectory>${project.build.directory}/lib/test</outputDirectory>
+                                    <destFileName>java-hamcrest.jar</destFileName>
                                 </artifactItem>
                             </artifactItems>
                         </configuration>

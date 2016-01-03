@@ -7,5 +7,5 @@ if ! [ -d target/classes/org/haplo/template/html ]; then
     exit 1
 fi
 
-export CLASSPATH=target/classes:target/lib/*
+export CLASSPATH=target/classes:target/lib/test/*:target/lib/compile/*
 java -cp $CLASSPATH org.jruby.Main test/test.rb $@
