@@ -1,0 +1,21 @@
+
+Tag quote minimisation is optional
+
+---
+<div class="abc"> </div>
+#option:no-tag-attribute-quote-minimisation
+<div class="abc"> </div>
+---
+{}
+---
+<div class=abc></div><div class="abc"></div>
+
+---
+NEW TEMPLATE: Alternative spelling
+---
+#option:no-tag-attribute-quote-minimization
+<div class="usa"></div>
+---
+{}
+---
+<div class="usa"></div>

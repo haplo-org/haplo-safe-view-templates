@@ -1,0 +1,20 @@
+
+PARSE ERROR: Directives in templates
+
+---
+#unknown-directive
+<div> </div>
+---
+Error at line 1 character 18: Unknown parser directive: #unknown-directive
+
+---
+<div>
+    #unknown-directive
+</div>
+---
+Error at line 2 character 5: Directives must be at the top level of the template, and cannot be nested inside tags or functions.
+
+---
+#
+---
+Error at line 1 character 1: Unexpected end of template after directive start

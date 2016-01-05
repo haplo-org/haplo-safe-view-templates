@@ -91,11 +91,11 @@ While similar in structure, the second template has been properly parsed, and yo
 
 To try this template, run
 
-`./compile.sh && ./test.sh run examples/choose.html examples/choose_view.json`
+`mvn compile && ./test.sh run examples/choose.html examples/choose_view.json`
 
 and to see the AST, run
 
-` ./compile.sh && ./test.sh tree examples/choose.html`
+` mvn compile && ./test.sh tree examples/choose.html`
 
 Make sure you have `javac` and `jruby` on your `PATH`.
 
@@ -234,9 +234,11 @@ Running the tests requires JRuby, and the build system isn't worthy of the name.
 
 ### Running the tests
 
-Make sure you have `javac` and `jruby` on your `PATH`, then run
+Make sure you have `mvn`, `javac` and `jruby` on your `PATH`, then run
 
-`./compile.sh && ./test.sh`
+`fetch_dependencies.sh`
+
+`mvn compile && ./test.sh`
 
 The tests can be found in the `test-case` directory, and `test.rb` is a simple JRuby script to run them.
 
@@ -298,6 +300,13 @@ Pseudo function with special parsing. See URLs section above.
 Pseudo function for generating `<script>` tags. The arguments are a URL, as `url()`, and the resulting URL is output as the `src` attribute in `<script src="..."></script>` tag pair.
 
 Script tags are otherwise not allowed in templates, because including JavaScript is too dangerous and should be prohibited by your Content Security Policy.
+
+
+## Options
+
+Some HTML parsers don't like tag attributes without quotes. You can include them to keep those parsers happy with the the following directive at the top of your template:
+
+`#option:no-tag-attribute-quote-minimisation`
 
 
 ## TODO

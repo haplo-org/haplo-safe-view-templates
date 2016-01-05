@@ -1,0 +1,23 @@
+
+Quoted strings can include newlines
+
+---
+
+<div> "This is a
+very long quoted string
+on multiple lines.
+This line has trailing whitespace:   
+End!"
+</div>
+
+---
+
+{}
+
+---
+
+<div>This is a
+very long quoted string
+on multiple lines.
+This line has trailing whitespace:   
+End!</div>

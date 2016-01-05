@@ -13,6 +13,7 @@ final public class Parser {
     private String childlessTagName = null;
     private boolean inEnclosingViewBlock = false;
     private int nextRememberIndex = 0;
+    private boolean optionTagAttributeQuoteMinimisation = true;
 
     static final ParserConfiguration DEFAULT_CONFIGURATION = new ParserConfiguration();
 
@@ -82,12 +83,20 @@ final public class Parser {
             }
         } else if(singleChar == endOfListCharacter) {
             return END_OF_LIST;
-        } else if((singleChar == ']') || (singleChar == '}') ||
+        } else if((singleChar == ']') ||
+                  (singleChar == '}') || // both {} directions and error, but { has a better error message below
                   (singleChar == '(') || (singleChar == ')') || // both () directions
                   (singleChar == '>') ||
                   (singleChar == '?') || (singleChar == '!') || (singleChar == '*') // URL syntax
                 ) {
             error("Unexpected "+s);
+        } else if(singleChar == '{') {
+            error("Unexpected start of block. Blocks are only allowed as part of functions.");
+        }
+        // Directives
+        if(firstChar == '#') {
+            parseDirective();
+            return parseOneValue(endOfListCharacter); // symbol is "ignored" in parse tree
         }
         // Special case enclosing view block
         if(firstChar == '^') {
@@ -300,7 +309,8 @@ final public class Parser {
                 tag.addAttribute(
                         attributeName,
                         checkedTagAttribute(attributeName, parseOneValue(-1)),
-                        this.context);
+                        this.context,
+                        optionTagAttributeQuoteMinimisation);
                 this.context = Context.TAG;
                 attributeName = null;
             } else if(symbolIsSingleChar(s, '/')) {
@@ -471,6 +481,25 @@ final public class Parser {
             error("Not allowed in URL", startPos + 2);
         }
         return node;
+    }
+
+    protected void parseDirective() throws ParseException {
+        if(this.nesting.size() != 1) {
+            error("Directives must be at the top level of the template, and cannot be nested inside tags or functions.");
+        }
+        CharSequence directive = symbol();
+        if(directive == null) {
+            error("Unexpected end of template after directive start");
+        }
+        switch(directive.toString()) {
+            case "option:no-tag-attribute-quote-minimisation":
+            case "option:no-tag-attribute-quote-minimization": // simplified English spelling
+                optionTagAttributeQuoteMinimisation = false;
+                break;
+
+            default:
+                error("Unknown parser directive: #"+directive);
+        }
     }
 
     // ----------------------------------------------------------------------

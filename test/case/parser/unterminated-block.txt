@@ -10,3 +10,13 @@ Error at line 1 character 22: Did not find end of else block
 "111" if(a) { abc "222"
 ---
 Error at line 1 character 13: Did not find end of block
+
+---
+"x" abc {
+---
+Error at line 1 character 9: Unexpected start of block. Blocks are only allowed as part of functions.
+
+---
+{
+---
+Error at line 1 character 1: Unexpected start of block. Blocks are only allowed as part of functions.

@@ -18,12 +18,12 @@ final class NodeTag extends Node {
         return this.name;
     }
 
-    public void addAttribute(String attributeName, Node value, Context valueContext) {
+    public void addAttribute(String attributeName, Node value, Context valueContext, boolean tagQuoteMinimisationAllowed) {
         if(value instanceof NodeLiteral) {
             // Value is just a literal string, so can be optimised
             // Literal values should not be escaped, because the author is trusted
             String attributeValue = ((NodeLiteral)value).getLiteralString();
-            if(canOmitQuotesForValue(attributeValue)) {
+            if(tagQuoteMinimisationAllowed && canOmitQuotesForValue(attributeValue)) {
                 this.start += " "+attributeName+"="+attributeValue;
             } else {
                 this.start += " "+attributeName+"=\""+attributeValue+'"';

@@ -87,7 +87,7 @@ if ARGV[0] == 'run' || ARGV[0] == 'tree'
   # See if it looks like a test file, and if so, pick out the template
   template_source_split = template_source.split("\n---\n")
   template_source = template_source_split[1] if template_source_split.length >= 3
-  template = Parser.new(template_source).parse()
+  template = Parser.new(template_source, "tree").parse()
   if ARGV[0] == 'tree'
     STDOUT.write template.dump()
   else
