@@ -81,6 +81,9 @@ final public class Parser {
                 }
                 return parseList(']', "list").orSimplifiedNode();
             }
+        } else if(singleChar == '#') {
+            parseDirective();
+            return parseOneValue(endOfListCharacter); // symbol is "ignored" in parse tree
         } else if(singleChar == endOfListCharacter) {
             return END_OF_LIST;
         } else if((singleChar == ']') ||
@@ -92,11 +95,6 @@ final public class Parser {
             error("Unexpected "+s);
         } else if(singleChar == '{') {
             error("Unexpected start of block. Blocks are only allowed as part of functions.");
-        }
-        // Directives
-        if(firstChar == '#') {
-            parseDirective();
-            return parseOneValue(endOfListCharacter); // symbol is "ignored" in parse tree
         }
         // Special case enclosing view block
         if(firstChar == '^') {
@@ -351,6 +349,9 @@ final public class Parser {
                             "to introduce client side security bugs)");
                 }
                 break;
+            case "background":
+                error("background attributes are deprecated and must not be used.");
+                break;
             default:
                 break;
         }
@@ -487,9 +488,13 @@ final public class Parser {
         if(this.nesting.size() != 1) {
             error("Directives must be at the top level of the template, and cannot be nested inside tags or functions.");
         }
+        int savedPos = this.pos;
         CharSequence directive = symbol();
         if(directive == null) {
             error("Unexpected end of template after directive start");
+        }
+        if(isWhitespace(this.source.charAt(savedPos))) {
+            error("No space allowed between # and directive name", savedPos);
         }
         switch(directive.toString()) {
             case "option:no-tag-attribute-quote-minimisation":

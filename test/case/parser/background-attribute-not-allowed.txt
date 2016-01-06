@@ -1,0 +1,12 @@
+
+PARSE ERROR: background attribute is deprecated in the spec and would need special handling
+
+---
+<body background="abc"></body>
+---
+Error at line 1 character 22: background attributes are deprecated and must not be used.
+
+---
+<table background="abc"><tr><th></th></tr></table>
+---
+Error at line 1 character 23: background attributes are deprecated and must not be used.

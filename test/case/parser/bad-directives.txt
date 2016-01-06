@@ -18,3 +18,8 @@ Error at line 2 character 5: Directives must be at the top level of the template
 #
 ---
 Error at line 1 character 1: Unexpected end of template after directive start
+
+---
+# option:no-tag-attribute-quote-minimisation
+---
+Error at line 1 character 1: No space allowed between # and directive name
