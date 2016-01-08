@@ -1,6 +1,7 @@
 # coding: UTF-8
 
 require 'json'
+require 'rspec'
 
 Parser = Java::OrgHaploTemplateHtml::Parser
 NestedJavaDriver = Java::OrgHaploTemplateDriverNestedjava::NestedJavaDriver
@@ -46,7 +47,8 @@ $template_for_deferred = template_inclusions['template1']
 # ---------------------------------------------------------------------------
 
 java_import Java::OrgHaploTemplateHtml::Context
-def try_quoting
+
+describe 'Escaping' do
   [
     ['<ping>"','<ping>"',Context::UNSAFE],
     ['','',Context::TEXT],
@@ -57,10 +59,9 @@ def try_quoting
     ['"hello"','"hello"',Context::TEXT],
     ['"hello"','&quot;hello&quot;',Context::ATTRIBUTE_VALUE]
   ].each do |input, escaped, attribute_context|
-    output = Java::OrgHaploTemplateHtml::Escape.escapeString(input, attribute_context)
-    if output != escaped
-      puts "Escaping fail"
-      p [input, output]
+    it "escapes \"#{input}\" as \"#{escaped}\" in the context #{attribute_context}" do
+      output = Java::OrgHaploTemplateHtml::Escape.escapeString(input, attribute_context)
+      expect(output).to eq escaped
     end
   end
 end
@@ -98,10 +99,6 @@ if ARGV[0] == 'run' || ARGV[0] == 'tree'
   end
   exit(0)
 end
-# ---------------------------------------------------------------------------
-
-try_quoting
-
 # ---------------------------------------------------------------------------
 
 class TestParserConfiguration < Java::OrgHaploTemplateHtml::ParserConfiguration
