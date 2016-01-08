@@ -51,7 +51,11 @@ class JUnitFormatter
   private
 
   def description_of(notification)
-    Description.createTestDescription(escape(@group.join('/')), escape(notification.example.description), [].to_java)
+    class_name, *context_names = @group
+    Description.createTestDescription(
+      escape(class_name),
+      (context_names + [notification.example.description]).collect { |element| escape(element) }.join(' - '),
+      [].to_java)
   end
 
   def escape(message)
