@@ -9,38 +9,39 @@ RhinoJavaScriptDriver = Java::OrgHaploTemplateDriverRhinojs::RhinoJavaScriptDriv
 
 # ---------------------------------------------------------------------------
 
-template_inclusions = java.util.HashMap.new
-template_inclusions.put("template1", Parser.new(<<__E, "template1").parse())
-  <b> "Included Template 1: " value1 </b>
+template_inclusions = {
+  'template1' => Parser.new(<<__E, "template1").parse(),
+    <b> "Included Template 1: " value1 </b>
 __E
-template_inclusions.put("template2", Parser.new(<<__E, "template2").parse())
-  within(nested) {
-    <i> "Included Template 2: " ^{rootValue} </i>
-  }
+  'template2' => Parser.new(<<__E, "template2").parse(),
+    within(nested) {
+      <i> "Included Template 2: " ^{rootValue} </i>
+    }
 __E
-template_inclusions.put("template3", Parser.new(<<__E, "template2").parse())
-  <span> "T3 " template:template1() " - " generic-function() </span>
+  'template3' => Parser.new(<<__E, "template2").parse(),
+    <span> "T3 " template:template1() " - " generic-function() </span>
 __E
-template_inclusions.put("template4", Parser.new(<<__E, "template4").parse())
-  <span> template:unknown-template() </span>
+  'template4' => Parser.new(<<__E, "template4").parse(),
+    <span> template:unknown-template() </span>
 __E
-template_inclusions.put("self-inclusion", Parser.new(<<__E, "self-inclusion").parse())
-  <span> template:self-inclusion() </span>
+  'self-inclusion' => Parser.new(<<__E, "self-inclusion").parse(),
+    <span> template:self-inclusion() </span>
 __E
-template_inclusions.put("components", Parser.new(<<__E, "components").parse())
-  within(component) {
-    <div class="component">
-      value1 " "
-      <span class="anon"> yield() </span>
-      <span class="e1"> yield:extra1() </span>
-      <span class="e2"> yield:extra2() </span>
-      <span class="three"> yield:extra3() </span>
-    </div>
-  }
+  'components' => Parser.new(<<__E, "components").parse()
+    within(component) {
+      <div class="component">
+        value1 " "
+        <span class="anon"> yield() </span>
+        <span class="e1"> yield:extra1() </span>
+        <span class="e2"> yield:extra2() </span>
+        <span class="three"> yield:extra3() </span>
+      </div>
+    }
 __E
+}
 included_template_renderer = Java::OrgHaploTemplateHtml::SimpleIncludedTemplateRenderer.new(template_inclusions)
 
-$template_for_deferred = template_inclusions.get("template1")
+$template_for_deferred = template_inclusions['template1']
 
 # ---------------------------------------------------------------------------
 
