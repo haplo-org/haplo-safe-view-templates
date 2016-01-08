@@ -4,3 +4,7 @@ target
 # Fossil
 .fslckout
 .fossil-settings/*
+
+# IntellIJ IDEA
+.idea
+*.iml
