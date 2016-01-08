@@ -19,7 +19,7 @@ import static java.util.Collections.singletonList;
 import static java.util.stream.Collectors.toList;
 
 public final class RSpecTestRunner extends ParentRunner<RSpecTestRunner.RubyTestFile> {
-    private static final Path GEM_HOME = Paths.get("gems").toAbsolutePath();
+    private static final Path GEM_HOME = Paths.get("target/rubygems").toAbsolutePath();
     private final RubyInstanceConfig rubyConfig;
     private final Ruby runtime;
 
@@ -33,7 +33,6 @@ public final class RSpecTestRunner extends ParentRunner<RSpecTestRunner.RubyTest
         rubyConfig.setEnvironment(environment);
 
         runtime = JavaEmbedUtils.initialize(singletonList("src/test/ruby"), rubyConfig);
-        invokeFunction(null, "require", "gems");
         invokeFunction(null, "require", "test_runner");
     }
 
