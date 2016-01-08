@@ -227,32 +227,27 @@ files = Dir.glob("test/case/**/*.*").sort
 files.each do |filename|
   comment, *commands = File.open(filename, "r:UTF-8") { |f| f.read }.split("\n---\n")
   raise "Bad test #{filename} - no tests" if commands.empty?
-  required_cmd = Proc.new do
+  required_cmd = lambda do
     raise "Expected element in test #{filename}" if commands.empty?
     commands.shift
   end
-  if comment =~ /\A\s*PARSE ERROR:/
+  if comment =~ /^\s*PARSE ERROR:/
     # Test one or more parse errors
-    while ! commands.empty?
-      template_source = required_cmd.call
-      expected_error = required_cmd.call.strip
-      tests += 1
-      exception = nil
-      begin
-        template = Parser.new(template_source.strip, "expected-parse-error", TestParserConfiguration.new).parse()
-      rescue => e
-        exception = e
-      end
-      message = exception ? exception.message : '(exception not thrown)'
-      if message == expected_error
-        passed += 1
-      else
-        failed += 1
-        puts
-        puts "#{filename}: Unexpected exception:"
-        puts "EXPECTED: #{expected_error}"
-        puts "OUTPUT:   #{message}"
-        puts comment.strip
+    raise "Expected an even number of test elements in #{filename}" if commands.length.odd?
+
+    describe "#{filename.gsub(/^test\/case\/|\.txt$/, '')} - #{comment.strip}" do
+      commands.each_slice(2).each_with_index do |test_case, index|
+        it "Test Case ##{index + 1}" do
+          template_source, expected_error = test_case
+          exception = nil
+          begin
+            template = Parser.new(template_source.strip, "expected-parse-error", TestParserConfiguration.new).parse()
+          rescue => e
+            exception = e
+          end
+          message = exception ? exception.message : '(exception not thrown)'
+          expect(message).to eq expected_error.strip
+        end
       end
     end
   else

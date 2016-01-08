@@ -51,7 +51,19 @@ class JUnitFormatter
   private
 
   def description_of(notification)
-    Description.createTestDescription(@group.join('/'), notification.example.description, [].to_java)
+    Description.createTestDescription(escape(@group.join('/')), escape(notification.example.description), [].to_java)
+  end
+
+  def escape(message)
+    message
+      .gsub('.', '')
+      .gsub(':', '\\\\:')
+      .gsub('(', '[')
+      .gsub(')', ']')
+      .gsub('<', '[')
+      .gsub('>', ']')
+      .gsub("'", '')
+      .gsub('"', '')
   end
 end
 
