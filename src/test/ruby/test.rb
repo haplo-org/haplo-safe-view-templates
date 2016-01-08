@@ -323,3 +323,4 @@ failed = js_test_count - js_test_pass
 
 puts
 puts "#{tests} tests, #{passed} passed, #{failed} failed, in #{files.length} files"
+exit 1 if failed > 0

@@ -18,4 +18,3 @@ function jruby {
 }
 
 jruby "$GEM_HOME/bin/rspec" src/test/ruby/test.rb
-jruby src/test/ruby/test.rb "$@"
