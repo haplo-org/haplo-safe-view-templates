@@ -161,7 +161,7 @@ URL parsing and escaping is triggered by one of these forms:
 * An explicit url pseudo function containing a list `url(...)`
 
 * As an attribute defined in the HTML spec to take a URL value attribute, with a single value, `<a href=url>`
-  
+
 * As an attribute defined in the HTML spec to take a URL value attribute, with a list `<a href=[...]>`
 
 * As any tag attribute with an explict url value, `<a href=url(...)>`
@@ -234,11 +234,9 @@ Running the tests requires JRuby, and the build system isn't worthy of the name.
 
 ### Running the tests
 
-Make sure you have `mvn`, `javac` and `jruby` on your `PATH`, then run
+Make sure you have `mvn` and `javac` on your `PATH`, then run
 
-`fetch_dependencies.sh`
-
-`mvn compile && ./test.sh`
+`mvn package && ./test.sh`
 
 The tests can be found in the `test-case` directory, and `test.rb` is a simple JRuby script to run them.
 

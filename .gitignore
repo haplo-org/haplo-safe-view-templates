@@ -4,3 +4,10 @@ target
 # Fossil
 .fslckout
 .fossil-settings/*
+
+# RubyGems
+/gems
+
+# IntellIJ IDEA
+.idea
+*.iml

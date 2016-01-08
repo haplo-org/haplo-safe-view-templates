@@ -1,6 +1,7 @@
 # coding: UTF-8
 
 require 'json'
+require 'rspec'
 
 Parser = Java::OrgHaploTemplateHtml::Parser
 NestedJavaDriver = Java::OrgHaploTemplateDriverNestedjava::NestedJavaDriver
@@ -9,43 +10,45 @@ RhinoJavaScriptDriver = Java::OrgHaploTemplateDriverRhinojs::RhinoJavaScriptDriv
 
 # ---------------------------------------------------------------------------
 
-template_inclusions = java.util.HashMap.new
-template_inclusions.put("template1", Parser.new(<<__E, "template1").parse())
-  <b> "Included Template 1: " value1 </b>
+template_inclusions = {
+  'template1' => Parser.new(<<__E, "template1").parse(),
+    <b> "Included Template 1: " value1 </b>
 __E
-template_inclusions.put("template2", Parser.new(<<__E, "template2").parse())
-  within(nested) {
-    <i> "Included Template 2: " ^{rootValue} </i>
-  }
+  'template2' => Parser.new(<<__E, "template2").parse(),
+    within(nested) {
+      <i> "Included Template 2: " ^{rootValue} </i>
+    }
 __E
-template_inclusions.put("template3", Parser.new(<<__E, "template2").parse())
-  <span> "T3 " template:template1() " - " generic-function() </span>
+  'template3' => Parser.new(<<__E, "template2").parse(),
+    <span> "T3 " template:template1() " - " generic-function() </span>
 __E
-template_inclusions.put("template4", Parser.new(<<__E, "template4").parse())
-  <span> template:unknown-template() </span>
+  'template4' => Parser.new(<<__E, "template4").parse(),
+    <span> template:unknown-template() </span>
 __E
-template_inclusions.put("self-inclusion", Parser.new(<<__E, "self-inclusion").parse())
-  <span> template:self-inclusion() </span>
+  'self-inclusion' => Parser.new(<<__E, "self-inclusion").parse(),
+    <span> template:self-inclusion() </span>
 __E
-template_inclusions.put("components", Parser.new(<<__E, "components").parse())
-  within(component) {
-    <div class="component">
-      value1 " "
-      <span class="anon"> yield() </span>
-      <span class="e1"> yield:extra1() </span>
-      <span class="e2"> yield:extra2() </span>
-      <span class="three"> yield:extra3() </span>
-    </div>
-  }
+  'components' => Parser.new(<<__E, "components").parse()
+    within(component) {
+      <div class="component">
+        value1 " "
+        <span class="anon"> yield() </span>
+        <span class="e1"> yield:extra1() </span>
+        <span class="e2"> yield:extra2() </span>
+        <span class="three"> yield:extra3() </span>
+      </div>
+    }
 __E
+}
 included_template_renderer = Java::OrgHaploTemplateHtml::SimpleIncludedTemplateRenderer.new(template_inclusions)
 
-$template_for_deferred = template_inclusions.get("template1")
+$template_for_deferred = template_inclusions['template1']
 
 # ---------------------------------------------------------------------------
 
 java_import Java::OrgHaploTemplateHtml::Context
-def try_quoting
+
+describe 'Escaping' do
   [
     ['<ping>"','<ping>"',Context::UNSAFE],
     ['','',Context::TEXT],
@@ -56,10 +59,9 @@ def try_quoting
     ['"hello"','"hello"',Context::TEXT],
     ['"hello"','&quot;hello&quot;',Context::ATTRIBUTE_VALUE]
   ].each do |input, escaped, attribute_context|
-    output = Java::OrgHaploTemplateHtml::Escape.escapeString(input, attribute_context)
-    if output != escaped
-      puts "Escaping fail"
-      p [input, output]
+    it "escapes \"#{input}\" as \"#{escaped}\" in the context #{attribute_context}" do
+      output = Java::OrgHaploTemplateHtml::Escape.escapeString(input, attribute_context)
+      expect(output).to eq escaped
     end
   end
 end
@@ -97,10 +99,6 @@ if ARGV[0] == 'run' || ARGV[0] == 'tree'
   end
   exit(0)
 end
-# ---------------------------------------------------------------------------
-
-try_quoting
-
 # ---------------------------------------------------------------------------
 
 class TestParserConfiguration < Java::OrgHaploTemplateHtml::ParserConfiguration
@@ -220,102 +218,89 @@ end
 # ---------------------------------------------------------------------------
 
 JavaSystem = Java::JavaLang::System
-template_render_time = 0
-number_of_renders = 0
-tests = 0
-passed = 0
-failed = 0
+
 files = Dir.glob("test/case/**/*.*").sort
 files.each do |filename|
   comment, *commands = File.open(filename, "r:UTF-8") { |f| f.read }.split("\n---\n")
   raise "Bad test #{filename} - no tests" if commands.empty?
-  required_cmd = Proc.new do
-    raise "Expected element in test #{filename}" if commands.empty?
-    commands.shift
-  end
-  if comment =~ /\A\s*PARSE ERROR:/
-    # Test one or more parse errors
-    while ! commands.empty?
-      template_source = required_cmd.call
-      expected_error = required_cmd.call.strip
-      tests += 1
-      exception = nil
-      begin
-        template = Parser.new(template_source.strip, "expected-parse-error", TestParserConfiguration.new).parse()
-      rescue => e
-        exception = e
+
+  describe "#{filename.gsub(/^test\/case\/|\.txt$/, '')} - #{comment.strip}" do
+    test_case_index = 0
+
+    if comment =~ /^\s*PARSE ERROR:/
+      # Test one or more parse errors
+      raise "Expected an even number of test elements in #{filename}" if commands.length.odd?
+
+      commands.each_slice(2).each do |template_source, expected_error|
+        test_case_index += 1
+        it "Test Case ##{test_case_index}" do
+          exception = nil
+          begin
+            template = Parser.new(template_source.strip, "expected-parse-error", TestParserConfiguration.new).parse()
+          rescue => e
+            exception = e
+          end
+          message = exception ? exception.message : '(exception not thrown)'
+          expect(message).to eq expected_error.strip
+        end
       end
-      message = exception ? exception.message : '(exception not thrown)'
-      if message == expected_error
-        passed += 1
-      else
-        failed += 1
-        puts
-        puts "#{filename}: Unexpected exception:"
-        puts "EXPECTED: #{expected_error}"
-        puts "OUTPUT:   #{message}"
-        puts comment.strip
-      end
-    end
-  else
-    # Test templates
-    template = nil
-    while ! commands.empty?
-      if template == nil
-        begin
-          template = Parser.new(required_cmd.call.strip, "test-case", TestParserConfiguration.new).parse()
-        rescue => e
-          failed += 1
-          puts "\n#{filename}: Unexpected parse error"
-          (e.respond_to? :printStackTrace) ? e.printStackTrace() : p(e)
+    else
+      current_template_string = nil
+      test_cases_by_template = commands.chunk do |string|
+        if string =~ /NEW TEMPLATE(:\s*(.+))?/
+          current_template_string = nil
           next
         end
-      end
-      view_json = required_cmd.call.strip
-      if view_json =~ /NEW TEMPLATE(:\s*(.+))?/
-        comment = $2 if $2
-        template = nil
-        next
-      end
-      expected_output = required_cmd.call.strip
-      view = JSON.parse(view_json)
-      drivers = []
-      drivers << NestedJavaDriver.new(maybe_add_in_deferred_render(:java, view_value_to_java(view)))
-      drivers << JRubyJSONDriver.new(maybe_add_in_deferred_render(:rubyjson, view))
-      drivers << RhinoJavaScriptDriver.new(maybe_add_in_deferred_render(:js, view_json_to_rhino(view_json)))
-      if expected_output =~ /\ATREE:(.+)\z/m
-        # Testing the tree, not the rendered output
-        expected_output = $1.strip
-        drivers = [:tree]
-      end
-      drivers.each do |driver|
-        tests += 1
-        output = nil
-        begin
-          if driver == :tree
-            output = template.dump().strip
-          else
-            driver.setFunctionRenderer(TestFunctionRenderer.new)
-            driver.setIncludedTemplateRenderer(included_template_renderer)
-            # This is not a very good benchmark
-            render_start = JavaSystem.nanoTime()
-            output = template.renderString(driver)
-            template_render_time += JavaSystem.nanoTime() - render_start
-            number_of_renders += 1
-          end
-        rescue Java::OrgHaploTemplateHtml::RenderException => render_exception
-          output = "RENDER ERROR: #{render_exception.message}"
+        if current_template_string.nil?
+          current_template_string = string
+          next
         end
-        if output == expected_output
-          passed += 1
-        else
-          failed += 1
-          puts
-          puts "#{filename}: Bad template output"
-          puts comment.strip
-          puts "EXPECTED: #{expected_output}"
-          puts "OUTPUT:   #{output}"
-          puts "DRIVER:   #{driver.class.name.split('::').last}"
+        current_template_string
+      end
+
+      test_cases_by_template.each do |template_string, template_test_cases|
+        raise "Expected an even number of test elements in #{filename}" if template_test_cases.length.odd?
+
+        template_test_cases.each_slice(2).each do |view_json, expected_output|
+          test_case_index += 1
+          context "Test Case ##{test_case_index}" do
+            view = JSON.parse(view_json)
+
+            before(:all) do
+              @template = Parser.new(template_string.strip, "test-case", TestParserConfiguration.new).parse()
+            end
+
+            if expected_output =~ /\ATREE:(.+)\z/m
+              # Testing the tree, not the rendered output
+              expected_output = $1.strip
+
+              it 'tree' do
+                output = @template.dump().strip
+                expect(output).to eq expected_output
+              end
+            else
+              [
+                ['nested Java driver',
+                 NestedJavaDriver.new(maybe_add_in_deferred_render(:java, view_value_to_java(view)))],
+                ['JRuby JSON driver',
+                 JRubyJSONDriver.new(maybe_add_in_deferred_render(:rubyjson, view))],
+                ['Rhino JavaScript driver',
+                 RhinoJavaScriptDriver.new(maybe_add_in_deferred_render(:js, view_json_to_rhino(view_json)))]
+              ].each do |driver_name, driver|
+                it driver_name do
+                  driver.setFunctionRenderer(TestFunctionRenderer.new)
+                  driver.setIncludedTemplateRenderer(included_template_renderer)
+                  begin
+                    output = @template.renderString(driver)
+                  rescue Java::OrgHaploTemplateHtml::RenderException => render_exception
+                    output = "RENDER ERROR: #{render_exception.message}"
+                  end
+
+                  expect(output).to eq expected_output.strip
+                end
+              end
+            end
+          end
         end
       end
     end
@@ -331,11 +316,11 @@ $jsscope.put('$testpass', $jsscope, 0.to_java)
 $jscontext.evaluateString($jsscope, File.read("test/rhino.js"), "test/rhino.js", 1, nil);
 js_test_count = $jsscope.get('$testcount', $jsscope).to_i
 raise "No JS tests" unless js_test_count > 0
-tests += js_test_count
-passed += (js_test_pass =  $jsscope.get('$testpass', $jsscope).to_i)
-failed += js_test_count - js_test_pass
+
+tests = js_test_count
+passed = (js_test_pass =  $jsscope.get('$testpass', $jsscope).to_i)
+failed = js_test_count - js_test_pass
 
 puts
-puts (failed == 0) ? "PASSED" : "FAILED"
-puts "Approx render time per template: #{(template_render_time.to_f / number_of_renders / 1000000).round(2)} ms"
 puts "#{tests} tests, #{passed} passed, #{failed} failed, in #{files.length} files"
+exit 1 if failed > 0
