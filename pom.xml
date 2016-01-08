@@ -66,8 +66,8 @@
                 <version>2.10</version>
                 <executions>
                     <execution>
-                        <id>copy-dependencies</id>
-                        <phase>package</phase>
+                        <id>copy-compile-dependencies</id>
+                        <phase>process-resources</phase>
                         <goals>
                             <goal>copy</goal>
                         </goals>
@@ -91,6 +91,17 @@
                                     <outputDirectory>${project.build.directory}/lib/compile</outputDirectory>
                                     <destFileName>rhino.jar</destFileName>
                                 </artifactItem>
+                            </artifactItems>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>copy-test-dependencies</id>
+                        <phase>process-test-resources</phase>
+                        <goals>
+                            <goal>copy</goal>
+                        </goals>
+                        <configuration>
+                            <artifactItems>
                                 <artifactItem>
                                     <groupId>junit</groupId>
                                     <artifactId>junit</artifactId>
