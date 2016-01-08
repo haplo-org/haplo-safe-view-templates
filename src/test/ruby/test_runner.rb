@@ -1,6 +1,8 @@
+java_import java.lang.AssertionError
 java_import org.jruby.exceptions.RaiseException
 java_import org.junit.runner.Description
 java_import org.junit.runner.notification.Failure
+
 require 'rspec'
 
 class JUnitFormatter
@@ -33,8 +35,13 @@ class JUnitFormatter
   end
 
   def example_failed(notification)
-    exception = RaiseException.new(notification.exception.to_java)
-    @@notifier.fireTestFailure(Failure.new(description_of(notification), exception))
+    description = description_of(notification)
+    java_exception = RaiseException.new(notification.exception.to_java)
+    failure_exception = notification.exception.is_a?(RSpec::Expectations::ExpectationNotMetError) \
+      ? AssertionError.new(java_exception)
+      : java_exception
+    @@notifier.fireTestFailure(Failure.new(description, failure_exception))
+    @@notifier.fireTestFinished(description)
   end
 
   def example_pending(notification)
