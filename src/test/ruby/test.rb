@@ -84,81 +84,9 @@ if ARGV[0] == 'run' || ARGV[0] == 'tree'
 end
 # ---------------------------------------------------------------------------
 
-class TestParserConfiguration < Java::OrgHaploTemplateHtml::ParserConfiguration
-  def functionArgumentsAreURL(functionName)
-    (functionName == "testFunctionWithURL")
-  end
-  def validateFunction(parser, function)
-    if function.getFunctionName() == "badFunction"
-      parser.error("badFunction doesn't validate")
-    elsif function.getFunctionName() == "textOnly"
-      if parser.getCurrentParseContext() != Context::TEXT
-        parser.error("textOnly() can only be used in text context")
-      end
-    end
-  end
-end
-
-class TestFunctionRenderer
-  ArgumentRequirement = Java::OrgHaploTemplateHtml::FunctionBinding::ArgumentRequirement
-  def renderFunction(builder, binding)
-    case binding.getFunctionName()
-    when "generic-function"
-      builder.append("TEST GENERIC FUNCTION RENDER")
-      true
-    when 'textOnly'
-      builder.append('TEXT ONLY')
-      true
-    when /\Atestargs-(.*)\z/
-      builder.append('`')
-      $1.split(//).each do |i|
-        str = nil
-        case i
-        when 's'; str = binding.nextUnescapedStringArgument(ArgumentRequirement::OPTIONAL)
-        when 'S'; str = binding.nextUnescapedStringArgument(ArgumentRequirement::REQUIRED)
-        when 'v'; str = obj_with_class(binding.nextViewObjectArgument(ArgumentRequirement::OPTIONAL))
-        when 'V'; str = obj_with_class(binding.nextViewObjectArgument(ArgumentRequirement::REQUIRED))
-        when 'r'; binding.restartArguments()
-        when 'n'; binding.skipArgument(ArgumentRequirement::OPTIONAL)
-        when 'N'; binding.skipArgument(ArgumentRequirement::REQUIRED)
-        when 'L'; binding.noMoreArgumentsExpected()
-        when 'a'; str = binding.hasArguments().to_s
-        else raise "Unknown instruction in test"
-        end
-        builder.append(str.nil? ? "NULL" : str)
-        builder.append('`')
-      end
-      true
-    else
-      false
-    end
-  end
-  CLASS_NAME_MAP = {
-    'Java::JavaUtil::LinkedHashMap' => 'Hash',
-    'Java::OrgMozillaJavascript::NativeObject' => 'Hash'
-  }
-  def obj_with_class(obj)
-    obj.to_s+"/"+(CLASS_NAME_MAP[obj.class.name] || obj.class.name)
-  end
-end
-
-class JSTestFunctionRenderer
-  def initialize(renderer)
-    @renderer = renderer
-  end
-  def renderFunction(owner, builder, binding)
-    @renderer.renderFunction(builder, binding)
-  end
-end
-
-class JSIncludedTemplateRenderer
-  def initialize(renderer)
-    @renderer = renderer
-  end
-  def renderIncludedTemplate(owner, *args)
-    @renderer.renderIncludedTemplate(*args)
-  end
-end
+require "#{File.dirname(__FILE__)}/test_parser_config"
+require "#{File.dirname(__FILE__)}/test_function_renderer"
+require "#{File.dirname(__FILE__)}/test_rhino_integration"
 
 # ---------------------------------------------------------------------------
 
@@ -199,8 +127,6 @@ def maybe_add_in_deferred_render(view_kind, view)
 end
 
 # ---------------------------------------------------------------------------
-
-JavaSystem = Java::JavaLang::System
 
 files = Dir.glob("test/case/**/*.*").sort
 files.each do |filename|
