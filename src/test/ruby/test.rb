@@ -17,39 +17,15 @@ RhinoJavaScriptDriver = Java::OrgHaploTemplateDriverRhinojs::RhinoJavaScriptDriv
 
 # ---------------------------------------------------------------------------
 
-template_inclusions = {
-  'template1' => Parser.new(<<__E, "template1").parse(),
-    <b> "Included Template 1: " value1 </b>
-__E
-  'template2' => Parser.new(<<__E, "template2").parse(),
-    within(nested) {
-      <i> "Included Template 2: " ^{rootValue} </i>
-    }
-__E
-  'template3' => Parser.new(<<__E, "template2").parse(),
-    <span> "T3 " template:template1() " - " generic-function() </span>
-__E
-  'template4' => Parser.new(<<__E, "template4").parse(),
-    <span> template:unknown-template() </span>
-__E
-  'self-inclusion' => Parser.new(<<__E, "self-inclusion").parse(),
-    <span> template:self-inclusion() </span>
-__E
-  'components' => Parser.new(<<__E, "components").parse()
-    within(component) {
-      <div class="component">
-        value1 " "
-        <span class="anon"> yield() </span>
-        <span class="e1"> yield:extra1() </span>
-        <span class="e2"> yield:extra2() </span>
-        <span class="three"> yield:extra3() </span>
-      </div>
-    }
-__E
-}
-included_template_renderer = Java::OrgHaploTemplateHtml::SimpleIncludedTemplateRenderer.new(template_inclusions)
+included_templates = {}
+Dir.glob("test/included-templates/*.hsvt").sort.each do |filename|
+  filename =~ /\/([^\/]+?)\.hsvt\z/
+  included_templates[$1] = Parser.new(File.read(filename), $1).parse()
+end
 
-$template_for_deferred = template_inclusions['template1']
+included_template_renderer = Java::OrgHaploTemplateHtml::SimpleIncludedTemplateRenderer.new(included_templates)
+
+$template_for_deferred = included_templates['template1']
 
 # ---------------------------------------------------------------------------
 

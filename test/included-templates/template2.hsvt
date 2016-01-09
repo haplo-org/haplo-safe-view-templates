@@ -1,0 +1,3 @@
+within(nested) {
+  <i> "Included Template 2: " ^{rootValue} </i>
+}
