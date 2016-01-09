@@ -2,10 +2,10 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>org.haplo</groupId>
-    <artifactId>safe-web-templates</artifactId>
+    <artifactId>hsvt</artifactId>
     <version>0.1-SNAPSHOT</version>
 
-    <name>Safe Web Templates</name>
+    <name>Haplo Safe View Templates</name>
 
     <repositories>
         <repository>
