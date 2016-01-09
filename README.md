@@ -1,11 +1,14 @@
 
-# A prototype secure web templating language for dynamic JVM languages
+# Haplo Safe View Templates
 
-A experimental web templating language, with the goal of making it almost impossible to write templates with XSS and other common security issues.
+HSVT is an HTML templating language with the goal of making it almost impossible to write templates with XSS and other common security issues.
 
 It achieves this through parsing and understanding the structure of HTML, so it knows the context within which inserted values are output. The language is designed to look like HTML with C-style control flow, so it looks familiar to developers.
 
-The language is designed so that if a trusted template
+
+## Threat model
+
+If a trusted template
 
  * parses without errors,
  * only uses the built in functions, and
@@ -15,36 +18,32 @@ then all possible input views will write the HTML structure described by the tem
 
 That is, when using a template written by the application author, is it impossible for an attacker controlled view to inject arbitary HTML, such as unwelcome JavaScript.
 
-Licensed under the MPLv2.
 
-## Introduction
+## License and copyright
 
-There's lots of advice on the internet that you shouldn't write your own templating language. But I have Opinions, and Requirements.
+Licensed under the MPLv2, (c) Haplo Services 2016.
 
-I'm currently using [Handlebars](http://handlebarsjs.com/) in my project, [Haplo](http://haplo.org). While it's pretty good, I would like to use something better.
 
-* It's very noisy. I've noticed that in my applications, most of the time I'm just writing HTML tags and inserting escaped values. The `{{handlebars}}` clutter up your code, and make it hard to read. I'd like to invert that, so that literal text has the special syntax.
+## Aims
 
-* It doesn't help writing secure applications, because it's just interpolating escaped strings. A templating language should properly parse HTML and understand the different contexts within it.
+* Terse syntax. Most of the time templates are just HTML tags and inserted and escaped values. Extra syntax, like `{{handlebars}}`, just clutters up the code and makes it hard to read. HSVT inverts that, so that literal text has the special syntax.
 
-* I'd like to output really tidy HTML, with the language handling all the edge cases. String interpolation makes this harder than it should be, for example, adding multiple classes to an tag is tricky.
+* Just interpolating escaped strings doesn't help writing secure applications. A templating language should properly parse HTML and understand the different contexts within it.
 
-* I want it to ignore whitespace, as I'd like to lay out my templates as clearly as possible. I shouldn't need to have to chose between legibility and consistent formatting.
+* Output really tidy HTML, with the language handling all the edge cases. String interpolation makes this harder than it should be, for example, adding multiple classes to an tag is tricky.
 
-* When you mess up your template, I'd like really good error messages with the exact character position of the error.
+* Whitespace is ignored so you can lay out your templates as clearly as possible. You shouldn't need to chose between legibility and consistent formatting.
 
-* I'd like to use the same templating language for multiple JVM languages. I use Rhino JavaScript and JRuby, and there's no reason they can't share code.
+* Really good error messages with the exact character position of the error.
 
-* The implementation should be easy to embed in a framework. For example, I should be able to parse a template, then use the parsed template over and over again in different threads and in different security contexts.
+* The same templating language for multiple JVM languages. Haplo uses Rhino JavaScript and JRuby, and there's no reason they can't share code.
 
-This repo contains the start of a templating language which I think will work much better.
-
-I'm publishing it now to get feedback on the language and the implementation.
+* The implementation should be easy to embed in a framework. For example, a parsed template can be used over and over again in different threads and in different security contexts.
 
 
 ## Example
 
-Here's a template in this new language:
+Here's an example template:
 
 ```
 <div class="container">
@@ -85,7 +84,7 @@ This is how the equivalent Handlebars template looks:
 
 Note this doesn't include the implementation of a `_internal__indicator_styles()` Handlebars helper, which has to output a space prefixed class name if required. This is implemented in JavaScript, which is verbose and means you have to look in another place to understand what's going on.
 
-In the new templating language, the `_internal__indicator_styles()` function effectively inlined using the `switch()` builtin. The template will output one or two class names in the class attribute.
+In HSVT, the `_internal__indicator_styles()` function effectively inlined using the `switch()` builtin. The template will output one or two class names in the class attribute.
 
 While similar in structure, the second template has been properly parsed, and you can't write a template which outputs invalid HTML or doesn't escape things properly. And hopefully it's easier to read.
 
@@ -229,16 +228,14 @@ Currently there are three drivers. A JavaScript driver for the Mozilla Rhino int
 
 All the rendering functions keep track of the context, so escaping and other features is context aware.
 
-Running the tests requires JRuby, and the build system isn't worthy of the name.
-
 
 ### Running the tests
 
 Make sure you have `mvn` and `javac` on your `PATH`, then run
 
-`mvn package && ./test.sh`
+`mvn test`
 
-The tests can be found in the `test-case` directory, and `test.rb` is a simple JRuby script to run them.
+The tests can be found in the `test/case` directory, and `src/test/ruby/test.rb` is a simple JRuby script to runs them and performs other tests.
 
 
 ## Functions
@@ -315,8 +312,6 @@ Some HTML parsers don't like tag attributes without quotes. You can include them
 
 * A proper driver for JRuby which can do more than just JSON data structures
 
-* Javadocs, build system, etc, so it can be used in other projects
-
 * Linter to find more problems in templates (eg inline JavaScript, improperly escaped URLs)
 
 * Logging of empty and wrongly typed values.
@@ -326,7 +321,7 @@ Some HTML parsers don't like tag attributes without quotes. You can include them
 
 ## Contributing
 
-If you're interested in this project, then contributions would be very welcome.
+Contributions would be very welcome.
 
 * The most useful thing you can do is try writing some templates in this language and providing feedback. Perhaps you could convert your most complex templates and try running them?
 
@@ -341,5 +336,7 @@ If you submit a pull request, I'll ask you to confirm you're happy to license yo
 
 ## Thank you!
 
-Many thanks [Alaric Snell-Pym](http://www.snell-pym.org.uk/alaric/), [Samir Talwar](http://samirtalwar.com), and my colleages at [Haplo Services](http://www.haplo-services.com) for reviewing my language design, giving actionable feedback, and trying out the code.
+[Samir Talwar](http://samirtalwar.com) for feedback and sorting out the build and test systems.
+
+[Alaric Snell-Pym](http://www.snell-pym.org.uk/alaric/), and my colleages at [Haplo Services](http://www.haplo-services.com), for reviewing the language design, giving actionable feedback, and trying out the code.
 
