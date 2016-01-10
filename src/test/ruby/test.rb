@@ -67,22 +67,6 @@ def view_value_to_java(value)
 end
 
 # ---------------------------------------------------------------------------
-if ARGV[0] == 'run' || ARGV[0] == 'tree'
-  template_source = File.open(ARGV[1], "r:UTF-8") { |f| f.read }
-  # See if it looks like a test file, and if so, pick out the template
-  template_source_split = template_source.split("\n---\n")
-  template_source = template_source_split[1] if template_source_split.length >= 3
-  template = Parser.new(template_source, "tree").parse()
-  if ARGV[0] == 'tree'
-    STDOUT.write template.dump()
-  else
-    view = JSON.parse(File.read(ARGV[2]))
-    driver = Java::OrgHaploTemplateHtmlDriverNestedjava::NestedJavaDriver.new(view_value_to_java(view), nil)
-    puts template.renderString(driver)
-  end
-  exit(0)
-end
-# ---------------------------------------------------------------------------
 
 require "#{File.dirname(__FILE__)}/test_parser_config"
 require "#{File.dirname(__FILE__)}/test_function_renderer"

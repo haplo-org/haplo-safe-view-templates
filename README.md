@@ -90,13 +90,12 @@ While similar in structure, the second template has been properly parsed, and yo
 
 To try this template, run
 
-`mvn compile && ./test.sh run examples/choose.html examples/choose_view.json`
+```
+mvn test
+test/try_template.sh examples/choose.hsvt examples/choose_view.json
+```
 
-and to see the AST, run
-
-` mvn compile && ./test.sh tree examples/choose.html`
-
-Make sure you have `javac` and `jruby` on your `PATH`.
+This will output the AST tree, and then render the template with the view.
 
 
 ## Language overview
@@ -236,6 +235,8 @@ Make sure you have `mvn` and `javac` on your `PATH`, then run
 `mvn test`
 
 The tests can be found in the `test/case` directory, and `src/test/ruby/test.rb` is a simple JRuby script to runs them and performs other tests.
+
+`test/try_template.sh` is a script which takes either a template and optional view, or a test case, and dumps the AST and then renders the template.
 
 
 ## Functions
