@@ -21,6 +21,12 @@ final public class Template {
         return this.name;
     }
 
+    public void compile(Compiler compiler) throws CompileException {
+        compiler.start(this);
+        this.nodes.compile(compiler, Context.TEXT);
+        compiler.end();
+    }
+
     public void render(StringBuilder builder, Driver driver) throws RenderException {
         driver.setupForRender(this);
         this.nodes.render(builder, driver, driver.getRootView(), Context.TEXT);

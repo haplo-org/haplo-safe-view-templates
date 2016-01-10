@@ -25,6 +25,10 @@ final class NodeLiteral extends Node {
         return false;
     }
 
+    public void compile(Compiler compiler, Context context) throws CompileException {
+        compiler.literal(this.literal);
+    }
+
     public void render(StringBuilder builder, Driver driver, Object view, Context context) throws RenderException {
         builder.append(this.literal);
     }

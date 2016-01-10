@@ -200,6 +200,12 @@ files.each do |filename|
   end
 end
 
+# Ruby compiler tests
+require "#{File.dirname(__FILE__)}/ruby_compiler_test_utils"
+Dir.glob("#{File.dirname(__FILE__)}/ruby-compiler/**/*.rb").sort.each do |tests|
+  require tests
+end
+
 # Also run some tests of the Rhino JavaScript integration
 Java::OrgHaploTemplateDriverRhinojs::JSPlatformIntegration.parserConfiguration = TestParserConfiguration.new
 Java::OrgHaploTemplateDriverRhinojs::JSPlatformIntegration.includedTemplateRenderer = JSIncludedTemplateRenderer.new(included_template_renderer)

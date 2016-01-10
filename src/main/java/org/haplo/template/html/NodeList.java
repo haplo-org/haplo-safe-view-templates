@@ -27,6 +27,13 @@ final class NodeList extends NodeListBase {
         }
     }
 
+    public void compile(Compiler compiler, Context context) throws CompileException {
+        Node node = getListHeadMaybe();
+        if(node != null) {
+            node.compileWithNextNodes(compiler, context);
+        }
+    }
+
     public void render(StringBuilder builder, Driver driver, Object view, Context context) throws RenderException {
         if(context == Context.ATTRIBUTE_VALUE) {
             // Lists need to be space separated inside attributes

@@ -14,6 +14,18 @@ abstract public class Node {
         return true;
     }
 
+    public void compile(Compiler compiler, Context context) throws CompileException {
+        throw new CompileException("Compilation not supported for this kind of node.");
+    }
+
+    public void compileWithNextNodes(Compiler compiler, Context context) throws CompileException {
+        Node node = this;
+        while(node != null) {
+            node.compile(compiler, context);
+            node = node.getNextNode();
+        }
+    }
+
     abstract public void render(StringBuilder builder, Driver driver, Object view, Context context) throws RenderException;
 
     final public void renderWithNextNodes(StringBuilder builder, Driver driver, Object view, Context context) throws RenderException {
