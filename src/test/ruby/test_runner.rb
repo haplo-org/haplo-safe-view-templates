@@ -1,3 +1,12 @@
+# coding: UTF-8
+
+# Haplo Safe View Templates                          http://haplo.org
+# (c) Samir Talwar 2016                   https://www.samirtalwar.com
+# This Source Code Form is subject to the terms of the Mozilla Public
+# License, v. 2.0. If a copy of the MPL was not distributed with this
+# file, You can obtain one at http://mozilla.org/MPL/2.0/.
+
+
 java_import java.lang.AssertionError
 java_import org.jruby.exceptions.RaiseException
 java_import org.junit.runner.Description
