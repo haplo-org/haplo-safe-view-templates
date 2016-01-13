@@ -169,3 +169,16 @@ assertEqual(templateWithPlatformFns.render({}), "<div>TEST GENERIC FUNCTION REND
 // Include platform templates
 var templateWithIncludedTemplate = new $HaploTemplate("<div> template:template1() </div>");
 assertEqual(templateWithIncludedTemplate.render({value1:"Hello!"}), "<div><b>Included Template 1: Hello!</b></div>", "JS template includes other template");
+
+// --------------------------------------------------------------------------
+// Iterating over array-like things
+
+var IterableThing = function() {};
+IterableThing.prototype.__defineGetter__('length', function() { return 3; });
+IterableThing.prototype[2] = 'In prototype';
+var arrayLikeThingInstance = new IterableThing();
+arrayLikeThingInstance[0] = 'Hello';
+arrayLikeThingInstance[1] = 'World';
+
+var iterableTemplate = new $HaploTemplate('<div> each(a) { "^" . "$" } </div>');
+assertEqual(iterableTemplate.render({a:arrayLikeThingInstance}), "<div>^Hello$^World$^In prototype$</div>");
