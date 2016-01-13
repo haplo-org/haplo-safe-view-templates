@@ -182,3 +182,10 @@ arrayLikeThingInstance[1] = 'World';
 
 var iterableTemplate = new $HaploTemplate('<div> each(a) { "^" . "$" } </div>');
 assertEqual(iterableTemplate.render({a:arrayLikeThingInstance}), "<div>^Hello$^World$^In prototype$</div>");
+
+// --------------------------------------------------------------------------
+// toString used on JS objects in views
+
+var dateTemplate = new $HaploTemplate('<div> d </div>');
+assert(0 === dateTemplate({d:(new Date(2016,00,07))}).indexOf('<div>Thu Jan 07 2016 00:00:00 '), "starts with date string, time zone isn't important");
+
