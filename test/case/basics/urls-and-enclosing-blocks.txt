@@ -2,15 +2,12 @@
 Enclosing view blocks can be used to fish out values to make URLs
 
 ---
-
 <div class="container">
     each(elements) {
         <div class="item"><a href=url("/path/to/" ^{id} "/" act)> label </a></div>
     }
 </div>
-
 ---
-
 {
     "id": "12☃",
     "elements": [
@@ -18,7 +15,26 @@ Enclosing view blocks can be used to fish out values to make URLs
         {"act":"xyz", "label":"Duck"}
     ]
 }
+---
+<div class=container><div class=item><a href="/path/to/12%E2%98%83/abc">Tiger</a></div><div class=item><a href="/path/to/12%E2%98%83/xyz">Duck</a></div></div>
 
 ---
+NEW TEMPLATE: Arguments can use enclosing blocks
+---
+<div>
+  each(elements) {
+    <a href=["/path" ? *^{criteria} x=^{y} z=q]> "a" </a>
+  }
+</div>
+---
+{
+  "criteria": {"a":1, "b":"two"},
+  "y": "Why",
+  "elements": [
+    {"q":"p"},
+    {"q":342}
+  ]
+}
+---
+<div><a href="/path?a=1&b=two&x=Why&z=p">a</a><a href="/path?a=1&b=two&x=Why&z=342">a</a></div>
 
-<div class=container><div class=item><a href="/path/to/12%E2%98%83/abc">Tiger</a></div><div class=item><a href="/path/to/12%E2%98%83/xyz">Duck</a></div></div>

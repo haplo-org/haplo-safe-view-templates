@@ -139,12 +139,13 @@ final public class Parser {
         }
     };
 
-    protected <T extends Node> T parseOneValueOfType(Class<T> type, String expected, int endOfListCharacter, int startPos) throws ParseException {
+    protected Node parseOneValueRequired(String expected, int endOfListCharacter) throws ParseException {
+        int startPos = this.pos;
         Node node = parseOneValue(endOfListCharacter);
-        if((node == null) || (node == END_OF_LIST) || !(type.isInstance(node))) {
+        if((node == null) || (node == END_OF_LIST)) {
             error("Expected "+expected, startPos);
         }
-        return type.cast(node);
+        return node;
     }
 
     protected Node parseEnclosingViewBlock(CharSequence name) throws ParseException {
@@ -430,7 +431,10 @@ final public class Parser {
                 break;
             } else if(inParameters) {
                 if(singleChar == '*') {
-                    NodeValue value = parseOneValueOfType(NodeValue.class, "dictionary value after *", endOfListCharacter, this.pos);
+                    Node value = parseOneValueRequired("dictionary value after *", endOfListCharacter);
+                    if(!value.nodeRepresentsValueFromView()) {
+                        error("Expected dictionary value after *", symbolStart+1);
+                    }
                     url.addParameterInstructionAllFromDictionary(value);
                 } else if(singleChar == '!') {
                     CharSequence name = symbol();
@@ -447,7 +451,7 @@ final public class Parser {
                         error("After ?, URLs must be formed of key=value, !key or *dictionary");
                     }
                     this.context = Context.UNSAFE;  // escaping happens in NodeURL's render()
-                    Node value = parseOneValueOfType(Node.class, "URL parameter value after =", endOfListCharacter, this.pos);
+                    Node value = parseOneValueRequired("URL parameter value after =", endOfListCharacter);
                     this.context = Context.URL;
                     url.addParameterInstructionAddKeyValue(s.toString(), value);
                 }
