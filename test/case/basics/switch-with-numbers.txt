@@ -1,0 +1,35 @@
+
+switch() works with numbers
+
+---
+<div>
+    switch(count)
+        { count " entries" }
+        0 { "no entries" }
+        1 { "one entry"}
+</div>
+
+---
+{"count":0}
+---
+<div>no entries</div>
+
+---
+{"count":1}
+---
+<div>one entry</div>
+
+---
+{"count":2}
+---
+<div>2 entries</div>
+
+---
+{"count":-1}
+---
+<div>-1 entries</div>
+
+---
+{"count":10001}
+---
+<div>10001 entries</div>
