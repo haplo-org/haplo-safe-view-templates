@@ -45,10 +45,18 @@ class JUnitFormatter
 
   def example_failed(notification)
     description = description_of(notification)
-    java_exception = RaiseException.new(notification.exception.to_java)
-    failure_exception = notification.exception.is_a?(RSpec::Expectations::ExpectationNotMetError) \
-      ? AssertionError.new(java_exception)
-      : java_exception
+    exception = notification.exception.to_java
+    java_exception = RaiseException.new(exception)
+    failure_exception =
+      case notification.exception
+      when RSpec::Expectations::ExpectationNotMetError
+        AssertionError.new(java_exception)
+      when RSpec::Core::MultipleExceptionError
+        message = (['Multiple exceptions:'] + notification.exception.all_exceptions.map(&:message)).join("\n")
+        AssertionError.new(message, java_exception)
+      else
+        java_exception
+      end
     @@notifier.fireTestFailure(Failure.new(description, failure_exception))
     @@notifier.fireTestFinished(description)
   end
