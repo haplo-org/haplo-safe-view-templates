@@ -44,7 +44,7 @@ describe 'Escaping' do
   ].each do |input, escaped, attribute_context|
     it "escapes \"#{input}\" as \"#{escaped}\" in the context #{attribute_context}" do
       output = Java::OrgHaploTemplateHtml::Escape.escapeString(input, attribute_context)
-      expect(output).to eq escaped
+      expect(output).to eq(escaped)
     end
   end
 end
@@ -134,7 +134,7 @@ files.each do |filename|
             exception = e
           end
           message = exception ? exception.message : '(exception not thrown)'
-          expect(message).to eq expected_error.strip
+          expect(message).to eq(expected_error.strip)
         end
       end
     else
@@ -155,42 +155,38 @@ files.each do |filename|
         raise "Expected an even number of test elements in #{filename}" if template_test_cases.length.odd?
 
         template_test_cases.each_slice(2).each do |view_json, expected_output|
+          expected_output.strip!
+
           test_case_index += 1
-          context "Test Case ##{test_case_index}" do
-            before(:all) do
-              @view = JSON.parse(view_json)
-              @template = Parser.new(template_string.strip, "test-case", TestParserConfiguration.new).parse()
-            end
+          it "Test Case ##{test_case_index}" do
+            view = JSON.parse(view_json)
+            template = Parser.new(template_string.strip, "test-case", TestParserConfiguration.new).parse()
 
-            if expected_output =~ /\ATREE:(.+)\z/m
+            if expected_output =~ /\ATREE:\s*(.+)\z/m
               # Testing the tree, not the rendered output
-              expected_output = $1.strip
+              expected_output = $1
 
-              it 'tree' do
-                output = @template.dump().strip
-                expect(output).to eq expected_output
-              end
+              output = template.dump().strip
+              expect(output).to eq(expected_output)
             else
               [
                 ['nested Java driver',
-                 ->(view) { NestedJavaDriver.new(maybe_add_in_deferred_render(:java, view_value_to_java(view))) }],
+                 NestedJavaDriver.new(maybe_add_in_deferred_render(:java, view_value_to_java(view)))],
                 ['JRuby JSON driver',
-                 ->(view) { JRubyJSONDriver.new(maybe_add_in_deferred_render(:rubyjson, view)) }],
+                 JRubyJSONDriver.new(maybe_add_in_deferred_render(:rubyjson, view))],
                 ['Rhino JavaScript driver',
-                 ->(view) { RhinoJavaScriptDriver.new(maybe_add_in_deferred_render(:js, view_json_to_rhino(view_json))) }]
-              ].each do |driver_name, new_driver|
-                it driver_name do
-                  driver = new_driver.call(@view)
-                  driver.setFunctionRenderer(TestFunctionRenderer.new)
-                  driver.setIncludedTemplateRenderer(included_template_renderer)
-                  begin
-                    output = @template.renderString(driver)
-                  rescue Java::OrgHaploTemplateHtml::RenderException => render_exception
-                    output = "RENDER ERROR: #{render_exception.message}"
-                  end
-
-                  expect(output).to eq expected_output.strip
+                 RhinoJavaScriptDriver.new(maybe_add_in_deferred_render(:js, view_json_to_rhino(view_json)))]
+              ].each do |driver_name, driver|
+                driver.setFunctionRenderer(TestFunctionRenderer.new)
+                driver.setIncludedTemplateRenderer(included_template_renderer)
+                begin
+                  output = template.renderString(driver)
+                rescue Java::OrgHaploTemplateHtml::RenderException => render_exception
+                  output = "RENDER ERROR: #{render_exception.message}"
                 end
+
+                expect(output).to eq(expected_output),
+                  -> { "#{driver_name} failed.\nexpected: #{expected_output.inspect}\n     got: #{output.inspect}" }
               end
             end
           end
