@@ -8,6 +8,7 @@
 
 
 java_import java.lang.AssertionError
+java_import java.lang.Throwable
 java_import org.jruby.exceptions.RaiseException
 java_import org.junit.runner.Description
 java_import org.junit.runner.notification.Failure
@@ -46,7 +47,9 @@ class JUnitFormatter
   def example_failed(notification)
     description = description_of(notification)
     exception = notification.exception.to_java
-    java_exception = RaiseException.new(exception)
+    java_exception = exception.is_a?(Throwable) \
+      ? exception
+      : RaiseException.new(exception)
     failure_exception =
       case notification.exception
       when RSpec::Expectations::ExpectationNotMetError
