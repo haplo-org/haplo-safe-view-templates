@@ -129,7 +129,7 @@ files.each do |filename|
         it "Test Case ##{test_case_index}" do
           exception = nil
           begin
-            template = Parser.new(template_source.strip, "expected-parse-error", TestParserConfiguration.new).parse()
+            Parser.new(template_source.strip, "expected-parse-error", TestParserConfiguration.new).parse()
           rescue => e
             exception = e
           end
@@ -157,9 +157,8 @@ files.each do |filename|
         template_test_cases.each_slice(2).each do |view_json, expected_output|
           test_case_index += 1
           context "Test Case ##{test_case_index}" do
-            view = JSON.parse(view_json)
-
             before(:all) do
+              @view = JSON.parse(view_json)
               @template = Parser.new(template_string.strip, "test-case", TestParserConfiguration.new).parse()
             end
 
@@ -174,13 +173,14 @@ files.each do |filename|
             else
               [
                 ['nested Java driver',
-                 NestedJavaDriver.new(maybe_add_in_deferred_render(:java, view_value_to_java(view)))],
+                 ->(view) { NestedJavaDriver.new(maybe_add_in_deferred_render(:java, view_value_to_java(view))) }],
                 ['JRuby JSON driver',
-                 JRubyJSONDriver.new(maybe_add_in_deferred_render(:rubyjson, view))],
+                 ->(view) { JRubyJSONDriver.new(maybe_add_in_deferred_render(:rubyjson, view)) }],
                 ['Rhino JavaScript driver',
-                 RhinoJavaScriptDriver.new(maybe_add_in_deferred_render(:js, view_json_to_rhino(view_json)))]
-              ].each do |driver_name, driver|
+                 ->(view) { RhinoJavaScriptDriver.new(maybe_add_in_deferred_render(:js, view_json_to_rhino(view_json))) }]
+              ].each do |driver_name, new_driver|
                 it driver_name do
+                  driver = new_driver.call(@view)
                   driver.setFunctionRenderer(TestFunctionRenderer.new)
                   driver.setIncludedTemplateRenderer(included_template_renderer)
                   begin
