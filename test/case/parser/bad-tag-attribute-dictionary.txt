@@ -1,0 +1,22 @@
+
+PARSE ERROR: tag attribute expansion dictionaries are a bit restricted
+
+---
+<div *> </div>
+---
+Error at line 1 character 6: Expected value for attribute dictionary
+
+---
+<div *"pants"> </div>
+---
+Error at line 1 character 13: Attribute dictionary for tag must be a value
+
+---
+<div *if(x){x}> </div>
+---
+Error at line 1 character 14: Attribute dictionary for tag must be a value
+
+---
+<div *a *b> </div>
+---
+Error at line 1 character 10: Tag can only have one attribute dictionary

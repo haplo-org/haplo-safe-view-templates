@@ -149,6 +149,8 @@ That single value may be a list, eg `<div class=["name1" otherClass]>`, in which
 
 Functions can be used for attribute values.
 
+To specify attributes at runtime, you can use the `*` operator to expand a dictionary into attributes. For example `<div *attrs>` with a view of `{"attrs":{"a","b"}}` would be rendered as `<div a="b">`.
+
 
 ### URLs
 

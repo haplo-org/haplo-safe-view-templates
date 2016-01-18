@@ -1,0 +1,87 @@
+
+Only safe names are allowed in tag attribute dictionary expansions, unfortunately it has to be a render time error.
+
+---
+<div class="x">
+  <a href="/abc" *dict> "Link" </a>
+</div>
+
+---
+{"dict":{"<":"value"}}
+---
+RENDER ERROR: When rendering template 'test-case': Bad attribute name for tag attribute dictionary expansion: '<'
+
+---
+{"dict":{">":"value"}}
+---
+RENDER ERROR: When rendering template 'test-case': Bad attribute name for tag attribute dictionary expansion: '>'
+
+---
+{"dict":{"&":"value"}}
+---
+RENDER ERROR: When rendering template 'test-case': Bad attribute name for tag attribute dictionary expansion: '&'
+
+---
+{"dict":{"'":"value"}}
+---
+RENDER ERROR: When rendering template 'test-case': Bad attribute name for tag attribute dictionary expansion: '''
+
+---
+{"dict":{"\"":"value"}}
+---
+RENDER ERROR: When rendering template 'test-case': Bad attribute name for tag attribute dictionary expansion: '"'
+
+---
+{"dict":{"X":"value"}}
+---
+RENDER ERROR: When rendering template 'test-case': Bad attribute name for tag attribute dictionary expansion: 'X'
+
+---
+{"dict":{"id":"value"}}
+---
+RENDER ERROR: When rendering template 'test-case': Bad attribute name for tag attribute dictionary expansion: 'id'
+
+---
+{"dict":{"":"value"}}
+---
+RENDER ERROR: When rendering template 'test-case': Bad attribute name for tag attribute dictionary expansion: ''
+
+---
+{"dict":{"id":"value"}}
+---
+RENDER ERROR: When rendering template 'test-case': Bad attribute name for tag attribute dictionary expansion: 'id'
+
+---
+{"dict":{"class":"value"}}
+---
+RENDER ERROR: When rendering template 'test-case': Bad attribute name for tag attribute dictionary expansion: 'class'
+
+---
+{"dict":{"style":"value"}}
+---
+RENDER ERROR: When rendering template 'test-case': Bad attribute name for tag attribute dictionary expansion: 'style'
+
+---
+{"dict":{"href":"value"}}
+---
+RENDER ERROR: When rendering template 'test-case': Bad attribute name for tag attribute dictionary expansion: 'href'
+
+---
+{"dict":{"background":"value"}}
+---
+RENDER ERROR: When rendering template 'test-case': Bad attribute name for tag attribute dictionary expansion: 'background'
+
+---
+{"dict":{" ":"value"}}
+---
+RENDER ERROR: When rendering template 'test-case': Bad attribute name for tag attribute dictionary expansion: ' '
+
+---
+{"dict":{"onclick":"value"}}
+---
+RENDER ERROR: When rendering template 'test-case': Bad attribute name for tag attribute dictionary expansion: 'onclick'
+
+---
+{"dict":{"on":"value"}}
+---
+RENDER ERROR: When rendering template 'test-case': Bad attribute name for tag attribute dictionary expansion: 'on'

@@ -43,6 +43,7 @@ class NestedJavaDriver extends Driver {
     }
 
     public String valueToStringRepresentation(Object value) {
+        if(value instanceof Map || value instanceof Object[]) { return null; }
         return (value == null) ? null : value.toString();
     }
 

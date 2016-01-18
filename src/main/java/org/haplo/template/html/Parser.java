@@ -318,13 +318,15 @@ final public class Parser {
                         optionTagAttributeQuoteMinimisation);
                 this.context = Context.TAG;
                 attributeName = null;
+            } else if(symbolIsSingleChar(s, '*')) {
+                tag.setAttributesDictionary(this, parseOneValueRequired("value for attribute dictionary", '>'));
             } else if(symbolIsSingleChar(s, '/')) {
                 error("Self closing tags are not allowed", tagStartPos);
             } else {
                 if(attributeName != null) {
                     error("Expected = after attribute name");
                 }
-                if(!(validAttributeName(s))) {
+                if(!(HTML.validTagAttributeName(s))) {
                     error("Invalid attribute name: '"+s+"' (attribute names must be lower case, "+
                         "and not begin with 'on' as these attributes are security risks)");
                 }
@@ -344,6 +346,7 @@ final public class Parser {
 
     protected Node checkedTagAttribute(String attributeName, Node value) throws ParseException {
         switch(attributeName) {
+            // SEE ALSO: HTML.validTagAttributeNameAndNoSpecialHandlingRequired() which duplicates this list
             case "style":
             case "id":
             case "class":
@@ -396,22 +399,6 @@ final public class Parser {
         }
     }
 
-    private boolean validRestrictedName(CharSequence name) {
-        int len = name.length();
-        for(int i = 0; i < len; ++i) {
-            char c = name.charAt(i);
-            if(!( ((c >= 'a') && (c <= 'z')) || ((c >= '0') && (c <= '9')) || (c == '-') || (c == '_') )) {
-                return false;
-            }
-        }
-        return true;
-    }
-
-    private boolean validAttributeName(CharSequence name) {
-        if(!validRestrictedName(name)) { return false; }
-        return !((name.length() >= 2) && (name.charAt(0) == 'o') && (name.charAt(1) == 'n'));
-    }
-
     protected NodeURL parseURL(char endOfListCharacter) throws ParseException {
         int urlStart = this.pos;
         Context oldContext = this.context;
@@ -444,7 +431,7 @@ final public class Parser {
                     inParameters = false;
                     inFragment = true;
                 } else {
-                    if(!(validRestrictedName(s))) {
+                    if(!(HTML.validRestrictedName(s))) {
                         error("Invalid literal URL parameter name: '"+s+"'");
                     }
                     if(!symbolIsSingleChar(symbol(), '=')) {

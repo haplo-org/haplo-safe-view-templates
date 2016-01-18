@@ -1,0 +1,63 @@
+
+Tags can have attribute dictionaries which are expanded when rendering, and they check the names of attributes carefully.
+
+---
+<div class="x">
+  <a href="/abc" *dict> "Link" </a>
+</div>
+
+---
+{}
+---
+<div class=x><a href="/abc">Link</a></div>
+
+---
+{"dict":42, "comment":"dict is not a dictionary and will be ignored"}
+---
+<div class=x><a href="/abc">Link</a></div>
+
+---
+{"dict":{"data-x":"y"}}
+---
+<div class=x><a href="/abc" data-x="y">Link</a></div>
+
+---
+{"dict":{"data-x":"y", "ping":"PONG"}}
+---
+<div class=x><a href="/abc" data-x="y" ping="PONG">Link</a></div>
+
+---
+{"dict":{"data-x":"y&\"'<>"}}
+---
+<div class=x><a href="/abc" data-x="y&amp;&quot;'&lt;&gt;">Link</a></div>
+
+
+---
+NEW TEMPLATE: Can mix dictionaries with values
+---
+<div data-value=data *attrs> "x" </div>
+
+---
+{"data":42, "attrs":{"x":"y"}}
+---
+<div data-value="42" x="y">x</div>
+
+---
+NEW TEMPLATE: Tags with only dictionaries don't get simplified
+---
+<div *attrs> "x" </div>
+
+---
+{}
+---
+<div>x</div>
+
+---
+{"attrs":{"x":"y"}}
+---
+<div x="y">x</div>
+
+---
+{"attrs":{"x":["p", "q"]}}
+---
+<div>x</div>

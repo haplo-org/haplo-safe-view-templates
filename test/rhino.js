@@ -189,3 +189,8 @@ assertEqual(iterableTemplate.render({a:arrayLikeThingInstance}), "<div>^Hello$^W
 var dateTemplate = new $HaploTemplate('<div> d </div>');
 assert(0 === dateTemplate({d:(new Date(2016,00,07))}).indexOf('<div>Thu Jan 07 2016 00:00:00 '), "starts with date string, time zone isn't important");
 
+// --------------------------------------------------------------------------
+// JS specific behaviour for tag attribute expansion
+
+var tagExpTemplat = new $HaploTemplate('<div *attrs> "x" </div>');
+assertEqual(tagExpTemplat.render({"attrs":{"x":{"p":"q"}}}), '<div x="[object Object]">x</div>');

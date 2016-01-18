@@ -68,6 +68,9 @@ class RhinoJavaScriptDriver extends Driver {
         }
         // If it's a JavaScript object then call toString() on it, if implemented
         if((value instanceof Scriptable)) {
+            if(-1 != isArrayLikeScriptableObject(value)) {
+                return null;
+            }
             Scriptable jsObject = (Scriptable)value;
             if(ScriptableObject.hasProperty(jsObject, "toString")) {
                 Object stringRepresentation = ScriptableObject.callMethod(jsObject, "toString", new Object[] {});

@@ -18,6 +18,7 @@ import org.jruby.RubyObject;
 import org.jruby.RubyString;
 import org.jruby.RubyBoolean;
 import org.jruby.RubyArray;
+import org.jruby.RubyHash;
 import org.jruby.java.proxies.ConcreteJavaProxy;
 
 class JRubyJSONDriver extends Driver {
@@ -57,6 +58,9 @@ class JRubyJSONDriver extends Driver {
     }
 
     public String valueToStringRepresentation(Object value) {
+        if(value instanceof RubyArray || value instanceof RubyHash) {
+            return null;
+        }
         if(value instanceof IRubyObject) {
             IRubyObject o = (IRubyObject)value;;
             if(o.isNil()) { return null; }
