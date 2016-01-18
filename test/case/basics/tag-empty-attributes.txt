@@ -1,0 +1,16 @@
+
+Literal tag attributes can be empty strings
+
+---
+
+<div class="x">
+  <input type="text" value="">
+</div>
+
+---
+
+{}
+
+---
+
+<div class=x><input type=text value=""></div>

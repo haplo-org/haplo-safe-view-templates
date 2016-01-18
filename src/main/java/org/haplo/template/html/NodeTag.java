@@ -60,6 +60,7 @@ final class NodeTag extends Node {
 
     private boolean canOmitQuotesForValue(CharSequence value) {
         int len = value.length();
+        if(len == 0) { return false; }
         for(int i = 0; i < len; ++i) {
             char c = value.charAt(i);
             if(!(
