@@ -30,7 +30,7 @@ Licensed under the MPLv2, (c) Haplo Services 2016.
 
 * Just interpolating escaped strings doesn't help writing secure applications. A templating language should properly parse HTML and understand the different contexts within it.
 
-* Output really tidy HTML, with the language handling all the edge cases. String interpolation makes this harder than it should be, for example, adding multiple classes to an tag is tricky.
+* Output really tidy HTML, with the language handling all the edge cases. String interpolation makes this harder than it should be, for example, adding multiple classes to a tag is tricky.
 
 * Whitespace is ignored so you can lay out your templates as clearly as possible. You shouldn't need to chose between legibility and consistent formatting.
 
