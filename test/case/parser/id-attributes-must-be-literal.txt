@@ -45,3 +45,8 @@ Error at line 1 character 41: id and class attributes must always be a literal s
 <div id=["abc" url("/abc")]></div>
 ---
 Error at line 1 character 27: id and class attributes must always be a literal string or conditionals choosing between literal strings. Use if()/switch() to determine or whitelist values (using untrusted id/class attributes is likely to introduce client side security bugs)
+
+---
+<div id=concat("abc" "def")></div>
+---
+Error at line 1 character 27: id and class attributes must always be a literal string or conditionals choosing between literal strings. Use if()/switch() to determine or whitelist values (using untrusted id/class attributes is likely to introduce client side security bugs)

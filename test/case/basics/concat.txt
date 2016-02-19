@@ -1,0 +1,22 @@
+
+concat() is useful for overriding the default behaviour of space separated values in tag attributes.
+
+---
+<div>
+  <input name=concat("hello[" id "]") value="1">
+</div>
+---
+{
+  "id": 42
+}
+---
+<div><input value=1 name="hello[42]"></div>
+
+---
+NEW TEMPLATE: empty concat()
+---
+<span something=concat()></span>
+---
+{}
+---
+<span></span>

@@ -147,6 +147,8 @@ Otherwise, a single value follows, such as `<a href=action>`, and the `action` v
 
 That single value may be a list, eg `<div class=["name1" otherClass]>`, in which case, a space separated value will be generated. If `otherClass` is missing, just `<div class="name1">` will be output. If the attribute value is a list which evaluates as empty, the attribute will be omitted from the output entirely.
 
+Use the concat() function if you want to generate an attribute value which doesn't have automatic spaces inserted, for example, `<input type="text" name=concat("item" n)>`.
+
 Functions can be used for attribute values.
 
 To specify attributes at runtime, you can use the `*` operator to expand a dictionary into attributes. For example `<div *attrs>` with a view of `{"attrs":{"a","b"}}` would be rendered as `<div a="b">`.
@@ -288,6 +290,10 @@ When rendering a do() anonymous block, or template which has been included in an
 ### render(deferred)
 
 Include a deferred render into the current template.
+
+### concat(...)
+
+Outputs the arguments in the current context. Used for turning off the automatic spaces between values in tag attributes.
 
 ### url(...)
 

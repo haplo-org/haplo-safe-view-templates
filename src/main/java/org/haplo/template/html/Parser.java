@@ -248,6 +248,7 @@ final public class Parser {
             case "switch":      return new NodeFunctionSwitch();
             case "do"    :      return new NodeFunctionDo();
             case "render":      return new NodeFunctionRender();
+            case "concat":      return new NodeFunctionConcat();
             case "unsafeHTML":  return new NodeFunctionUnsafeHTML();
             case "yield":       return new NodeFunctionYield(Node.BLOCK_ANONYMOUS);
             default: break;
