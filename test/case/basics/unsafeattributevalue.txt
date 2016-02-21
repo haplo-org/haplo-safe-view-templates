@@ -1,0 +1,16 @@
+
+unsafeAttributeValue() allows restriction on name, id, etc to be lifted, but still escapes the value
+
+---
+
+<div class=unsafeAttributeValue(x.unsafeClass)> "a" </div>
+
+---
+{"x":{"unsafeClass":"abc"}}
+---
+<div class="abc">a</div>
+
+---
+{"x":{"unsafeClass":"<class> \""}}
+---
+<div class="&lt;class&gt; &quot;">a</div>

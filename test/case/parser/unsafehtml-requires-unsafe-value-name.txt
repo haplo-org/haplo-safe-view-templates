@@ -4,17 +4,17 @@ PARSE ERROR: Value names for unsafeHTML() must begin with 'unsafe'
 ---
 <div> unsafeHTML(abc) </div>
 ---
-Error at line 1 character 17: The value used in unsafeHTML() must begin with 'unsafe' to ensure it's obvious in the code generating the view that the value will be used unsafely.
+Error at line 1 character 17: The value used in unsafeHTML(), or one of its path elements, must begin with 'unsafe' to ensure it's obvious in the code generating the view that the value will be used unsafely.
 
 ---
 <div> unsafeHTML(unsafE) </div>
 ---
-Error at line 1 character 17: The value used in unsafeHTML() must begin with 'unsafe' to ensure it's obvious in the code generating the view that the value will be used unsafely.
+Error at line 1 character 17: The value used in unsafeHTML(), or one of its path elements, must begin with 'unsafe' to ensure it's obvious in the code generating the view that the value will be used unsafely.
 
 ---
 <div> unsafeHTML(a) </div>
 ---
-Error at line 1 character 17: The value used in unsafeHTML() must begin with 'unsafe' to ensure it's obvious in the code generating the view that the value will be used unsafely.
+Error at line 1 character 17: The value used in unsafeHTML(), or one of its path elements, must begin with 'unsafe' to ensure it's obvious in the code generating the view that the value will be used unsafely.
 
 ---
 <div> unsafeHTML(.) </div>

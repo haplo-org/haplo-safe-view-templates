@@ -12,7 +12,7 @@ If a trusted template
 
  * parses without errors,
  * only uses the built in functions, and
- * does not use `unsafeHTML()`,
+ * does not use `unsafeHTML()` or `unsafeAttributeValue()`,
 
 then all possible input views will write the HTML structure described by the template.
 
@@ -216,11 +216,11 @@ There are some additional restrictions on templates to encourage secure coding.
 
 * onX attributes are not allowed, as they contain inline JavaScript. Use id and class attributes to select nodes and add handlers in your client side scripting.
 
-* id, class and style attributes may only contain literal strings, or conditionals which choose between one or more literal strings. This helps stop attackers from being able to manipulate the behaviour of client side scripts.
+* id, class and style attributes may only contain literal strings, or conditionals which choose between one or more literal strings. This helps stop attackers from being able to manipulate the behaviour of client side scripts. (Use `unsafeAttributeValue()` to override this check if you have appropriate security checking elsewhere.)
 
 * `<style>` tags are not allowed. Use external stylesheets instead.
 
-* if the use of `unsafeHTML()` is unavoidable, the value key must have a name beginning with 'unsafe' so the view generation code also contains a hint that it's unsafe.
+* if the use of `unsafeHTML()` or `unsafeAttributeValue()` is unavoidable, the value key must have a name beginning with 'unsafe' so the view generation code also contains a hint that it's unsafe.
 
 
 ## Implementation
@@ -277,7 +277,13 @@ This is useful for things like conditionally adding links around generated HTML.
 
 Evaluate `value` as a string, then output directly in the template without escaping. A parse error is thrown if it is used outside the text context (eg can't be used in an attribute value).
 
-The value name must begin with `unsafe` so that it's obvious in the code generating the view that the value will be used unsafely.
+The value name, or one of the path elements, must begin with `unsafe` so that it's obvious in the code generating the view that the value will be used unsafely.
+
+### unsafeAttributeValue(value)
+
+When you really have to output a dynamic `class`, `id` or `style`, use this function to override the safety checks.
+
+The value name, or one of the path elements, must begin with `unsafe` so that it's obvious in the code generating the view that the value will be used unsafely.
 
 ### template:X()
 

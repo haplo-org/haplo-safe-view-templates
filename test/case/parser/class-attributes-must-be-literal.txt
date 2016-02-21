@@ -4,44 +4,44 @@ PARSE ERROR: id attributes must be string literals, because they're too hard to 
 ---
 <div class=value></div>
 ---
-Error at line 1 character 16: id and class attributes must always be a literal string or conditionals choosing between literal strings. Use if()/switch() to determine or whitelist values (using untrusted id/class attributes is likely to introduce client side security bugs)
+Error at line 1 character 16: id and class attributes must always be a literal string or conditionals choosing between literal strings. Use if()/switch() to determine or whitelist values (using untrusted id/class attributes is likely to introduce client side security bugs). Use unsafeAttributeValue() if you have implemented security checks elsewhere.
 
 ---
 <div class=[value]></div>
 ---
-Error at line 1 character 18: id and class attributes must always be a literal string or conditionals choosing between literal strings. Use if()/switch() to determine or whitelist values (using untrusted id/class attributes is likely to introduce client side security bugs)
+Error at line 1 character 18: id and class attributes must always be a literal string or conditionals choosing between literal strings. Use if()/switch() to determine or whitelist values (using untrusted id/class attributes is likely to introduce client side security bugs). Use unsafeAttributeValue() if you have implemented security checks elsewhere.
 
 ---
 <div class=if(a){x}></div>
 ---
-Error at line 1 character 19: id and class attributes must always be a literal string or conditionals choosing between literal strings. Use if()/switch() to determine or whitelist values (using untrusted id/class attributes is likely to introduce client side security bugs)
+Error at line 1 character 19: id and class attributes must always be a literal string or conditionals choosing between literal strings. Use if()/switch() to determine or whitelist values (using untrusted id/class attributes is likely to introduce client side security bugs). Use unsafeAttributeValue() if you have implemented security checks elsewhere.
 
 ---
 <div class=["a" b]></div>
 ---
-Error at line 1 character 18: id and class attributes must always be a literal string or conditionals choosing between literal strings. Use if()/switch() to determine or whitelist values (using untrusted id/class attributes is likely to introduce client side security bugs)
+Error at line 1 character 18: id and class attributes must always be a literal string or conditionals choosing between literal strings. Use if()/switch() to determine or whitelist values (using untrusted id/class attributes is likely to introduce client side security bugs). Use unsafeAttributeValue() if you have implemented security checks elsewhere.
 
 ---
 <div class=if(x) { y } else { "there" }></div>
 ---
-Error at line 1 character 39: id and class attributes must always be a literal string or conditionals choosing between literal strings. Use if()/switch() to determine or whitelist values (using untrusted id/class attributes is likely to introduce client side security bugs)
+Error at line 1 character 39: id and class attributes must always be a literal string or conditionals choosing between literal strings. Use if()/switch() to determine or whitelist values (using untrusted id/class attributes is likely to introduce client side security bugs). Use unsafeAttributeValue() if you have implemented security checks elsewhere.
 
 ---
 <div class=unless(x) { y } else { "there" }></div>
 ---
-Error at line 1 character 43: id and class attributes must always be a literal string or conditionals choosing between literal strings. Use if()/switch() to determine or whitelist values (using untrusted id/class attributes is likely to introduce client side security bugs)
+Error at line 1 character 43: id and class attributes must always be a literal string or conditionals choosing between literal strings. Use if()/switch() to determine or whitelist values (using untrusted id/class attributes is likely to introduce client side security bugs). Use unsafeAttributeValue() if you have implemented security checks elsewhere.
 
 ---
 <div class=switch(x) { "Q" } y { y }></div>
 ---
-Error at line 1 character 36: id and class attributes must always be a literal string or conditionals choosing between literal strings. Use if()/switch() to determine or whitelist values (using untrusted id/class attributes is likely to introduce client side security bugs)
+Error at line 1 character 36: id and class attributes must always be a literal string or conditionals choosing between literal strings. Use if()/switch() to determine or whitelist values (using untrusted id/class attributes is likely to introduce client side security bugs). Use unsafeAttributeValue() if you have implemented security checks elsewhere.
 
 ---
 <div class=["abc" switch(x) { "Q" } y { y }]></div>
 ---
-Error at line 1 character 44: id and class attributes must always be a literal string or conditionals choosing between literal strings. Use if()/switch() to determine or whitelist values (using untrusted id/class attributes is likely to introduce client side security bugs)
+Error at line 1 character 44: id and class attributes must always be a literal string or conditionals choosing between literal strings. Use if()/switch() to determine or whitelist values (using untrusted id/class attributes is likely to introduce client side security bugs). Use unsafeAttributeValue() if you have implemented security checks elsewhere.
 
 ---
 <div class=["abc" url("/abc")]></div>
 ---
-Error at line 1 character 30: id and class attributes must always be a literal string or conditionals choosing between literal strings. Use if()/switch() to determine or whitelist values (using untrusted id/class attributes is likely to introduce client side security bugs)
+Error at line 1 character 30: id and class attributes must always be a literal string or conditionals choosing between literal strings. Use if()/switch() to determine or whitelist values (using untrusted id/class attributes is likely to introduce client side security bugs). Use unsafeAttributeValue() if you have implemented security checks elsewhere.

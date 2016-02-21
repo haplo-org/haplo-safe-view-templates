@@ -250,6 +250,7 @@ final public class Parser {
             case "render":      return new NodeFunctionRender();
             case "concat":      return new NodeFunctionConcat();
             case "unsafeHTML":  return new NodeFunctionUnsafeHTML();
+            case "unsafeAttributeValue": return new NodeFunctionUnsafeAttributeValue();
             case "yield":       return new NodeFunctionYield(Node.BLOCK_ANONYMOUS);
             default: break;
         }
@@ -357,7 +358,8 @@ final public class Parser {
                             "(CSS escaping not supported)" :
                         "id and class attributes must always be a literal string or conditionals choosing between literal strings. "+
                             "Use if()/switch() to determine or whitelist values (using untrusted id/class attributes is likely "+
-                            "to introduce client side security bugs)");
+                            "to introduce client side security bugs). Use unsafeAttributeValue() if you have implemented security "+
+                            "checks elsewhere.");
                 }
                 break;
             case "background":

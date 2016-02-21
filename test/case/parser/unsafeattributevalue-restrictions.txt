@@ -1,0 +1,27 @@
+
+PARSE ERROR: unsafeAttributeValue() has restricted use
+
+---
+<div class=unsafeAttributeValue(ping)> </div>
+---
+Error at line 1 character 32: The value used in unsafeAttributeValue(), or one of its path elements, must begin with 'unsafe' to ensure it's obvious in the code generating the view that the value will be used unsafely.
+
+---
+<div> unsafeAttributeValue(unsafeValue) </div>
+---
+Error at line 1 character 27: unsafeAttributeValue() cannot be used in this context
+
+---
+<div class=unsafeAttributeValue("unsafeValue")> </div>
+---
+Error at line 1 character 32: unsafeAttributeValue() must have a value as the argument
+
+---
+<div class=unsafeAttributeValue(unsafeValue) {}> </div>
+---
+Error at line 1 character 44: unsafeAttributeValue() may not take an anonymous block
+
+---
+<div class=unsafeAttributeValue(unsafeValue "x")> </div>
+---
+Error at line 1 character 48: unsafeAttributeValue() must take exactly one argument

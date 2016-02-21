@@ -24,3 +24,13 @@ NEW TEMPLATE: Check nested unsafe value names
 {"unsafe":{"nested":"<b>"}}
 ---
 <div><b></div>
+
+---
+NEW TEMPLATE: Check nested unsafe value names (2)
+---
+<div> unsafeHTML(nested.unsafe.something) </div>
+
+---
+{"nested":{"unsafe":{"something":"<b>"}}}
+---
+<div><b></div>
