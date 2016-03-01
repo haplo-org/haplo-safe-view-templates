@@ -40,3 +40,26 @@ NEW TEMPLATE: first element in URL list is escaped differently so views can incl
 {"value":"/path"}
 ---
 <div>/path%2Fpath</div>
+
+---
+NEW TEMPLATE: don't need anything before a ?
+---
+<div>
+  <a href=[? x=y]> "Hello" </a>
+</div>
+---
+{"y":"z"}
+---
+<div><a href="?x=z">Hello</a></div>
+
+---
+NEW TEMPLATE: don't need anything before a #
+---
+<div>
+  <a href=[# ping]> "Hello" </a>
+</div>
+---
+{"ping":"pong"}
+---
+<div><a href="#pong">Hello</a></div>
+
