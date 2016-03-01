@@ -17,6 +17,7 @@ import org.jruby.runtime.builtin.IRubyObject;
 import org.jruby.RubyObject;
 import org.jruby.RubyString;
 import org.jruby.RubyBoolean;
+import org.jruby.RubyNumeric;
 import org.jruby.RubyArray;
 import org.jruby.RubyHash;
 import org.jruby.java.proxies.ConcreteJavaProxy;
@@ -101,6 +102,8 @@ class JRubyJSONDriver extends Driver {
                 return (o instanceof RubyBoolean.True);
             } else if(o instanceof RubyArray) {
                 return !(((RubyArray)o).isEmpty());
+            } else if(value instanceof RubyNumeric) {
+                return ((RubyNumeric)value).getLongValue() != 0;
             }
             return false;
         } else {

@@ -49,3 +49,14 @@ if() and unless()
 {}
 ---
 <div><span>FALSE</span><span>false</span><span></span><span>ff</span></div>
+
+---
+{"check":{"value":1234567489}}
+---
+<div><span>TRUE</span><span>true</span><span>tt</span><span></span></div>
+
+---
+{"check":{"value":0}}
+---
+<div><span>FALSE</span><span>false</span><span></span><span>ff</span></div>
+
