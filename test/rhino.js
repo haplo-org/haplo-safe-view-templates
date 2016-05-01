@@ -52,6 +52,8 @@ assert(deferred1 instanceof $HaploTemplateDeferredRender, "deferred is right typ
 var template2 = new $HaploTemplate("<span> render(def) </span>");
 assertEqual(template2.render({def:deferred1}), "<span><div>Deferred X</div></span>", "Deferred render");
 assertEqual(template2.render({def:deferred1}), "<span><div>Deferred X</div></span>", "Deferred render (2)");
+// DeferredRenders have a toString() which renders in TEXT mode
+assertEqual(deferred1.toString(), "<div>Deferred X</div>", "Deferred render toString()");
 
 // --------------------------------------------------------------------------
 // Template functions defined in JS
