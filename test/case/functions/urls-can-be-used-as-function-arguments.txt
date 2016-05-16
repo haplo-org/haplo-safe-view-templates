@@ -1,0 +1,21 @@
+
+url() can be used a function argument
+
+---
+
+<div>
+    testargs-S(url(?a=b))
+    " "
+    testargs-V(url(?x=b))
+</div>
+
+---
+
+{
+  "b":"hello"
+}
+
+---
+
+<div>`?a=hello` `?x=hello/String`</div>
+
