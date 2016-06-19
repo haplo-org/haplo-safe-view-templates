@@ -225,7 +225,7 @@ There are some additional restrictions on templates to encourage secure coding.
 
 ## Implementation
 
-The prototype has a simple hand-written recursive descent parser which outputs a thread-safe AST. This AST is then rendered with a Driver which provides language specific implentations to retrieve values from the view.
+HSVT uses a simple hand-written recursive descent parser which outputs a thread-safe AST. This AST is then rendered with a Driver which provides language specific implentations to retrieve values from the view.
 
 Currently there are three drivers. A JavaScript driver for the Mozilla Rhino interpreter, and two example drivers (neither terribly useful in practise), for nested Java structures, and the JRuby data structures output by JRuby's JSON parser.
 
