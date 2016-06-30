@@ -103,7 +103,7 @@ class JRubyJSONDriver extends Driver {
             } else if(o instanceof RubyArray) {
                 return !(((RubyArray)o).isEmpty());
             } else if(value instanceof RubyNumeric) {
-                return ((RubyNumeric)value).getLongValue() != 0;
+                return ((RubyNumeric)value).getDoubleValue() != 0.0;
             }
             return false;
         } else {

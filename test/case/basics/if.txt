@@ -60,3 +60,27 @@ if() and unless()
 ---
 <div><span>FALSE</span><span>false</span><span></span><span>ff</span></div>
 
+---
+{"check":{"value":0.5}}
+---
+<div><span>TRUE</span><span>true</span><span>tt</span><span></span></div>
+
+---
+{"check":{"value":-0.5}}
+---
+<div><span>TRUE</span><span>true</span><span>tt</span><span></span></div>
+
+---
+{"check":{"value":100.5}}
+---
+<div><span>TRUE</span><span>true</span><span>tt</span><span></span></div>
+
+---
+{"check":{"value":-100.5}}
+---
+<div><span>TRUE</span><span>true</span><span>tt</span><span></span></div>
+
+---
+{"check":{"value":-100}}
+---
+<div><span>TRUE</span><span>true</span><span>tt</span><span></span></div>
