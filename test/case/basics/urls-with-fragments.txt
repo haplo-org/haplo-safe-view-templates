@@ -24,6 +24,20 @@ URLs with fragments
 ---
 <a href="/path/to/23?x=Y#&/%25">link</a>
 
+---
+{"id":23, "y":"Y", "frag":"&/%25"}
+---
+<a href="/path/to/23?x=Y#&/%25">link</a>
+
+---
+{"id":23, "y":"Y", "frag":"&/%20"}
+---
+<a href="/path/to/23?x=Y#&/%20">link</a>
+
+---
+{"id":23, "y":"Y", "frag":"&/%x0"}
+---
+<a href="/path/to/23?x=Y#&/%25x0">link</a>
 
 ---
 NEW TEMPLATE: Fragments with multiple nodes

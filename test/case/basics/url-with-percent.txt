@@ -1,0 +1,51 @@
+
+URLs with good and bad % encodings in URL_PATH context, which should be passed through if correctly encoded
+
+---
+<a href=[a b]>"link"</a>
+
+---
+{"a":"/abc%"}
+---
+<a href="/abc%25">link</a>
+
+---
+{"a":"/abc%2"}
+---
+<a href="/abc%252">link</a>
+
+---
+{"a":"/abc%25"}
+---
+<a href="/abc%25">link</a>
+
+---
+{"a":"/abc%fF"}
+---
+<a href="/abc%fF">link</a>
+
+---
+{"a":"/abc%25x"}
+---
+<a href="/abc%25x">link</a>
+
+---
+{"a":"/abc%x25x"}
+---
+<a href="/abc%25x25x">link</a>
+
+---
+{"a":"/abc", "b":"x%25h"}
+---
+<a href="/abcx%2525h">link</a>
+
+---
+{"a":"/abc", "b":"x%25h"}
+---
+<a href="/abcx%2525h">link</a>
+
+---
+{"a":"/abc", "b":"x%25h"}
+---
+<a href="/abcx%2525h">link</a>
+
