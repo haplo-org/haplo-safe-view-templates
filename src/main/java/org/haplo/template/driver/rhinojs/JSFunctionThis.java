@@ -36,6 +36,14 @@ public class JSFunctionThis extends ScriptableObject {
         this.binding = null;
     }
 
+    public StringBuilder getBuilder() {
+        return this.builder;
+    }
+
+    public FunctionBinding getBinding() {
+        return this.binding;
+    }
+
     // ----------------------------------------------------------------------
 
     public String jsGet_functionName() {
