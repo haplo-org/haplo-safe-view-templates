@@ -1,0 +1,22 @@
+
+PARSE ERROR: <! must start a DOCTYPE
+
+---
+<div> <!hello> </div>
+---
+Error at line 1 character 7: Tags starting with <! may only be a <!DOCTYPE ...> declaration
+
+---
+<!doctype html> <div> </div>
+---
+Error at line 1 character 1: Tags starting with <! may only be a <!DOCTYPE ...> declaration
+
+---
+<!DOCTYPE> <div> </div>
+---
+Error at line 1 character 1: <!DOCTYPE ...> declarations must specify the document type
+
+---
+<div> <!DOCTYPE html
+---
+Error at line 1 character 20: Unexpected end of template when reading possible <!DOCTYPE ...> declaration
