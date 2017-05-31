@@ -13,6 +13,7 @@ import org.haplo.template.html.DeferredRender;
 import org.haplo.template.html.Context;
 import org.haplo.template.html.RenderException;
 
+import org.mozilla.javascript.Scriptable;
 import org.mozilla.javascript.ScriptableObject;
 import org.mozilla.javascript.Undefined;
 
@@ -83,6 +84,18 @@ public class JSFunctionThis extends ScriptableObject {
         this.binding.renderBlock(checkedBlockName(blockName), this.builder,
             this.binding.getView(), this.binding.getContext());
         return this;
+    }
+
+    public Scriptable jsFunction_deferredRenderBlock(Object blockName) throws RenderException {
+        String checkedBlockName = checkedBlockName(blockName);
+        if(!this.binding.hasBlock(checkedBlockName)) { return null; }
+        HaploTemplateDeferredRender deferred =
+            (HaploTemplateDeferredRender)org.mozilla.javascript.Context.getCurrentContext().
+                newObject(this.getParentScope(), "$HaploTemplateDeferredRender");
+        deferred.setDeferredRender((builder, context) -> {
+            this.binding.renderBlock(checkedBlockName, this.builder, this.binding.getView(), context);
+        });
+        return deferred;
     }
 
     public JSFunctionThis jsFunction_render(Object thing) throws RenderException {

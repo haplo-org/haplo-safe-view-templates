@@ -93,6 +93,13 @@ var JSFunctions = {
     },
     checkContext: function(context) {
         this.assertContext(context).write("Context: "+context);
+    },
+    blockasdeferred: function() {
+        var tmpl = new $HaploTemplate('<div> render(block1) </div> <span> render(block2) </span>');
+        this.render(tmpl.deferredRender({
+            block1: this.deferredRenderBlock(),
+            block2: this.deferredRenderBlock("example")
+        }));
     }
 };
 $haploTemplateFunctionFinder = function(name) {
@@ -158,6 +165,9 @@ assertEqual(templateCheckContext2.render({context:"ATTRIBUTE_VALUE"}), '<span da
 assertException(function() {
     templateCheckContext2.render({context:"TEXT"});
 }, "org.haplo.template.html.RenderException: When rendering template 'undefined': In checkContext(), must be used in TEXT context, attempt to use in ATTRIBUTE_VALUE context");
+
+var templateDeferredRenderBlock = new $HaploTemplate('<div class="x"> blockasdeferred() { "anon " value } example { <p> "something " value </p> } </div>');
+assertEqual(templateDeferredRenderBlock.render({value:"1234"}), '<div class=x><div>anon 1234</div><span><p>something 1234</p></span></div>', "Deferred block rendering");
 
 // Make sure parser configuration is active
 assertException(function() {
