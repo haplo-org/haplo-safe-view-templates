@@ -1,5 +1,5 @@
 
-concat() is useful for overriding the default behaviour of space separated values in tag attributes.
+concat() is useful for overriding the default behaviour of space separated values in tag attributes, and building strings as arguments to template functions.
 
 ---
 <div>
@@ -20,3 +20,23 @@ NEW TEMPLATE: empty concat()
 {}
 ---
 <span></span>
+
+---
+NEW TEMPLATE: concat used to form string as arguments to functions (1)
+---
+<div> testargs-S(concat("x-" value "-y")) </div>
+---
+{"value":"some value"}
+---
+<div>`x-some value-y`</div>
+
+---
+NEW TEMPLATE: concat used to form string as arguments to functions (2)
+---
+<div> testargs-A(concat("x-" value "-y") "z") </div>
+---
+{"value":"two"}
+---
+<div>`x-two-y!z`</div>
+
+
