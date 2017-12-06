@@ -130,6 +130,7 @@ abstract public class Driver {
         Driver driver = this.driverWithNewRoot(rootView);
         driver.parentDriver = this;
         driver.nestingDepth = newNestingDepth;
+        driver.rememberedViews = this.rememberedViews;
         driver.includedTemplateRenderer = this.includedTemplateRenderer;
         driver.functionRenderer = this.functionRenderer;
         return driver;

@@ -24,3 +24,31 @@ do() allows you to do things like conditionally linking something
 {"name":"John"}
 ---
 <div><span><b>Hello John</b></span></div>
+
+---
+NEW TEMPLATE
+---
+
+<div>
+    within(x) {
+        ^{a}
+        do() {
+            " do " ^{a}
+            yield:block()
+        }
+        block {
+            " block " ^{a}
+        }
+    }
+</div>
+
+---
+
+{
+    "a": "hello",
+    "x": {}
+}
+
+---
+
+<div>hello do hello block hello</div>
