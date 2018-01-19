@@ -64,6 +64,9 @@ var JSFunctions = {
     jsargs: function() {
         return "`"+this.functionName+":"+Array.prototype.join.call(arguments, ",")+"`";
     },
+    outputfromview: function() {
+        return this.view.valueFromView;
+    },
     writethis: function(str) {
         this.write(str);
     },
@@ -138,6 +141,9 @@ var templateWithFns8 = new $HaploTemplate('<span> rendering(thing) </span>');
 assertEqual(templateWithFns8.render({thing:templateWithFns1}), "<span><div>FUNCTIONONE</div></span>");
 var templateWithFns8 = new $HaploTemplate('<span> rendering(thing) </span>');
 assertEqual(templateWithFns8.render({thing:templateWithFns1.deferredRender()}), "<span><div>FUNCTIONONE</div></span>");
+
+var templateWithFns10 = new $HaploTemplate('<span> outputfromview() </span>');
+assertEqual(templateWithFns10.render({valueFromView:"View<>"}), "<span>View&lt;&gt;</span>");
 
 assertException(function() {
     templateWithFns8.render({thing:"string"});

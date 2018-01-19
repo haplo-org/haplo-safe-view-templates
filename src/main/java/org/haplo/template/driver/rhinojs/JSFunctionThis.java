@@ -51,6 +51,10 @@ public class JSFunctionThis extends ScriptableObject {
         return this.binding.getFunctionName();
     }
 
+    public Object jsGet_view() {
+        return this.binding.getView();
+    }
+
     public JSFunctionThis jsFunction_assertContext(String context) throws RenderException {
         try {
             Context expectedContext = Context.valueOf(context);
