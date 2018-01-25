@@ -91,6 +91,9 @@ var JSFunctions = {
     badBlockName2: function() {
         this.hasBlock(346);
     },
+    blockNames: function() {
+        return this.getAllNamedBlockNames().join("~");
+    },
     rendering: function(thing) {
         this.render(thing);
     },
@@ -144,6 +147,11 @@ assertEqual(templateWithFns8.render({thing:templateWithFns1.deferredRender()}), 
 
 var templateWithFns10 = new $HaploTemplate('<span> outputfromview() </span>');
 assertEqual(templateWithFns10.render({valueFromView:"View<>"}), "<span>View&lt;&gt;</span>");
+
+var templateWithFns11 = new $HaploTemplate('<span> blockNames() {} a {} one {} two {} three {} </span>');
+assertEqual(templateWithFns11.render({}), "<span>a~one~two~three</span>");
+var templateWithFns12 = new $HaploTemplate('<span> blockNames() </span>');
+assertEqual(templateWithFns12.render({}), "<span></span>");
 
 assertException(function() {
     templateWithFns8.render({thing:"string"});
