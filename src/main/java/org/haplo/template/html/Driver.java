@@ -33,6 +33,11 @@ abstract public class Driver {
         return false;
     }
 
+    // Fallback for render() - render an arbitary object from the view as HTML in TEXT context
+    public boolean renderObjectFromView(Object object, StringBuilder builder) {
+        return false;
+    }
+
     // ----------------------------------------------------------------------
 
     final public Driver getParentDriver() {

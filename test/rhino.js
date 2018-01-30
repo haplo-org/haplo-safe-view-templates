@@ -196,6 +196,22 @@ assertEqual(templateWithPlatformFns.render({}), "<div>TEST GENERIC FUNCTION REND
 var templateWithIncludedTemplate = new $HaploTemplate("<div> template:template1() </div>");
 assertEqual(templateWithIncludedTemplate.render({value1:"Hello!"}), "<div><b>Included Template 1: Hello!</b></div>", "JS template includes other template");
 
+// render() can render anything with a toHTML method
+var CanRenderAsHTML = function(html) {
+    this.html = html;
+};
+CanRenderAsHTML.prototype.toHTML = function() {
+    return this.html;
+}
+var renderGenericTemplate = new $HaploTemplate('<span> render(something) </span>');
+assertEqual(renderGenericTemplate.render({
+    something: new CanRenderAsHTML("<i>ping</i>")
+}), '<span><i>ping</i></span>');
+// but will exception if it doesn't have a toHTML method
+assertException(function() {
+    renderGenericTemplate.render({something:new Date()});
+}, "org.haplo.template.html.RenderException: When rendering template 'undefined': Can't use render() on the value found in the view");
+
 // --------------------------------------------------------------------------
 // Iterating over array-like things
 
