@@ -1,0 +1,35 @@
+
+ifAll(), ifAny(), unlessAll() and unlessAny()
+
+---
+
+<div>
+    ifAll(a b c) { "T0 " } else { "F0 "}
+    ifAll(b c)   { "T1 " }
+    ifAny(a b c) { "T2 " } else { "F2 "}
+    ifAny(a b)   { "T3 " }
+    unlessAll(a b c) { "F4 " } else { "T4 "}
+    unlessAll(b c)   { "F5 " }
+    unlessAny(a b c) { "F6 " } else { "T6 "}
+    unlessAny(a b)   { "F7 " }
+</div>
+
+---
+{"a":true,"b":true,"c":true}
+---
+<div>T0 T1 T2 T3 T4 T6 </div>
+
+---
+{"a":true,"b":true,"c":false}
+---
+<div>F0 T2 T3 F4 F5 T6 </div>
+
+---
+{"a":0,"b":1,"c":1}
+---
+<div>F0 T1 T2 T3 F4 T6 </div>
+
+---
+{"a":true,"b":0,"c":1}
+---
+<div>F0 T2 T3 F4 F5 T6 </div>

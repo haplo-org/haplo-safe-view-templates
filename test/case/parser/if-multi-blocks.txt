@@ -1,0 +1,13 @@
+
+PARSE ERROR: multi-arg conditionals must take right blocks
+
+---
+<div>ifAny(a b c)</div>
+---
+Error at line 1 character 11: ifAny() requires an anonymous block
+
+---
+<div>unlessAll(a b c) {} something {}</div>
+---
+Error at line 1 character 35: unlessAll() may not take a something block
+

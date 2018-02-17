@@ -1,0 +1,18 @@
+
+PARSE ERROR: multi-arg conditionals need correct arguments
+
+---
+<div>ifAny() {}</div>
+---
+Error at line 1 character 11: ifAny() must have two or more values as the argument
+
+---
+<div>ifAll(a) {}</div>
+---
+Error at line 1 character 11: ifAll() must have two or more values as the argument
+
+---
+<div>ifAll(a "b") {}</div>
+---
+Error at line 1 character 11: ifAll() must have values as arguments
+
