@@ -55,6 +55,18 @@ assertEqual(template2.render({def:deferred1}), "<span><div>Deferred X</div></spa
 // DeferredRenders have a toString() which renders in TEXT mode
 assertEqual(deferred1.toString(), "<div>Deferred X</div>", "Deferred render toString()");
 
+var deferred10view = {x:"Deferred 10"};
+var deferred10 = template1.deferredRender(deferred10view);
+var deferred10immediate = deferred10.immediate();
+// Shouldn't really do this, but modify the view underneath to check immedaite was rendered at right time
+deferred10view.x = "Deferred 10 modified";
+// Check rendering of strings
+assertEqual(deferred10immediate.toString(), "<div>Deferred 10</div>", "Deferred render toString() immediate");
+assertEqual(deferred10.toString(), "<div>Deferred 10 modified</div>", "Deferred render toString() modified view");
+// Check immediate works with render()
+var immcontext1 = new $HaploTemplate("<div> render(.) </div>");
+assertEqual(immcontext1.render(deferred10immediate), "<div><div>Deferred 10</div></div>", "render into text context");
+
 // --------------------------------------------------------------------------
 // Template functions defined in JS
 
