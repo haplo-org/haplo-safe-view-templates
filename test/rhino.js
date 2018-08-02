@@ -70,6 +70,8 @@ assertEqual(immcontext1.render(deferred10immediate), "<div><div>Deferred 10</div
 // --------------------------------------------------------------------------
 // Template functions defined in JS
 
+var fnStoredBlock = null;
+
 var JSFunctions = {
     notafunction: "Hello!",
     jsfn1: function() { return 'FUNCTIONONE'; },
@@ -118,6 +120,12 @@ var JSFunctions = {
             block1: this.deferredRenderBlock(),
             block2: this.deferredRenderBlock("example")
         }));
+    },
+    storeBlock: function() {
+        fnStoredBlock = this.deferredRenderBlock();
+    },
+    renderStoredBlock: function() {
+        this.render(fnStoredBlock);
     }
 };
 $haploTemplateFunctionFinder = function(name) {
@@ -223,6 +231,15 @@ assertEqual(renderGenericTemplate.render({
 assertException(function() {
     renderGenericTemplate.render({something:new Date()});
 }, "org.haplo.template.html.RenderException: When rendering template 'undefined': Can't use render() on the value found in the view");
+
+// Deferred renders from function blocks can be used independently
+var templateForStoredBlocks = new $HaploTemplate('<div> storeBlock() { "last" } "first " renderStoredBlock() </div>');
+assertEqual(templateForStoredBlocks.render(), '<div>first last</div>');
+// Can't use it in the wrong context
+var templateForStoredBlocksWrongContext = new $HaploTemplate('<div> storeBlock() { "last" } "first " <span data-text=renderStoredBlock()></span> </div>');
+assertException(function() {
+    templateForStoredBlocksWrongContext.render();
+}, "org.haplo.template.html.RenderException: When rendering template 'undefined': In renderStoredBlock(), can only use render() in text context");
 
 // --------------------------------------------------------------------------
 // Iterating over array-like things
