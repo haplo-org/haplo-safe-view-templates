@@ -126,6 +126,10 @@ var JSFunctions = {
     },
     renderStoredBlock: function() {
         this.render(fnStoredBlock);
+    },
+    renderIncludeWithYield: function() {
+        var template = new $HaploTemplate("<div> yield:a() </div> <span> b </span>");
+        this.renderIncludedTemplate(template);
     }
 };
 $haploTemplateFunctionFinder = function(name) {
@@ -240,6 +244,10 @@ var templateForStoredBlocksWrongContext = new $HaploTemplate('<div> storeBlock()
 assertException(function() {
     templateForStoredBlocksWrongContext.render();
 }, "org.haplo.template.html.RenderException: When rendering template 'undefined': In renderStoredBlock(), can only use render() in text context");
+
+// Can render templates like normal template: inclusions
+var templateForIncludeWithYield = new $HaploTemplate('<p> within(x) { renderIncludeWithYield() { } a { "A" } } </p>');
+assertEqual(templateForIncludeWithYield.render({x:{b:"B"}}), '<p><div>A</div><span>B</span></p>');
 
 // --------------------------------------------------------------------------
 // Iterating over array-like things
