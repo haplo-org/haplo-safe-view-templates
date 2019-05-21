@@ -40,7 +40,7 @@ describe 'Escaping' do
     ['<ping>','&lt;ping&gt;',Context::TEXT],
     ['a<ping>b','a&lt;ping&gt;b',Context::TEXT],
     ['"hello"','"hello"',Context::TEXT],
-    ['ping -- hxello','ping - - hello',Context::COMMENT],
+    ['ping -- hello','ping - - hello',Context::COMMENT],
     ['<x>','<x>',Context::COMMENT],
     ['"hello"','&quot;hello&quot;',Context::ATTRIBUTE_VALUE]
   ].each do |input, escaped, attribute_context|

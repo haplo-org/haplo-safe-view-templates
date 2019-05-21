@@ -72,6 +72,8 @@ assertEqual(immcontext1.render(deferred10immediate), "<div><div>Deferred 10</div
 
 var fnStoredBlock = null;
 
+var renderIncludeWithYieldTemplate = new $HaploTemplate("<div> yield:a() </div> <span> b </span>");
+
 var JSFunctions = {
     notafunction: "Hello!",
     jsfn1: function() { return 'FUNCTIONONE'; },
@@ -128,8 +130,7 @@ var JSFunctions = {
         this.render(fnStoredBlock);
     },
     renderIncludeWithYield: function() {
-        var template = new $HaploTemplate("<div> yield:a() </div> <span> b </span>");
-        this.renderIncludedTemplate(template);
+        this.renderIncludedTemplate(renderIncludeWithYieldTemplate);
     }
 };
 $haploTemplateFunctionFinder = function(name) {
@@ -273,3 +274,20 @@ assert(0 === dateTemplate({d:(new Date(2016,00,07))}).indexOf('<div>Thu Jan 07 2
 
 var tagExpTemplat = new $HaploTemplate('<div *attrs> "x" </div>');
 assertEqual(tagExpTemplat.render({"attrs":{"x":{"p":"q"}}}), '<div x="[object Object]">x</div>');
+
+// --------------------------------------------------------------------------
+// Debug comments
+
+var debugTemplate = new $HaploTemplate('<div> x </div>');
+debugTemplate.addDebugComment("comment--1");
+assertEqual(debugTemplate.render({x:"1"}), '<!-- BEGIN comment- -1 --><div>1</div><!-- END comment- -1 -->');
+debugTemplate.addDebugComment("two");
+assertEqual(debugTemplate.render({x:"1"}), '<!-- BEGIN comment- -1 | two --><div>1</div><!-- END comment- -1 | two -->');
+debugTemplate.addDebugComment("comment--1");
+assertEqual(debugTemplate.render({x:"1"}), '<!-- BEGIN comment- -1 | two --><div>1</div><!-- END comment- -1 | two -->');
+
+assertEqual(debugTemplate.deferredRender({x:"1"}).toString(), '<!-- BEGIN comment- -1 | two --><div>1</div><!-- END comment- -1 | two -->');
+
+renderIncludeWithYieldTemplate.addDebugComment("c1");
+assertEqual(templateForIncludeWithYield.render({x:{b:"B"}}), '<p><!-- BEGIN c1 --><div>A</div><span>B</span><!-- END c1 --></p>');
+

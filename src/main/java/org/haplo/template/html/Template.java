@@ -6,10 +6,14 @@
 
 package org.haplo.template.html;
 
+import java.util.ArrayList;
+
+
 final public class Template {
     private String name;
     private NodeList nodes;
     private int numberOfRememberedViews;
+    private ArrayList<String> debugComments;
 
     protected Template(String name, NodeList nodes, int numberOfRememberedViews) {
         this.name = name;
@@ -23,12 +27,12 @@ final public class Template {
 
     public void render(StringBuilder builder, Driver driver) throws RenderException {
         driver.setupForRender(this);
-        this.nodes.render(builder, driver, driver.getRootView(), Context.TEXT);
+        this.renderTemplate(builder, driver, driver.getRootView(), Context.TEXT);
     }
 
     public void renderAsIncludedTemplate(StringBuilder builder, Driver driver, Object view, Context context) throws RenderException {
         driver.setupForRender(this);
-        this.nodes.render(builder, driver, view, context);
+        this.renderTemplate(builder, driver, view, context);
     }
 
     public DeferredRender deferredRender(Driver driver) throws RenderException {
@@ -37,8 +41,22 @@ final public class Template {
             if(context != Context.TEXT) {
                 throw new RenderException(driver, "Can't deferred render into this context");
             }
-            this.nodes.render(builder, driver, driver.getRootView(), context);
+            this.renderTemplate(builder, driver, driver.getRootView(), context);
         };
+    }
+
+    private void renderTemplate(StringBuilder builder, Driver driver, Object view, Context context) throws RenderException {
+        String dc = null;
+        if((this.debugComments != null) && (context == Context.TEXT)) {
+            dc = String.join(" | ", debugComments);
+            builder.append("<!-- BEGIN ").append(dc).append(" -->");
+        }
+
+        this.nodes.render(builder, driver, view, context);
+
+        if(dc != null) {
+            builder.append("<!-- END ").append(dc).append(" -->");
+        }
     }
 
     public String renderString(Driver driver) throws RenderException {
@@ -55,5 +73,18 @@ final public class Template {
 
     protected int getNumberOfRememberedViews() {
         return this.numberOfRememberedViews;
+    }
+
+    public void addDebugComment(String comment) {
+        if(this.debugComments == null) {
+            this.debugComments = new ArrayList<String>(2);
+        }
+        // Escape and deduplicate comments
+        StringBuilder b = new StringBuilder();
+        Escape.escape(comment, b, Context.COMMENT);
+        String escapedComment = b.toString();
+        if(!this.debugComments.contains(escapedComment)) {
+            this.debugComments.add(escapedComment);
+        }
     }
 }
