@@ -15,6 +15,9 @@ final public class Template {
     private int numberOfRememberedViews;
     private ArrayList<String> debugComments;
 
+    // Special value to mark debug comments as disabled without using an extra member variable.
+    static private final ArrayList<String> DEBUG_COMMENTS_DISABLED = new ArrayList<String>(1);
+
     protected Template(String name, NodeList nodes, int numberOfRememberedViews) {
         this.name = name;
         this.nodes = nodes;
@@ -47,7 +50,7 @@ final public class Template {
 
     private void renderTemplate(StringBuilder builder, Driver driver, Object view, Context context) throws RenderException {
         String dc = null;
-        if((this.debugComments != null) && (context == Context.TEXT)) {
+        if((this.debugComments != null) && (this.debugComments != DEBUG_COMMENTS_DISABLED) && (context == Context.TEXT)) {
             dc = String.join(" | ", debugComments);
             builder.append("<!-- BEGIN ").append(dc).append(" -->");
         }
@@ -76,6 +79,9 @@ final public class Template {
     }
 
     public void addDebugComment(String comment) {
+        if(this.debugComments == DEBUG_COMMENTS_DISABLED) {
+            return; // ignore addition of comment
+        }
         if(this.debugComments == null) {
             this.debugComments = new ArrayList<String>(2);
         }
@@ -86,5 +92,9 @@ final public class Template {
         if(!this.debugComments.contains(escapedComment)) {
             this.debugComments.add(escapedComment);
         }
+    }
+
+    public void disableDebugComments() {
+        this.debugComments = DEBUG_COMMENTS_DISABLED;
     }
 }

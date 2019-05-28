@@ -291,3 +291,7 @@ assertEqual(debugTemplate.deferredRender({x:"1"}).toString(), '<!-- BEGIN commen
 renderIncludeWithYieldTemplate.addDebugComment("c1");
 assertEqual(templateForIncludeWithYield.render({x:{b:"B"}}), '<p><!-- BEGIN c1 --><div>A</div><span>B</span><!-- END c1 --></p>');
 
+var debugTemplateNoComments = new $HaploTemplate('#option:disable-debug-comments <div> "hello" </div>');
+assertEqual(debugTemplateNoComments.render(), '<div>hello</div>');
+debugTemplateNoComments.addDebugComment("ping");
+assertEqual(debugTemplateNoComments.render(), '<div>hello</div>');
