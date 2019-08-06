@@ -1,0 +1,6 @@
+<div>
+  ifHasBlock() { "ANON: " yield() " . " value} else { "no anon . " value }
+</div>
+<div>
+  ifHasBlock:named() { "NAMED: " yield:named() " . " value } else { "no named . " value}
+</div>
