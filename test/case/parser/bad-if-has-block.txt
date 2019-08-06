@@ -1,0 +1,23 @@
+
+PARSE ERROR: yield* functions must be well formed
+
+---
+<div> ifHasBlock(a) { } </div>
+---
+Error at line 1 character 17: ifHasBlock() does not take any arguments
+
+---
+<div> ifHasBlock:x(a) { } </div>
+---
+Error at line 1 character 19: ifHasBlock:x() does not take any arguments
+
+---
+<div> ifHasBlock:x() </div>
+---
+Error at line 1 character 19: ifHasBlock:x() requires an anonymous block
+
+---
+<div> ifHasBlock:x() { } ping { } </div>
+---
+Error at line 1 character 30: ifHasBlock:x() may not take a ping block
+

@@ -1,0 +1,55 @@
+
+Conditional on being able to yield to a block.
+---
+<div>
+    do() {
+        ifHasBlock() {"anon"} else {"UNEXPECTED"}
+        " - "
+        ifHasBlock:ping() { "has ping " yield:ping() } else { "no ping" }
+        " - "
+        ifHasBlock:pong() { "has pong" } else { "NO PONG"}
+    }
+    ping { "PING" }
+</div>
+---
+{}
+---
+<div>anon - has ping PING - NO PONG</div>
+
+
+---
+NEW TEMPLATE: isHasBlock() in included templates
+---
+template:if-blocks()
+---
+{"value":"one"}
+---
+<div>no anon . one</div><div>no named . one</div>
+
+---
+NEW TEMPLATE: isHasBlock() in included templates
+---
+template:if-blocks() { "XYZ" }
+---
+{"value":"one"}
+---
+<div>ANON: XYZ . one</div><div>no named . one</div>
+
+---
+NEW TEMPLATE: isHasBlock() in included templates
+---
+template:if-blocks() { "XYZ" } x { "Q" }
+---
+{"value":"one"}
+---
+<div>ANON: XYZ . one</div><div>no named . one</div>
+
+---
+NEW TEMPLATE: isHasBlock() in included templates
+---
+template:if-blocks() { "XYZ" } named { "QWERTY"}
+---
+{"value":"one"}
+---
+<div>ANON: XYZ . one</div><div>NAMED: QWERTY . one</div>
+

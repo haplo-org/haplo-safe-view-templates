@@ -265,6 +265,7 @@ final public class Parser {
             case "unsafeHTML":  return new NodeFunctionUnsafeHTML();
             case "unsafeAttributeValue": return new NodeFunctionUnsafeAttributeValue();
             case "yield":       return new NodeFunctionYield(Node.BLOCK_ANONYMOUS);
+            case "ifHasBlock":  return new NodeFunctionConditionalHasBlock(Node.BLOCK_ANONYMOUS);
             default: break;
         }
         if(functionName.startsWith("template")) {
@@ -277,6 +278,11 @@ final public class Parser {
                 error("Bad named yield function name, must start 'yield:'");
             }
             return new NodeFunctionYield(functionName.substring(6));
+        } else if(functionName.startsWith("ifHasBlock")) {
+            if((functionName.length() <= 11) || (functionName.charAt(10) != ':')) {
+                error("Bad named ifHasBlock function name, must start 'ifHasBlock:'");
+            }
+            return new NodeFunctionConditionalHasBlock(functionName.substring(11));
         }
         return new NodeFunctionGeneric(functionName);
     }

@@ -96,6 +96,11 @@ abstract public class Driver {
         this.bindingForYield.renderBlock(blockName, builder, view, context);
     }
 
+    final public boolean canYieldToBlock(String blockName) {
+        if(this.bindingForYield == null) { return false; }
+        return this.bindingForYield.hasBlock(blockName);
+    }
+
     // ----------------------------------------------------------------------
 
     public interface FunctionRenderer {
