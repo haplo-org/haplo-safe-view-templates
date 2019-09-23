@@ -1,0 +1,30 @@
+
+PARSE ERROR: Translated strings need to have a single literal string as their argument
+
+---
+<div>
+  i()
+</div>
+---
+Error at line 2 character 5: i() must take exactly one argument
+
+---
+<div>
+  i:xyz()
+</div>
+---
+Error at line 2 character 9: i:xyz() must take exactly one argument
+
+---
+<div>
+  i(hello)
+</div>
+---
+Error at line 2 character 4: i() must have a literal string as the argument
+
+---
+<div>
+  i:pqw(hello)
+</div>
+---
+Error at line 2 character 8: i:pqw() must have a literal string as the argument

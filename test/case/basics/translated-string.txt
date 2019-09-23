@@ -1,0 +1,15 @@
+
+Strings marked with i() or i:category() are translated.
+
+---
+
+<div> i("Hello") </div>
+<span> i:cat2("A string with a \"quote\"") </span>
+
+---
+
+{}
+
+---
+
+<div>Hello</div><span>A string with a "quote"</span>
