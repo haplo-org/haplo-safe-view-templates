@@ -12,4 +12,25 @@ Strings marked with i() or i:category() are translated.
 
 ---
 
-<div>Hello</div><span>A string with a "quote"</span>
+<div>template:HELLO</div><span>cat2:A STRING WITH A "QUOTE"</span>
+
+---
+
+NEW TEMPLATE: check nested drivers copy text translation too
+
+---
+
+<div>
+  do() {
+    <span> i("Hello World") </span>
+    yield:x()
+  } x { i("Ping") }
+</div>
+
+---
+
+{}
+
+---
+
+<div><span>template:HELLO WORLD</span>template:PING</div>

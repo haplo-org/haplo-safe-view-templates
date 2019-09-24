@@ -29,11 +29,11 @@ final class NodeFunctionTranslatedString extends NodeFunction.ExactlyOneArgument
 
     public void render(StringBuilder builder, Driver driver, Object view, Context context) throws RenderException {
         NodeLiteral argument = (NodeLiteral)getSingleArgument();
-        String string = argument.getLiteralString();
-        // TODO: Translate string
+        String text = argument.getLiteralString();
+        String translatedText = driver.translateText(this.category, text);
         // TODO: Where there are block, interpolate
         // TODO: Plural handling
-        builder.append(string);
+        builder.append(translatedText);
     }
 
     public String getDumpName() {

@@ -114,6 +114,14 @@ end
 
 # ---------------------------------------------------------------------------
 
+class TextTranslator
+  def translate(category, text)
+    "#{category}:#{text.upcase}"
+  end
+end
+
+# ---------------------------------------------------------------------------
+
 files = Dir.glob("test/case/**/*.*").sort
 files.each do |filename|
   comment, *commands = File.open(filename, "r:UTF-8") { |f| f.read }.split("\n---\n")
@@ -181,6 +189,7 @@ files.each do |filename|
               ].each do |driver_name, driver|
                 driver.setFunctionRenderer(TestFunctionRenderer.new)
                 driver.setIncludedTemplateRenderer(included_template_renderer)
+                driver.setTextTranslator(TextTranslator.new)
                 begin
                   output = template.renderString(driver)
                 rescue Java::OrgHaploTemplateHtml::RenderException => render_exception

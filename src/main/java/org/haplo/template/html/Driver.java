@@ -132,6 +132,22 @@ abstract public class Driver {
 
     // ----------------------------------------------------------------------
 
+    public static interface TextTranslator {
+        String translate(String category, String text);
+    }
+
+    private TextTranslator textTranslator;
+
+    final public void setTextTranslator(TextTranslator textTranslator) {
+        this.textTranslator = textTranslator;
+    }
+
+    final public String translateText(String category, String text) {
+        return (this.textTranslator != null) ? this.textTranslator.translate(category, text) : text;
+    }
+
+    // ----------------------------------------------------------------------
+
     final public Driver newNestedDriverWithView(Object rootView) throws RenderException {
         int newNestingDepth = this.nestingDepth + 1;
         if(newNestingDepth > MAX_DRIVER_NESTING) {
@@ -143,6 +159,7 @@ abstract public class Driver {
         driver.rememberedViews = this.rememberedViews;
         driver.includedTemplateRenderer = this.includedTemplateRenderer;
         driver.functionRenderer = this.functionRenderer;
+        driver.textTranslator = this.textTranslator;
         return driver;
     }
 
