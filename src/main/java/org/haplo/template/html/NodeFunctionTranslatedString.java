@@ -1,4 +1,3 @@
-
 /* Haplo Safe View Templates                         https://haplo.org
  * (c) Haplo Services Ltd 2015 - 2019            https://www.haplo.com
  * This Source Code Form is subject to the terms of the Mozilla Public
