@@ -147,3 +147,23 @@ NEW TEMPLATE: has arguments 3?
 {}
 ---
 <div>`true`</div>
+
+
+---
+NEW TEMPLATE: translated text as argument
+---
+<div> testargs-V(i("ping")) </div>
+---
+{}
+---
+<div>`template:PING/String`</div>
+
+
+---
+NEW TEMPLATE: translated text as argument with blocks
+---
+<div> testargs-V(i("ping {}"){"Pong"}) </div>
+---
+{}
+---
+<div>`template:PING Pong/String`</div>

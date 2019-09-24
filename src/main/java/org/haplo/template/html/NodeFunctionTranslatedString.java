@@ -27,6 +27,12 @@ final class NodeFunctionTranslatedString extends NodeFunction.ExactlyOneArgument
         }
     }
 
+    protected Object valueForFunctionArgument(Driver driver, Object view) throws RenderException {
+        StringBuilder builder = new StringBuilder(224);
+        this.render(builder, driver, view, Context.UNSAFE);
+        return builder.toString();
+    }
+
     public void render(StringBuilder builder, Driver driver, Object view, Context context) throws RenderException {
         NodeLiteral argument = (NodeLiteral)getSingleArgument();
         String text = argument.getLiteralString();
