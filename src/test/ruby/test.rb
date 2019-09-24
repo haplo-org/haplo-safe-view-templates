@@ -211,6 +211,7 @@ end
 Java::OrgHaploTemplateDriverRhinojs::JSPlatformIntegration.parserConfiguration = TestParserConfiguration.new
 Java::OrgHaploTemplateDriverRhinojs::JSPlatformIntegration.includedTemplateRenderer = JSIncludedTemplateRenderer.new(included_template_renderer)
 Java::OrgHaploTemplateDriverRhinojs::JSPlatformIntegration.platformFunctionRenderer = JSTestFunctionRenderer.new(TestFunctionRenderer.new)
+Java::OrgHaploTemplateDriverRhinojs::JSPlatformIntegration.textTranslatorFactory = JSTestTextTranslator.new()
 $jsscope.put('$testcount', $jsscope, 0.to_java)
 $jsscope.put('$testpass', $jsscope, 0.to_java)
 $jscontext.evaluateString($jsscope, File.read("test/rhino.js"), "test/rhino.js", 1, nil);

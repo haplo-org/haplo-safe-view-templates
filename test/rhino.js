@@ -276,6 +276,12 @@ var tagExpTemplat = new $HaploTemplate('<div *attrs> "x" </div>');
 assertEqual(tagExpTemplat.render({"attrs":{"x":{"p":"q"}}}), '<div x="[object Object]">x</div>');
 
 // --------------------------------------------------------------------------
+// Text translation, including caching of text translator
+
+var translatedTextTemplate = new $HaploTemplate('<div> i("Hello world") </div> <i> i:cat2("Ping") </i> <i> i:cat2("Pong") </i> <span> i("x") </span> <span> i("y") </span>')
+assertEqual(translatedTextTemplate.render({}), '<div>JS:1:template:HELLO WORLD</div><i>JS:1:cat2:PING</i><i>JS:2:cat2:PONG</i><span>JS:1:template:X</span><span>JS:2:template:Y</span>');
+
+// --------------------------------------------------------------------------
 // Debug comments
 
 var debugTemplate = new $HaploTemplate('<div> x </div>');
