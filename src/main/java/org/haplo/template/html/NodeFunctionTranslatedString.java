@@ -31,12 +31,50 @@ final class NodeFunctionTranslatedString extends NodeFunction.ExactlyOneArgument
         NodeLiteral argument = (NodeLiteral)getSingleArgument();
         String text = argument.getLiteralString();
         String translatedText = driver.translateText(this.category, text);
-        // TODO: Where there are block, interpolate
-        // TODO: Plural handling
-        builder.append(translatedText);
+        if(this.hasAnyBlocks()) {
+            // When there are blocks on this function, interpolate the string.
+            this.renderInterpolated(translatedText, builder, driver, view, context);
+        } else {
+            // If there aren't any blocks, just output the translated text as is.
+            builder.append(translatedText);
+        }
     }
 
     public String getDumpName() {
         return "TRANSLATED-STRING";
     }
+
+    // ----------------------------------------------------------------------
+
+    private void renderInterpolated(String text, StringBuilder builder, Driver driver, Object view, Context context) throws RenderException {
+        int index = 0,
+            length = text.length();
+        while(index < length) {
+            int startInterpolation = text.indexOf('{', index);
+            if(startInterpolation == -1) {
+                if(index < (length - 1)) {
+                    builder.append(text, index, length);
+                    return;
+                }
+            }
+            builder.append(text, index, startInterpolation);
+            int endInterpolation = text.indexOf('}', startInterpolation);
+            if(endInterpolation == -1) {
+                throw new RenderException(driver, "Missing end } from interpolation");
+            }
+            String blockName = text.substring(startInterpolation+1, endInterpolation);
+            // TODO: Plural handling by special annonations in this 'block name'
+            Node block = this.getBlock((blockName.length() == 0) ? Node.BLOCK_ANONYMOUS : blockName);
+            if(block == null) {
+                throw new RenderException(driver, 
+                    (blockName.length() == 0) ?
+                    "When interpolating, i() does not have an anonymous block" :
+                    "When interpolating, i() does not have block named "+blockName
+                );
+            }
+            block.render(builder, driver, view, context);
+            index = endInterpolation + 1;
+        }
+    }
+
 }
