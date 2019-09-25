@@ -57,10 +57,10 @@ final class NodeFunctionTranslatedString extends NodeFunction.ExactlyOneArgument
         while(index < length) {
             int startInterpolation = text.indexOf('{', index);
             if(startInterpolation == -1) {
-                if(index < (length - 1)) {
+                if(index < length) {
                     builder.append(text, index, length);
-                    return;
                 }
+                return;
             }
             builder.append(text, index, startInterpolation);
             int endInterpolation = text.indexOf('}', startInterpolation);

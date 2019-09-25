@@ -11,6 +11,17 @@ Strings marked with i() or i:category() are translated.
 ---
 
 
+NEW TEMPLATE: text used as attributes values
+---
+<form> <input value=i("Submit label")> </form>
+<form> <input value=i("Submit {}!") { "hello"} > </form>
+---
+{}
+---
+<form><input value="template:SUBMIT LABEL"></form><form><input value="template:SUBMIT hello!"></form>
+---
+
+
 NEW TEMPLATE: check nested drivers copy text translation too
 ---
 <div>
@@ -90,6 +101,19 @@ NEW TEMPLATE: Interpolation with blocks, interpolate at end
 }
 ---
 <div>template:HELLO WORLD, Person name</div>
+---
+
+
+NEW TEMPLATE: Interpolation with blocks, interpolate at one char before the end (regression test)
+---
+<div>
+  i("Hello world, {}!")
+    { name }
+</div>
+---
+{"name": "Person name"}
+---
+<div>template:HELLO WORLD, Person name!</div>
 ---
 
 
