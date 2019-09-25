@@ -208,6 +208,32 @@ files.each do |filename|
   end
 end
 
+# Extract translatable strings from template.
+describe "translated strings" do
+  it "can extra strings from template" do
+    template = Parser.new(<<__E, "test-case", TestParserConfiguration.new).parse()
+      i("Text!") " "
+      <div> i("String 1") </div>
+      <form>
+        <input type="submit" value=i("Button text")>
+      </form>
+      do() {
+        i("T3")
+      } block {
+        i("T4")
+      }
+__E
+    extracted = template.extractTranslatedStrings().to_a
+    expect(extracted).to eq([
+        "Text!",
+        "String 1",
+        "Button text",
+        "T3",
+        "T4"
+    ])
+  end
+end
+
 # Also run some tests of the Rhino JavaScript integration
 Java::OrgHaploTemplateDriverRhinojs::JSPlatformIntegration.parserConfiguration = TestParserConfiguration.new
 Java::OrgHaploTemplateDriverRhinojs::JSPlatformIntegration.includedTemplateRenderer = JSIncludedTemplateRenderer.new(included_template_renderer)

@@ -49,6 +49,11 @@ final class NodeFunctionTranslatedString extends NodeFunction.ExactlyOneArgument
         return "TRANSLATED-STRING";
     }
 
+    protected String getOriginalString() {
+        NodeLiteral argument = (NodeLiteral)getSingleArgument();
+        return argument.getLiteralString();
+    }
+
     // ----------------------------------------------------------------------
 
     private void renderInterpolated(String text, StringBuilder builder, Driver driver, Object view, Context context) throws RenderException {
