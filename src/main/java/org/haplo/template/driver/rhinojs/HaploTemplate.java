@@ -50,6 +50,10 @@ public class HaploTemplate extends ScriptableObject implements Callable, Driver.
         JSPlatformIntegration.includedTemplateRenderer.renderIncludedTemplate(this.owner, templateName, builder, driver, context);
     }
 
+    public String getLocaleId() {
+        return (this.textTranslator != null) ? this.textTranslator.getLocaleId() : Driver.DEFAULT_LOCALE_ID;
+    }
+
     public String translate(String category, String text) {
         if(this.textTranslator == null || !category.equals(this.textTranslatorCategory)) {
             this.textTranslator = JSPlatformIntegration.textTranslatorFactory.getTextTranslator(this.owner, category);

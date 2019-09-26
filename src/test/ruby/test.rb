@@ -115,6 +115,9 @@ end
 # ---------------------------------------------------------------------------
 
 class TextTranslator
+  def getLocaleId
+    "en"
+  end
   def translate(category, text)
     # include category, and upcase everything which isn't in {} to avoid upcasing interpolations
     nesting = 0

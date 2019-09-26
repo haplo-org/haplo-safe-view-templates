@@ -11,6 +11,7 @@ import com.ibm.icu.util.ULocale;
 
 abstract public class Driver {
     public static final int MAX_DRIVER_NESTING = 256;
+    public static final String DEFAULT_LOCALE_ID = "en";
 
     abstract public Object getRootView();
     abstract public Driver driverWithNewRoot(Object rootView);
@@ -136,10 +137,12 @@ abstract public class Driver {
     // ----------------------------------------------------------------------
 
     public static interface TextTranslator {
+        String getLocaleId();
         String translate(String category, String text);
     }
 
     private TextTranslator textTranslator;
+    private ULocale locale;
 
     final public void setTextTranslator(TextTranslator textTranslator) {
         this.textTranslator = textTranslator;
@@ -150,8 +153,11 @@ abstract public class Driver {
     }
 
     public ULocale getULocale() {
-        // TODO: Get actual locale
-        return new ULocale("en");
+        if(this.locale == null) {
+            String localeId = (this.textTranslator != null) ? this.textTranslator.getLocaleId() : DEFAULT_LOCALE_ID;
+            this.locale = new ULocale(localeId);
+        }
+        return this.locale;
     }
 
     // ----------------------------------------------------------------------
