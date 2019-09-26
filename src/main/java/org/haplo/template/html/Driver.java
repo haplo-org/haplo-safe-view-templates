@@ -6,6 +6,9 @@
 
 package org.haplo.template.html;
 
+import com.ibm.icu.util.ULocale;
+
+
 abstract public class Driver {
     public static final int MAX_DRIVER_NESTING = 256;
 
@@ -144,6 +147,11 @@ abstract public class Driver {
 
     final public String translateText(String category, String text) {
         return (this.textTranslator != null) ? this.textTranslator.translate(category, text) : text;
+    }
+
+    public ULocale getULocale() {
+        // TODO: Get actual locale
+        return new ULocale("en");
     }
 
     // ----------------------------------------------------------------------

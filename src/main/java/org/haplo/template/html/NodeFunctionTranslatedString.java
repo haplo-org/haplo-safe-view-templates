@@ -6,6 +6,9 @@
 
 package org.haplo.template.html;
 
+import com.ibm.icu.text.PluralFormat;
+
+
 final class NodeFunctionTranslatedString extends NodeFunction.ExactlyOneArgument {
     private String category;
 
@@ -68,21 +71,59 @@ final class NodeFunctionTranslatedString extends NodeFunction.ExactlyOneArgument
                 return;
             }
             builder.append(text, index, startInterpolation);
-            int endInterpolation = text.indexOf('}', startInterpolation);
+            // Find end of the interpolation, noting that {} may be nested when using plural formats
+            int endInterpolation = -1;
+            int s = startInterpolation + 1;
+            int nesting = 1;
+            while(s < length) {
+                char c = text.charAt(s);
+                if(c == '{') { nesting++; }
+                else if(c == '}') { nesting--; }
+                if(nesting == 0) {
+                    endInterpolation = s;
+                    break;
+                }
+                s++;
+            }
             if(endInterpolation == -1) {
                 throw new RenderException(driver, "Missing end } from interpolation");
             }
+            // Contents of the {} are usually a block name, but might be a plural format
             String blockName = text.substring(startInterpolation+1, endInterpolation);
-            // TODO: Plural handling by special annonations in this 'block name'
-            Node block = this.getBlock((blockName.length() == 0) ? Node.BLOCK_ANONYMOUS : blockName);
-            if(block == null) {
-                throw new RenderException(driver, 
-                    (blockName.length() == 0) ?
-                    "When interpolating, i() does not have an anonymous block" :
-                    "When interpolating, i() does not have block named "+blockName
-                );
+            int firstComma = blockName.indexOf(',');
+            if(firstComma == -1) {
+                // Simple rendering of block
+                Node block = this.getBlock((blockName.length() == 0) ? Node.BLOCK_ANONYMOUS : blockName);
+                if(block == null) {
+                    throw new RenderException(driver, 
+                        (blockName.length() == 0) ?
+                        "When interpolating, i() does not have an anonymous block" :
+                        "When interpolating, i() does not have block named "+blockName
+                    );
+                }
+                block.render(builder, driver, view, context);
+
+            } else {
+                // Plural format
+                int secondComma = blockName.indexOf(',', firstComma+1);
+                if(secondComma == -1 || !"plural".equals(blockName.substring(firstComma+1, secondComma))) {
+                    throw new RenderException(driver, "When interpolating, bad plural: "+blockName);
+                }
+                String valueBlockName = blockName.substring(0, firstComma);
+                String pluralFormat = blockName.substring(secondComma+1);
+                Node valueBlock = this.getBlock((valueBlockName.length() == 0) ? Node.BLOCK_ANONYMOUS : valueBlockName);
+                if(valueBlock == null) {
+                    throw new RenderException(driver, "When interpolating, can't find block for plural format: "+blockName);
+                }
+                if(valueBlock.getNextNode() != null || !(valueBlock instanceof NodeValue)) {
+                    throw new RenderException(driver, "When interpolating, value block for plural is not a simple value node: "+valueBlockName);
+                }
+                Object value = valueBlock.value(driver, view);
+                double count = (value instanceof Number) ? ((Number)value).doubleValue() : 0;  // default to zero for non-number values
+                String formatted = new PluralFormat(driver.getULocale(), pluralFormat).format(count);
+                Escape.escape(formatted, builder, context);
             }
-            block.render(builder, driver, view, context);
+
             index = endInterpolation + 1;
         }
     }

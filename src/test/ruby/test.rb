@@ -117,7 +117,16 @@ end
 class TextTranslator
   def translate(category, text)
     # include category, and upcase everything which isn't in {} to avoid upcasing interpolations
-    "#{category}:#{text.gsub(/(\A|\})(.+?)(\{|\z)/){$1+$2.upcase+$3}}"
+    nesting = 0
+    text2 = text.chars.map do |c|
+      if c == '{'
+        nesting += 1
+      elsif c == '}'
+        nesting -= 1
+      end
+      nesting == 0 ? c.upcase : c
+    end .join('')
+    "#{category}:#{text2}"
   end
 end
 
