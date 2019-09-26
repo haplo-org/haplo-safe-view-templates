@@ -18,6 +18,7 @@ import org.jruby.RubyObject;
 import org.jruby.RubyString;
 import org.jruby.RubyBoolean;
 import org.jruby.RubyNumeric;
+import org.jruby.RubyInteger;
 import org.jruby.RubyArray;
 import org.jruby.RubyHash;
 import org.jruby.java.proxies.ConcreteJavaProxy;
@@ -50,6 +51,10 @@ class JRubyJSONDriver extends Driver {
             }
             if(o instanceof ConcreteJavaProxy) {
                 return ((ConcreteJavaProxy)o).getObject();
+            } else if(o instanceof RubyInteger) {
+                return ((RubyInteger)o).getLongValue();
+            } else if(o instanceof RubyNumeric) {
+                return ((RubyNumeric)o).getDoubleValue();
             }
             return ((o == null) || o.isNil()) ? null : o;
         } else if(path.length == 0) {
