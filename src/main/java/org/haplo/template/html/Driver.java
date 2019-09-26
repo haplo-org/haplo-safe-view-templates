@@ -174,6 +174,7 @@ abstract public class Driver {
         driver.includedTemplateRenderer = this.includedTemplateRenderer;
         driver.functionRenderer = this.functionRenderer;
         driver.textTranslator = this.textTranslator;
+        driver.locale = this.locale;
         return driver;
     }
 
