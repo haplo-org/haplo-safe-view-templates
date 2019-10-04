@@ -25,3 +25,19 @@ class JSIncludedTemplateRenderer
   end
 end
 
+class JSTestTextTranslator
+  def getTextTranslator(owner, category)
+    TextTranslator.new(category)
+  end
+  class TextTranslator
+    def initialize(category)
+      @given_category = category
+      @count = 0
+    end
+    def translate(category, text)
+      raise "Bad category" unless @given_category == category
+      @count += 1
+      "JS:#{@count}:#{category}:#{text.upcase}"
+    end
+  end
+end

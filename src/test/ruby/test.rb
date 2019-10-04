@@ -114,6 +114,27 @@ end
 
 # ---------------------------------------------------------------------------
 
+class TextTranslator
+  def getLocaleId
+    "en"
+  end
+  def translate(category, text)
+    # include category, and upcase everything which isn't in {} to avoid upcasing interpolations
+    nesting = 0
+    text2 = text.chars.map do |c|
+      if c == '{'
+        nesting += 1
+      elsif c == '}'
+        nesting -= 1
+      end
+      nesting == 0 ? c.upcase : c
+    end .join('')
+    "#{category}:#{text2}"
+  end
+end
+
+# ---------------------------------------------------------------------------
+
 files = Dir.glob("test/case/**/*.*").sort
 files.each do |filename|
   comment, *commands = File.open(filename, "r:UTF-8") { |f| f.read }.split("\n---\n")
@@ -181,6 +202,7 @@ files.each do |filename|
               ].each do |driver_name, driver|
                 driver.setFunctionRenderer(TestFunctionRenderer.new)
                 driver.setIncludedTemplateRenderer(included_template_renderer)
+                driver.setTextTranslator(TextTranslator.new)
                 begin
                   output = template.renderString(driver)
                 rescue Java::OrgHaploTemplateHtml::RenderException => render_exception
@@ -198,10 +220,37 @@ files.each do |filename|
   end
 end
 
+# Extract translatable strings from template.
+describe "translated strings" do
+  it "can extra strings from template" do
+    template = Parser.new(<<__E, "test-case", TestParserConfiguration.new).parse()
+      i("Text!") " "
+      <div> i("String 1") </div>
+      <form>
+        <input type="submit" value=i("Button text")>
+      </form>
+      do() {
+        i("T3")
+      } block {
+        i("T4")
+      }
+__E
+    extracted = template.extractTranslatedStrings().to_a
+    expect(extracted).to eq([
+        "Text!",
+        "String 1",
+        "Button text",
+        "T3",
+        "T4"
+    ])
+  end
+end
+
 # Also run some tests of the Rhino JavaScript integration
 Java::OrgHaploTemplateDriverRhinojs::JSPlatformIntegration.parserConfiguration = TestParserConfiguration.new
 Java::OrgHaploTemplateDriverRhinojs::JSPlatformIntegration.includedTemplateRenderer = JSIncludedTemplateRenderer.new(included_template_renderer)
 Java::OrgHaploTemplateDriverRhinojs::JSPlatformIntegration.platformFunctionRenderer = JSTestFunctionRenderer.new(TestFunctionRenderer.new)
+Java::OrgHaploTemplateDriverRhinojs::JSPlatformIntegration.textTranslatorFactory = JSTestTextTranslator.new()
 $jsscope.put('$testcount', $jsscope, 0.to_java)
 $jsscope.put('$testpass', $jsscope, 0.to_java)
 $jscontext.evaluateString($jsscope, File.read("test/rhino.js"), "test/rhino.js", 1, nil);

@@ -250,6 +250,7 @@ final public class Parser {
 
     protected NodeFunction functionNodeFromName(String functionName) throws ParseException {
         switch(functionName) {
+            case "i":           return new NodeFunctionTranslatedString(null);
             case "within":      return new NodeFunctionWithin();
             case "if":          return new NodeFunctionConditional(false);
             case "unless":      return new NodeFunctionConditional(true);
@@ -268,7 +269,9 @@ final public class Parser {
             case "ifHasBlock":  return new NodeFunctionConditionalHasBlock(Node.BLOCK_ANONYMOUS);
             default: break;
         }
-        if(functionName.startsWith("template")) {
+        if(functionName.startsWith("i:")) {
+            return new NodeFunctionTranslatedString(functionName.substring(2));
+        } else if(functionName.startsWith("template")) {
             if((functionName.length() <= 9) || (functionName.charAt(8) != ':')) {
                 error("Bad included template function name, must start 'template:'");
             }

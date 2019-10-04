@@ -1,0 +1,87 @@
+
+Internationalised strings can define plurals
+
+---
+<span> i("There {,plural,one{is} other{are}} {} {,plural,one{item} other{items}}") { number } </span>
+---
+{"number":23}
+---
+<span>template:THERE are 23 items</span>
+
+---
+{"number":1}
+---
+<span>template:THERE is 1 item</span>
+
+---
+{"number":0}
+---
+<span>template:THERE are 0 items</span>
+
+---
+NEW TEMPLATE: non-anonymous block for count
+---
+<span> i("Hello {}, {x} {x,plural,one{item} other{items}}") { name } x { value } </span>
+---
+{"name":"John", "value":12}
+---
+<span>template:HELLO John, 12 items</span>
+---
+{"name":"John", "value":1}
+---
+<span>template:HELLO John, 1 item</span>
+
+---
+NEW TEMPLATE: not a plural
+---
+<span> i("Hello {}, {x} {x,ping,other{something}}") { name } x { value } </span>
+---
+{}
+---
+RENDER ERROR: When rendering template 'test-case': When interpolating, bad plural: x,ping,other{something}
+
+---
+NEW TEMPLATE: half a plural
+---
+<span> i("Hello {}, {x} {x,plural}") { name } x { value } </span>
+---
+{}
+---
+RENDER ERROR: When rendering template 'test-case': When interpolating, bad plural: x,plural
+
+---
+NEW TEMPLATE: not a plural
+---
+<span> i("Hello {}, {x} {x,ping,other{something}}") { name } x { value } </span>
+---
+{}
+---
+RENDER ERROR: When rendering template 'test-case': When interpolating, bad plural: x,ping,other{something}
+
+---
+NEW TEMPLATE: not a plural
+---
+<span> i("Hello {}, {x} {y,plural,other{something}}") { name } x { value } </span>
+---
+{"name":"John", "value":1}
+---
+RENDER ERROR: When rendering template 'test-case': When interpolating, can't find block for plural format: y,plural,other{something}
+
+---
+NEW TEMPLATE: block with more than one thing in it
+---
+<span> i("Hello {}, {x} {x,plural,other{something}}") { name } x { value "hello!" } </span>
+---
+{"name":"John", "value":1}
+---
+RENDER ERROR: When rendering template 'test-case': When interpolating, value block for plural is not a simple value node: x
+
+---
+NEW TEMPLATE: block with something other than a value in it
+---
+<span> i("Hello {}, {x} {x,plural,other{something}}") { name } x { "pong" } </span>
+---
+{"name":"John", "value":1}
+---
+RENDER ERROR: When rendering template 'test-case': When interpolating, value block for plural is not a simple value node: x
+

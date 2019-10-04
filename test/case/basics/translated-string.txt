@@ -1,0 +1,155 @@
+
+Strings marked with i() or i:category() are translated.
+
+---
+<div> i("Hello") </div>
+<span> i:cat2("A string with a \"quote\"") </span>
+---
+{}
+---
+<div>template:HELLO</div><span>cat2:A STRING WITH A "QUOTE"</span>
+---
+
+
+NEW TEMPLATE: text used as attributes values
+---
+<form> <input value=i("Submit label")> </form>
+<form> <input value=i("Submit {}!") { "hello"} > </form>
+---
+{}
+---
+<form><input value="template:SUBMIT LABEL"></form><form><input value="template:SUBMIT hello!"></form>
+---
+
+
+NEW TEMPLATE: check nested drivers copy text translation too
+---
+<div>
+  do() {
+    <span> i("Hello World") </span>
+    yield:x()
+  } x { i("Ping") }
+</div>
+---
+{}
+---
+<div><span>template:HELLO WORLD</span>template:PING</div>
+
+---
+
+
+NEW TEMPLATE: Interpolation with blocks
+---
+<div>
+  i("Hello {}, look at {thing}")
+    { name }
+    thing { thing }
+</div>
+---
+{
+  "name": "Person name",
+  "thing": "the sky"
+}
+---
+<div>template:HELLO Person name, LOOK AT the sky</div>
+---
+
+
+NEW TEMPLATE: Interpolation with blocks, but nothing to interpolate
+---
+<div>
+  i("Hello world")
+    { name }
+    thing { thing }
+</div>
+---
+{
+  "name": "Person name",
+  "thing": "the sky"
+}
+---
+<div>template:HELLO WORLD</div>
+---
+
+
+NEW TEMPLATE: Interpolation with blocks, interpolate at beginning
+---
+<div>
+  i("{}, Hello world")
+    { name }
+</div>
+---
+{
+  "name": "Person name",
+  "thing": "the sky"
+}
+---
+<div>template:Person name, HELLO WORLD</div>
+---
+
+
+NEW TEMPLATE: Interpolation with blocks, interpolate at end
+---
+<div>
+  i("Hello world, {}")
+    { name }
+</div>
+---
+{
+  "name": "Person name",
+  "thing": "the sky"
+}
+---
+<div>template:HELLO WORLD, Person name</div>
+---
+
+
+NEW TEMPLATE: Interpolation with blocks, interpolate at one char before the end (regression test)
+---
+<div>
+  i("Hello world, {}!")
+    { name }
+</div>
+---
+{"name": "Person name"}
+---
+<div>template:HELLO WORLD, Person name!</div>
+---
+
+
+NEW TEMPLATE: Interpolation with blocks, unclosed interpolation
+---
+<div>
+  i("Hello world, {something")
+    { name }
+</div>
+---
+{
+  "name": "Person name",
+  "thing": "the sky"
+}
+---
+RENDER ERROR: When rendering template 'test-case': Missing end } from interpolation
+---
+
+NEW TEMPLATE: Interpolation with blocks, missing anonymous block, so interpolation is off
+---
+<div>
+  i("Hello world, {}")
+</div>
+---
+{}
+---
+<div>template:HELLO WORLD, {}</div>
+---
+
+
+NEW TEMPLATE: Interpolation with blocks, missing named block, so exceptions
+---
+<div>
+  i("Hello world, {something}") {}
+</div>
+---
+{}
+---
+RENDER ERROR: When rendering template 'test-case': When interpolating, i() does not have block named something
