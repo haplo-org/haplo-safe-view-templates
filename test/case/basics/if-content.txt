@@ -1,0 +1,63 @@
+
+Conditional on marked content being non-null
+
+---
+
+<div>
+  markContent() { <span> "t" </span> } // content outside the ifContent
+  ifContent() {
+    <h1> markContent() { title } </h1>
+    markContent() {
+      ifContent() {
+        do() {
+          // This block is rendered with a different Driver, and checks mark works across drivers
+          <p> markContent() { yield:text() } </p>
+        } text {
+          text
+        }
+      }
+    }
+  }
+  <p> "Outside" </p>
+</div>
+
+---
+
+{
+}
+
+---
+
+<div><span>t</span><p>Outside</p></div>
+
+---
+
+{
+  "title": "Hello"
+}
+
+---
+
+<div><span>t</span><h1>Hello</h1><p>Outside</p></div>
+
+---
+
+{
+  "title": "Hello",
+  "text": "World!"
+}
+
+---
+
+<div><span>t</span><h1>Hello</h1><p>World!</p><p>Outside</p></div>
+
+---
+
+{
+  "text": "World!"
+}
+
+---
+
+<div><span>t</span><h1></h1><p>World!</p><p>Outside</p></div>
+
