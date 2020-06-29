@@ -53,3 +53,44 @@ NEW TEMPLATE: Fragments with multiple nodes
 {"frag": "PING"}
 ---
 <a href="#xPING">link</a>
+
+---
+NEW TEMPLATE: url() with minimal fragments
+---
+<a href=[# frag]>"link"</a>
+---
+{}
+---
+<a href="#">link</a>
+
+---
+{"frag":"boo"}
+---
+<a href="#boo">link</a>
+
+---
+NEW TEMPLATE: URLs with minimal fragments (1)
+---
+<a href=[#]>"link"</a>
+---
+{}
+---
+<a href="#">link</a>
+
+---
+NEW TEMPLATE: URLs with minimal fragments (2)
+---
+<a href="#">"link"</a>
+---
+{}
+---
+<a href="#">link</a>
+
+---
+NEW TEMPLATE: url() with minimal fragments (2)
+---
+<div data-x=url(#)>"link"</div>
+---
+{}
+---
+<div data-x="#">link</div>
