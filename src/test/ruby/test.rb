@@ -229,6 +229,7 @@ describe "translated strings" do
       <form>
         <input type="submit" value=i("Button text")>
       </form>
+      <span> "Translate a value: " i(someValue) </span>
       do() {
         i("T3")
       } block {

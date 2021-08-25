@@ -153,3 +153,42 @@ NEW TEMPLATE: Interpolation with blocks, missing named block, so exceptions
 {}
 ---
 RENDER ERROR: When rendering template 'test-case': When interpolating, i() does not have block named something
+---
+
+NEW TEMPLATE: Translated strings using values as text
+---
+<div>
+  i(ping)
+</div>
+---
+{}
+---
+<div></div>
+---
+
+{"ping":"hello"}
+---
+<div>template:HELLO</div>
+---
+
+NEW TEMPLATE: Translated strings using values as text, with interpolations
+---
+<div>
+  i(ping) { "x" }
+  i:abc(pong) { "y" }
+</div>
+---
+{}
+---
+<div></div>
+---
+
+{"ping": "with {}"}
+---
+<div>template:WITH x</div>
+---
+
+{"ping": "with {}", "pong": "another is {}"}
+---
+<div>template:WITH xabc:ANOTHER IS y</div>
+
