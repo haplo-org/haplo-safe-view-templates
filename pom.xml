@@ -24,7 +24,7 @@
         <dependency>
             <groupId>org.mozilla</groupId>
             <artifactId>rhino</artifactId>
-            <version>1.7.7</version>
+            <version>1.7.14.1</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
@@ -131,7 +131,7 @@
                                 <artifactItem>
                                     <groupId>org.mozilla</groupId>
                                     <artifactId>rhino</artifactId>
-                                    <version>1.7.7</version>
+                                    <version>1.7.14.1</version>
                                     <type>jar</type>
                                     <overWrite>false</overWrite>
                                     <outputDirectory>${project.build.directory}/lib/compile</outputDirectory>
